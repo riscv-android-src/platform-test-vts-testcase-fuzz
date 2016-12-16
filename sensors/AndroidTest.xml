@@ -25,8 +25,7 @@
             ISensorsActivate_fuzzer,
             ISensorsSetDelay_fuzzer,
             ISensorsBatch_fuzzer,
-            ISensorsInjectSensorData_fuzzer,
-            ISensorsPoll_fuzzer
+            ISensorsInjectSensorData_fuzzer
             "/>
         <option name="binary-test-type" value="llvmfuzzer" />
         <option name="test-config-path" value="vts/testcases/fuzz/sensors/ISensorsFuzzTest.config" />
