@@ -20,7 +20,7 @@ include $(CLEAR_VARS)
 module_name := ILightSetLight_fuzzer
 module_src_files := ILightSetLight_fuzzer.cpp
 module_shared_libraries := android.hardware.light@2.0
-include test/vts-testcase/fuzz/common/Android.hal_fuzzer.mk
+include test/vts-testcase/fuzz/simple_fuzzer/common/Android.hal_fuzzer.mk
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := ILightFuzzTest

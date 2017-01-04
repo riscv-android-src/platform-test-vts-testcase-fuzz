@@ -20,7 +20,7 @@ include $(CLEAR_VARS)
 ifeq (,$(findstring mips, $(TARGET_ARCH)))
 ifeq (,$(findstring x86, $(TARGET_ARCH)))
 
-hal_common_fuzz_dir := test/vts-testcase/fuzz/common
+hal_common_fuzz_dir := test/vts-testcase/fuzz/simple_fuzzer/common
 
 module_path := hal_fuzzer
 

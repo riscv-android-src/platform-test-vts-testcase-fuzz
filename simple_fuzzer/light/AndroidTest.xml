@@ -13,21 +13,15 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<configuration description="Config for VTS Sensors HIDL HAL's target-side fuzz test cases">
+<configuration description="Config for VTS LIGHT HIDL HAL's fuzz test cases">
     <target_preparer class="com.android.compatibility.common.tradefed.targetprep.VtsFilePusher">
         <option name="push-group" value="LLVMFuzzerTest.push" />
     </target_preparer>
     <target_preparer class="com.android.tradefed.targetprep.VtsPythonVirtualenvPreparer" />
     <test class="com.android.tradefed.testtype.VtsMultiDeviceTest">
-        <option name="test-module-name" value="ISensorsFuzzTest" />
-        <option name="binary-test-sources" value="
-            ISensorsFlush_fuzzer,
-            ISensorsActivate_fuzzer,
-            ISensorsSetDelay_fuzzer,
-            ISensorsBatch_fuzzer,
-            ISensorsInjectSensorData_fuzzer
-            "/>
+        <option name="test-module-name" value="ILightFuzzTest" />
+        <option name="binary-test-sources" value="ILightSetLight_fuzzer"/>
         <option name="binary-test-type" value="llvmfuzzer" />
-        <option name="test-config-path" value="vts/testcases/fuzz/sensors/ISensorsFuzzTest.config" />
+        <option name="test-config-path" value="vts/testcases/fuzz/simple_fuzzer/light/ILightFuzzTest.config" />
     </test>
 </configuration>

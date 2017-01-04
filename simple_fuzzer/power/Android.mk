@@ -20,13 +20,13 @@ include $(CLEAR_VARS)
 module_name := IPowerPowerHint_fuzzer
 module_src_files := IPowerPowerHint_fuzzer.cpp
 module_shared_libraries := android.hardware.power@1.0
-include test/vts-testcase/fuzz/common/Android.hal_fuzzer.mk
+include test/vts-testcase/fuzz/simple_fuzzer/common/Android.hal_fuzzer.mk
 
 include $(CLEAR_VARS)
 module_name := IPowerSetFeature_fuzzer
 module_src_files := IPowerSetFeature_fuzzer.cpp
 module_shared_libraries := android.hardware.power@1.0
-include test/vts-testcase/fuzz/common/Android.hal_fuzzer.mk
+include test/vts-testcase/fuzz/simple_fuzzer/common/Android.hal_fuzzer.mk
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := IPowerFuzzTest
