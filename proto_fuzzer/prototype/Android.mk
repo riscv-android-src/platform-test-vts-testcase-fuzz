@@ -16,6 +16,10 @@
 
 LOCAL_PATH := $(call my-dir)
 
+# TODO(trong): enable for mips and x86.
+ifeq (,$(findstring mips, $(TARGET_ARCH)))
+ifeq (,$(findstring x86, $(TARGET_ARCH)))
+
 include $(CLEAR_VARS)
 LOCAL_MODULE := vts_proto_fuzzer_prototype
 LOCAL_SRC_FILES := \
@@ -48,3 +52,6 @@ LOCAL_CFLAGS := \
 LOCAL_SANITIZE := address coverage
 
 include $(BUILD_EXECUTABLE)
+
+endif
+endif
