@@ -52,6 +52,20 @@ class Random {
   std::mt19937_64 rand_;
 };
 
+// Additional non-libfuzzer parameters passed to the fuzzer.
+struct ProtoFuzzerParams {
+  // Number of function calls per execution (fixed throught fuzzer run).
+  size_t exec_size_;
+  // VTS specs supplied to the fuzzer.
+  vector<ComponentSpecificationMessage> comp_specs_;
+};
+
+// Parses command-line flags to create a ProtoFuzzerParams instance.
+ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv);
+
+// Loads VTS HAL driver library.
+FuzzerBase *InitHalDriver(const ComponentSpecificationMessage &comp_spec);
+
 // Creates a key, value look-up table with keys being names of predefined types,
 // and values being their definitions.
 unordered_map<string, VariableSpecificationMessage> ExtractPredefinedTypes(

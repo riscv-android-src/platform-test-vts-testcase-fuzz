@@ -36,8 +36,6 @@ LOCAL_SHARED_LIBRARIES := \
     libvts_common \
     libvts_proto_fuzzer \
     libvts_proto_fuzzer_proto \
-    android.hardware.light@2.0 \
-    android.hardware.light.vts.driver@2.0 \
 
 LOCAL_STATIC_LIBRARIES := \
     libLLVMFuzzer \

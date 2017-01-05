@@ -31,6 +31,7 @@ LOCAL_C_INCLUDES := \
 
 LOCAL_SHARED_LIBRARIES := \
     libprotobuf-cpp-full \
+    libvts_common \
     libvts_multidevice_proto \
     libvts_proto_fuzzer_proto \
 
