@@ -17,18 +17,16 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-module_name := IPowerPowerHint_fuzzer
-module_src_files := IPowerPowerHint_fuzzer.cpp
-module_shared_libraries := android.hardware.power@1.0
-include test/vts-testcase/fuzz/common/Android.hal_fuzzer.mk
+LOCAL_MODULE := libvts_proto_fuzzer_proto
+LOCAL_SRC_FILES := \
+    ExecutionSpecificationMessage.proto \
 
-include $(CLEAR_VARS)
-module_name := IPowerSetFeature_fuzzer
-module_src_files := IPowerSetFeature_fuzzer.cpp
-module_shared_libraries := android.hardware.power@1.0
-include test/vts-testcase/fuzz/common/Android.hal_fuzzer.mk
+LOCAL_SHARED_LIBRARIES := \
+    libprotobuf-cpp-full \
+    libvts_multidevice_proto \
 
-include $(CLEAR_VARS)
-LOCAL_MODULE := IPowerFuzzTest
-VTS_CONFIG_SRC_DIR := testcases/hal/power/fuzz
-include test/vts/tools/build/Android.host_config.mk
+LOCAL_CFLAGS := \
+    -Wno-unused-parameter \
+
+include $(BUILD_SHARED_LIBRARY)
+
