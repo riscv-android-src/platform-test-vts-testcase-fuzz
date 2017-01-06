@@ -17,12 +17,29 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-module_name := ILightSetLight_fuzzer
-module_src_files := ILightSetLight_fuzzer.cpp
-module_shared_libraries := android.hardware.light@2.0
-include test/vts-testcase/fuzz/common/Android.hal_fuzzer.mk
+LOCAL_MODULE := scalar_mutator_test
 
-include $(CLEAR_VARS)
-LOCAL_MODULE := ILightFuzzTest
-VTS_CONFIG_SRC_DIR := testcases/hal/light/fuzz
-include test/vts/tools/build/Android.host_config.mk
+LOCAL_SRC_FILES := \
+    type_mutators/ProtoFuzzerScalarMutatorTest.cpp \
+
+LOCAL_C_INCLUDES := \
+    test/vts-testcase/fuzz/proto_fuzzer/include \
+    test/vts-testcase/fuzz/proto_fuzzer/test \
+
+LOCAL_SHARED_LIBRARIES := \
+    libprotobuf-cpp-full \
+    libvts_multidevice_proto \
+    libvts_common \
+    libvts_proto_fuzzer \
+    libvts_proto_fuzzer_proto \
+
+LOCAL_STATIC_LIBRARIES := \
+    libgtest \
+
+LOCAL_CFLAGS := \
+    -Wno-unused-parameter \
+    -Wno-macro-redefined \
+    -Wno-sign-compare \
+    -fno-omit-frame-pointer \
+
+include $(BUILD_EXECUTABLE)
