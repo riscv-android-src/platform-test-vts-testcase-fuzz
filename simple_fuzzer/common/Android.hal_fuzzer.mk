@@ -19,6 +19,7 @@ include $(CLEAR_VARS)
 # TODO(trong): enable for mips and x86.
 ifeq (,$(findstring mips, $(TARGET_ARCH)))
 ifeq (,$(findstring x86, $(TARGET_ARCH)))
+ifeq (O,$(PLATFORM_VERSION))
 
 hal_common_fuzz_dir := test/vts-testcase/fuzz/simple_fuzzer/common
 
@@ -59,5 +60,6 @@ include $(hal_common_fuzz_dir)/Android.vts_testcase.mk
 module_name :=
 module_path :=
 
+endif
 endif
 endif
