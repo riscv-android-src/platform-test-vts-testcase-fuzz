@@ -37,3 +37,32 @@ cc_library_shared {
         "-Wno-unused-parameter",
     ],
 }
+
+cc_binary {
+    name: "vts_proto_fuzzer",
+    srcs: [
+        "ProtoFuzzerMain.cpp",
+    ],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts/sysfuzzer/common/include",
+        "test/vts-testcase/fuzz/proto_fuzzer/include",
+    ],
+    shared_libs: [
+        "libprotobuf-cpp-full",
+        "libvts_common",
+        "libvts_multidevice_proto",
+        "libvts_proto_fuzzer",
+        "libvts_proto_fuzzer_proto",
+    ],
+    static_libs: [
+        "libLLVMFuzzer",
+    ],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-Wno-macro-redefined",
+        "-Wno-extra-tokens",
+        "-Wno-c99-extensions",
+        "-fno-omit-frame-pointer",
+    ],
+}
