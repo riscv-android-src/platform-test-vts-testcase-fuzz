@@ -15,6 +15,5 @@
 subdirs = [
      "proto_fuzzer",
      "proto_fuzzer/proto",
-     "proto_fuzzer/prototype",
      "proto_fuzzer/test",
 ]
