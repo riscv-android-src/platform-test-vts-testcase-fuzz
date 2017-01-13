@@ -35,12 +35,6 @@ module_shared_libraries := android.hardware.sensors@1.0
 include test/vts-testcase/fuzz/simple_fuzzer/common/Android.hal_fuzzer.mk
 
 include $(CLEAR_VARS)
-module_name := ISensorsSetDelay_fuzzer
-module_src_files := ISensorsSetDelay_fuzzer.cpp
-module_shared_libraries := android.hardware.sensors@1.0
-include test/vts-testcase/fuzz/simple_fuzzer/common/Android.hal_fuzzer.mk
-
-include $(CLEAR_VARS)
 module_name := ISensorsBatch_fuzzer
 module_src_files := ISensorsBatch_fuzzer.cpp
 module_shared_libraries := android.hardware.sensors@1.0

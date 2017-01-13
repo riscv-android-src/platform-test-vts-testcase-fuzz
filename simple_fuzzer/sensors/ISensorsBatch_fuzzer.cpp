@@ -34,10 +34,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   memcpy(&sensorHandle, data, sizeof(int32_t));
   data += sizeof(int32_t);
 
-  int32_t flags;
-  memcpy(&flags, data, sizeof(int32_t));
-  data += sizeof(int32_t);
-
   int64_t samplingPeriodNs;
   memcpy(&samplingPeriodNs, data, sizeof(int64_t));
   data += sizeof(int64_t);
@@ -45,6 +41,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   int64_t maxReportLatencyNs;
   memcpy(&maxReportLatencyNs, data, sizeof(int64_t));
 
-  sensors_hal->batch(sensorHandle, flags, samplingPeriodNs, maxReportLatencyNs);
+  sensors_hal->batch(sensorHandle, samplingPeriodNs, maxReportLatencyNs);
   return 0;
 }
