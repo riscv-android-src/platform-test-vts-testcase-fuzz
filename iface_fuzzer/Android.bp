@@ -14,14 +14,39 @@
 // limitations under the License.
 //
 
-cc_test {
-    name: "scalar_mutator_test",
+cc_library_shared {
+    name: "libvts_proto_fuzzer",
     srcs: [
-        "type_mutators/ProtoFuzzerScalarMutatorTest.cpp",
+        "ProtoFuzzerUtils.cpp",
+        "ProtoFuzzerMutator.cpp",
+        "type_mutators/ProtoFuzzerEnumMutator.cpp",
+        "type_mutators/ProtoFuzzerScalarMutator.cpp",
+        "type_mutators/ProtoFuzzerStructMutator.cpp",
     ],
     include_dirs: [
-        "test/vts-testcase/fuzz/proto_fuzzer/include",
-        "test/vts-testcase/fuzz/proto_fuzzer/test",
+        "test/vts/sysfuzzer/common/include",
+        "test/vts-testcase/fuzz/iface_fuzzer/include",
+    ],
+    shared_libs: [
+        "libprotobuf-cpp-full",
+        "libvts_common",
+        "libvts_multidevice_proto",
+        "libvts_proto_fuzzer_proto",
+    ],
+    cflags: [
+        "-Wno-unused-parameter",
+    ],
+}
+
+cc_binary {
+    name: "vts_proto_fuzzer",
+    srcs: [
+        "ProtoFuzzerMain.cpp",
+    ],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts/sysfuzzer/common/include",
+        "test/vts-testcase/fuzz/iface_fuzzer/include",
     ],
     shared_libs: [
         "libprotobuf-cpp-full",
@@ -31,12 +56,13 @@ cc_test {
         "libvts_proto_fuzzer_proto",
     ],
     static_libs: [
-        "libgtest",
+        "libLLVMFuzzer",
     ],
     cflags: [
         "-Wno-unused-parameter",
         "-Wno-macro-redefined",
-        "-Wno-sign-compare",
+        "-Wno-extra-tokens",
+        "-Wno-c99-extensions",
         "-fno-omit-frame-pointer",
     ],
 }
