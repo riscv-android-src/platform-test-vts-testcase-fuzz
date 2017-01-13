@@ -24,7 +24,7 @@
 #include <vector>
 
 #include "fuzz_tester/FuzzerBase.h"
-#include "test/vts-testcase/fuzz/proto_fuzzer/proto/ExecutionSpecificationMessage.pb.h"
+#include "test/vts-testcase/fuzz/iface_fuzzer/proto/ExecutionSpecificationMessage.pb.h"
 #include "test/vts/proto/ComponentSpecificationMessage.pb.h"
 
 using std::cout;

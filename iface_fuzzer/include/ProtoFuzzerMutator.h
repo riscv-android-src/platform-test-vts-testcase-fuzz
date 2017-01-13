@@ -22,7 +22,7 @@
 #include <unordered_map>
 
 #include "ProtoFuzzerUtils.h"
-#include "test/vts-testcase/fuzz/proto_fuzzer/proto/ExecutionSpecificationMessage.pb.h"
+#include "test/vts-testcase/fuzz/iface_fuzzer/proto/ExecutionSpecificationMessage.pb.h"
 #include "test/vts/proto/ComponentSpecificationMessage.pb.h"
 #include "type_mutators/ProtoFuzzerScalarMutator.h"
 
