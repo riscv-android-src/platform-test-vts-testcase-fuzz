@@ -64,6 +64,8 @@ class ProtoFuzzerMutator {
       const VariableSpecificationMessage &var_spec);
 
  private:
+  // Finds mutator of given type.
+  ProtoFuzzerTypeMutator *FindTypeMutator(VariableType type);
   // 64-bit random number generator.
   Random &rand_;
   // Used to look up definition of a predefined type by its name.
