@@ -15,9 +15,12 @@
  */
 
 #include "ProtoFuzzerMutator.h"
+#include "type_mutators/ProtoFuzzerArrayMutator.h"
 #include "type_mutators/ProtoFuzzerEnumMutator.h"
+#include "type_mutators/ProtoFuzzerHandleMutator.h"
 #include "type_mutators/ProtoFuzzerScalarMutator.h"
 #include "type_mutators/ProtoFuzzerStructMutator.h"
+#include "type_mutators/ProtoFuzzerUnionMutator.h"
 
 #include <iostream>
 
@@ -33,12 +36,18 @@ ProtoFuzzerMutator::ProtoFuzzerMutator(
     Random &rand,
     unordered_map<string, VariableSpecificationMessage> predefined_types)
     : rand_(rand), predefined_types_(predefined_types) {
+  type_mutators_[TYPE_ARRAY] =
+      make_unique<ProtoFuzzerArrayMutator>(rand, this, predefined_types_);
   type_mutators_[TYPE_ENUM] =
       make_unique<ProtoFuzzerEnumMutator>(rand, this, predefined_types_);
+  type_mutators_[TYPE_HANDLE] =
+      make_unique<ProtoFuzzerHandleMutator>(rand, this, predefined_types_);
   type_mutators_[TYPE_SCALAR] =
       make_unique<ProtoFuzzerScalarMutator>(rand, this, predefined_types_);
   type_mutators_[TYPE_STRUCT] =
       make_unique<ProtoFuzzerStructMutator>(rand, this, predefined_types_);
+  type_mutators_[TYPE_UNION] =
+      make_unique<ProtoFuzzerUnionMutator>(rand, this, predefined_types_);
 }
 
 ExecutionSpecificationMessage ProtoFuzzerMutator::RandomGen(
@@ -61,13 +70,17 @@ void ProtoFuzzerMutator::Mutate(const InterfaceSpecificationMessage &iface_spec,
   bool coin_flip = rand_(2);
 
   if (coin_flip) {
+    // Mutate a random function in execution.
     size_t idx = rand_(exec_spec->api_size());
     const FunctionSpecificationMessage &rand_api = exec_spec->api(idx);
     (*exec_spec->mutable_api(idx)) = Mutate(rand_api);
   } else {
-    size_t num_apis = iface_spec.api_size();
-    size_t idx = rand_(num_apis);
-    (*exec_spec->mutable_api(idx)) = RandomGen(iface_spec.api(idx));
+    // Generate a random function call in place of randomly chosen function in
+    // execution.
+    size_t func_idx = rand_(exec_spec->api_size());
+    size_t blueprint_idx = rand_(iface_spec.api_size());
+    *(exec_spec->mutable_api(func_idx)) =
+        RandomGen(iface_spec.api(blueprint_idx));
   }
 }
 
@@ -101,16 +114,25 @@ FunctionSpecificationMessage ProtoFuzzerMutator::Mutate(
 
 VariableSpecificationMessage ProtoFuzzerMutator::RandomGen(
     const VariableSpecificationMessage &var_spec) {
-  VariableSpecificationMessage result{
-      type_mutators_.at(var_spec.type())->RandomGen(var_spec)};
+  VariableSpecificationMessage result{};
+  result = FindTypeMutator(var_spec.type())->RandomGen(var_spec);
   return result;
 }
 
 VariableSpecificationMessage ProtoFuzzerMutator::Mutate(
     const VariableSpecificationMessage &var_spec) {
-  VariableSpecificationMessage result{
-      type_mutators_.at(var_spec.type())->Mutate(var_spec)};
+  VariableSpecificationMessage result{};
+  result = FindTypeMutator(var_spec.type())->Mutate(var_spec);
   return result;
+}
+
+ProtoFuzzerTypeMutator *ProtoFuzzerMutator::FindTypeMutator(VariableType type) {
+  auto type_mutator = type_mutators_.find(type);
+  if (type_mutator == type_mutators_.end()) {
+    cerr << "Type mutator not found for type: " << type << endl;
+    exit(1);
+  }
+  return type_mutator->second.get();
 }
 
 }  // namespace vts

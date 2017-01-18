@@ -14,33 +14,30 @@
  * limitations under the License.
  */
 
-#include "type_mutators/ProtoFuzzerStructMutator.h"
+#include "type_mutators/ProtoFuzzerArrayMutator.h"
 
 namespace android {
 namespace vts {
 
-VariableSpecificationMessage ProtoFuzzerStructMutator::RandomGen(
+VariableSpecificationMessage ProtoFuzzerArrayMutator::RandomGen(
     const VariableSpecificationMessage &var_spec) {
   VariableSpecificationMessage result{};
-  result.set_name(var_spec.predefined_type());
-  result.set_type(TYPE_STRUCT);
-
-  const VariableSpecificationMessage &blueprint =
-      FindPredefinedType(result.name());
-  for (const auto &struct_value : blueprint.struct_value()) {
-    *result.add_struct_value() = mutator_->RandomGen(struct_value);
+  result.set_type(TYPE_ARRAY);
+  int vector_size = var_spec.vector_value(0).vector_size();
+  result.set_vector_size(vector_size);
+  for (int i = 0; i < vector_size; ++i) {
+    *result.add_vector_value() = mutator_->RandomGen(var_spec.vector_value(0));
   }
   return result;
 }
 
-VariableSpecificationMessage ProtoFuzzerStructMutator::Mutate(
+VariableSpecificationMessage ProtoFuzzerArrayMutator::Mutate(
     const VariableSpecificationMessage &var_spec) {
   VariableSpecificationMessage result{var_spec};
-
-  size_t size = var_spec.struct_value_size();
-  size_t idx = rand_(size);
-  *result.mutable_struct_value(idx) =
-      mutator_->Mutate(var_spec.struct_value(idx));
+  size_t vector_size = static_cast<size_t>(var_spec.vector_size());
+  size_t idx = rand_(vector_size);
+  *result.mutable_vector_value(idx) =
+      mutator_->Mutate(var_spec.vector_value(idx));
   return result;
 }
 

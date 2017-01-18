@@ -16,11 +16,6 @@
 
 #include "type_mutators/ProtoFuzzerScalarMutator.h"
 
-#include <cstring>
-#include <iostream>
-
-using std::cout;
-using std::endl;
 using std::memcpy;
 using std::string;
 

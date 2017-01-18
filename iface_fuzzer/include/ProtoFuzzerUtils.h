@@ -48,7 +48,7 @@ class Random {
   virtual uint64_t operator()(uint64_t n) { return n ? Rand() % n : 0; }
 
  private:
-  // Used to generate a 64-bit Mersenne Twister pseudo-ranom number.
+  // Used to generate a 64-bit Mersenne Twister pseudo-random number.
   std::mt19937_64 rand_;
 };
 
