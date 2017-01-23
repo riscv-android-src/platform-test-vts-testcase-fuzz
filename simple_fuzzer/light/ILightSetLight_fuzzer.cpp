@@ -22,7 +22,7 @@ using ::android::hardware::light::V2_0::LightState;
 using ::android::hardware::light::V2_0::Type;
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  static ::android::sp<ILight> light_hal = ILight::getService("light", true);
+  static ::android::sp<ILight> light_hal = ILight::getService(true);
   if (light_hal == nullptr) {
     return 0;
   }
