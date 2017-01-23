@@ -21,7 +21,7 @@ using ::android::hardware::power::V1_0::IPower;
 using ::android::hardware::power::V1_0::PowerHint;
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  static ::android::sp<IPower> power_hal = IPower::getService("power", true);
+  static ::android::sp<IPower> power_hal = IPower::getService(true);
   if (power_hal == nullptr) {
     return 0;
   }
