@@ -21,7 +21,7 @@ using ::android::hardware::sensors::V1_0::ISensors;
 using ::android::hardware::sensors::V1_0::Event;
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  static ::android::sp<ISensors> sensors_hal = ISensors::getService("sensors", true);
+  static ::android::sp<ISensors> sensors_hal = ISensors::getService(true);
   if (sensors_hal == nullptr) {
     return 0;
   }
