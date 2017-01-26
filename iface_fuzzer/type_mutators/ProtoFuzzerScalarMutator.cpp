@@ -108,7 +108,9 @@ ScalarDataValueMessage ProtoFuzzerScalarMutator::Mutate(
 
 template <typename T>
 T ProtoFuzzerScalarMutator::RandomGen(T value) {
-  uint64_t rand_int = rand_.Rand();
+  // Generate a biased random scalar.
+  uint64_t rand_int = (mutator_->mutator_bias_).scalar_bias_(rand_);
+
   T result;
   memcpy(&result, &rand_int, sizeof(T));
   return result;
@@ -139,7 +141,7 @@ float ProtoFuzzerScalarMutator::Mutate(float value) {
 double ProtoFuzzerScalarMutator::Mutate(double value) {
   uint64_t copy;
   memcpy(&copy, &value, sizeof(double));
-  uint64_t mask = static_cast<uint64_t>(1) << rand_(32);
+  uint64_t mask = static_cast<uint64_t>(1) << rand_(64);
   copy ^= mask;
   memcpy(&value, &copy, sizeof(double));
   return value;

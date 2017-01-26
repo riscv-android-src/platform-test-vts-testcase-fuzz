@@ -34,8 +34,11 @@ namespace vts {
 
 ProtoFuzzerMutator::ProtoFuzzerMutator(
     Random &rand,
-    unordered_map<string, VariableSpecificationMessage> predefined_types)
-    : rand_(rand), predefined_types_(predefined_types) {
+    unordered_map<string, VariableSpecificationMessage> predefined_types,
+    const ProtoFuzzerMutatorBias &mutator_bias)
+    : mutator_bias_(mutator_bias),
+      rand_(rand),
+      predefined_types_(predefined_types) {
   type_mutators_[TYPE_ARRAY] =
       make_unique<ProtoFuzzerArrayMutator>(rand, this, predefined_types_);
   type_mutators_[TYPE_ENUM] =

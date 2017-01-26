@@ -35,8 +35,20 @@ VariableSpecificationMessage ProtoFuzzerEnumMutator::RandomGen(
   size_t size = blueprint.enumerator_size();
   size_t idx = rand_(size);
 
-  *(result.mutable_scalar_value()) = blueprint.scalar_value(idx);
-  result.set_scalar_type(blueprint.scalar_type());
+  ScalarDataValueMessage scalar_value = blueprint.scalar_value(idx);
+  string scalar_type = blueprint.scalar_type();
+
+  // Mutate this enum like a scalar with probability
+  // odds_for/(odds_for + odds_against).
+  uint64_t odds_for = (mutator_->mutator_bias_).enum_bias_.first;
+  uint64_t odds_against = (mutator_->mutator_bias_).enum_bias_.second;
+  uint64_t rand_num = rand_(odds_for + odds_against);
+  if (rand_num < odds_for) {
+    scalar_value = ProtoFuzzerScalarMutator::Mutate(scalar_value, scalar_type);
+  }
+
+  *(result.mutable_scalar_value()) = scalar_value;
+  result.set_scalar_type(scalar_type);
   return result;
 }
 
