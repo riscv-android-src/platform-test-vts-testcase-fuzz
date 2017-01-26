@@ -48,8 +48,7 @@ VariableSpecificationMessage ProtoFuzzerUnionMutator::Mutate(
     const VariableSpecificationMessage &var_spec) {
   VariableSpecificationMessage result{var_spec};
   // Assume contains exactly 1 union_value field.
-  *result.mutable_union_value(0) =
-      mutator_->Mutate(var_spec.union_value(0));
+  *result.mutable_union_value(0) = mutator_->Mutate(var_spec.union_value(0));
   return result;
 }
 
