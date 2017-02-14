@@ -24,7 +24,7 @@ cc_library_shared {
         "type_mutators/ProtoFuzzerStructMutator.cpp",
     ],
     include_dirs: [
-        "test/vts/sysfuzzer/common/include",
+        "test/vts/drivers/hal/common/include",
         "test/vts-testcase/fuzz/iface_fuzzer/include",
     ],
     shared_libs: [
@@ -45,7 +45,7 @@ cc_binary {
     ],
     include_dirs: [
         "external/llvm/lib/Fuzzer",
-        "test/vts/sysfuzzer/common/include",
+        "test/vts/drivers/hal/common/include",
         "test/vts-testcase/fuzz/iface_fuzzer/include",
     ],
     shared_libs: [
