@@ -39,7 +39,7 @@ namespace vts {
 
 static Random random{static_cast<uint64_t>(time(0))};
 static size_t kExecSize;
-static InterfaceSpecificationMessage iface_spec;
+static ComponentSpecificationMessage comp_spec;
 static unique_ptr<FuzzerBase> hal;
 static unique_ptr<ProtoFuzzerMutator> mutator;
 
@@ -47,11 +47,11 @@ extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
   ProtoFuzzerParams params{ExtractProtoFuzzerParams(*argc, *argv)};
   kExecSize = params.exec_size_;
 
-  iface_spec = params.comp_specs_.front().interface();
+  comp_spec = params.comp_specs_.front();
   mutator = make_unique<ProtoFuzzerMutator>(
       random, ExtractPredefinedTypes(params.comp_specs_));
 
-  hal.reset(InitHalDriver(params.comp_specs_.front()));
+  hal.reset(InitHalDriver(comp_spec));
   return 0;
 }
 
@@ -59,9 +59,9 @@ extern "C" size_t LLVMFuzzerCustomMutator(uint8_t *data, size_t size,
                                           size_t max_size, unsigned int seed) {
   ExecutionSpecificationMessage exec_spec;
   if (!exec_spec.ParseFromArray(data, size)) {
-    exec_spec = mutator->RandomGen(iface_spec, kExecSize);
+    exec_spec = mutator->RandomGen(comp_spec.interface(), kExecSize);
   } else {
-    mutator->Mutate(iface_spec, &exec_spec);
+    mutator->Mutate(comp_spec.interface(), &exec_spec);
   }
   exec_spec.SerializeToArray(data, exec_spec.ByteSize());
   return exec_spec.ByteSize();

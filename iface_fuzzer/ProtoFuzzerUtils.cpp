@@ -44,8 +44,7 @@ static void usage() {
       "\n"
       "libfuzzer flags (strictly in form -flag=value):\n"
       " Use -help=1 to see libfuzzer flags\n"
-      "\n"
-      );
+      "\n");
 }
 
 static struct option long_options[] = {
@@ -55,6 +54,22 @@ static struct option long_options[] = {
 
 namespace android {
 namespace vts {
+
+static string GetDriverName(const ComponentSpecificationMessage &comp_spec) {
+  stringstream version;
+  version.precision(1);
+  version << fixed << comp_spec.component_type_version();
+  string driver_name =
+      comp_spec.package() + ".vts.driver@" + version.str() + ".so";
+  return driver_name;
+}
+
+static string GetServiceName(const ComponentSpecificationMessage &comp_spec) {
+  // Infer HAL service name from its package name.
+  string prefix = "android.hardware.";
+  string service_name = comp_spec.package().substr(prefix.size());
+  return service_name;
+}
 
 vector<ComponentSpecificationMessage> ExtractCompSpecs(
     const char *vts_spec_files) {
@@ -97,27 +112,47 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
 
 // TODO(trong): this should be done using FuzzerWrapper.
 FuzzerBase *InitHalDriver(const ComponentSpecificationMessage &comp_spec) {
-  stringstream version;
-  version.precision(1);
-  version << fixed << comp_spec.component_type_version();
-  string driver_name =
-      comp_spec.package() + ".vts.driver@" + version.str() + ".so";
+  const char *error;
 
+  string driver_name = GetDriverName(comp_spec);
   void *handle = dlopen(driver_name.c_str(), RTLD_LAZY);
+  if (!handle) {
+    cerr << __func__ << ": " << dlerror() << endl;
+    cerr << __func__ << ": Can't load shared library: " << driver_name << endl;
+    exit(-1);
+  }
 
+  // Clear dlerror().
+  dlerror();
+  string function_name = GetFunctionNamePrefix(comp_spec);
   typedef FuzzerBase *(*loader_func)();
   auto hal_loader =
-      (loader_func)dlsym(handle, GetFunctionNamePrefix(comp_spec).c_str());
-
-  // Infer HAL service name from its package name.
-  string prefix = "android.hardware.";
-  string service_name = comp_spec.package().substr(prefix.size());
+      (loader_func)dlsym(handle, function_name.c_str());
+  if ((error = dlerror()) != NULL) {
+    cerr <<  __func__ << ": Can't find: " << function_name << endl;
+    cerr << error << endl;
+    exit(1);
+  }
 
   FuzzerBase *hal = hal_loader();
   // For fuzzing, we always use passthrough mode.
-  hal->GetService(true, service_name.c_str());
-
+  // TODO(trong): use "default" service name after HALs move to it.
+  if (!hal->GetService(true, GetServiceName(comp_spec).c_str())) {
+    if (!hal->GetService(true, "default")) {
+      cerr << __func__ << " failed." << endl;
+      exit(1);
+    }
+  }
   return hal;
+}
+
+void ExtractPredefinedTypesFromVar(
+    const VariableSpecificationMessage &var_spec,
+    unordered_map<string, VariableSpecificationMessage> &predefined_types) {
+  predefined_types[var_spec.name()] = var_spec;
+  for (const auto &sub_var_spec : var_spec.sub_struct()) {
+    ExtractPredefinedTypesFromVar(sub_var_spec, predefined_types);
+  }
 }
 
 unordered_map<string, VariableSpecificationMessage> ExtractPredefinedTypes(
@@ -125,7 +160,7 @@ unordered_map<string, VariableSpecificationMessage> ExtractPredefinedTypes(
   unordered_map<string, VariableSpecificationMessage> predefined_types;
   for (const auto &comp_spec : specs) {
     for (const auto &var_spec : comp_spec.attribute()) {
-      predefined_types[var_spec.name()] = var_spec;
+      ExtractPredefinedTypesFromVar(var_spec, predefined_types);
     }
   }
   return predefined_types;

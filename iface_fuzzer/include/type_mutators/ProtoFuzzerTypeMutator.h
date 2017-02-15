@@ -50,6 +50,8 @@ class ProtoFuzzerTypeMutator {
       const VariableSpecificationMessage &scalar_value) = 0;
 
  protected:
+  // Looks up predefined type by name.
+  const VariableSpecificationMessage &FindPredefinedType(string name);
   // 64-bit random number generator.
   Random &rand_;
   // Mutates/random generates a nested VariableSpecificationMessage.
