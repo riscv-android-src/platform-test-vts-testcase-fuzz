@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __VTS_PROTO_FUZZER_STRUCT_MUTATOR_H__
-#define __VTS_PROTO_FUZZER_STRUCT_MUTATOR_H__
+#ifndef __VTS_PROTO_FUZZER_UNION_MUTATOR_H__
+#define __VTS_PROTO_FUZZER_UNION_MUTATOR_H__
 
 #include "test/vts/proto/ComponentSpecificationMessage.pb.h"
 #include "type_mutators/ProtoFuzzerTypeMutator.h"
@@ -28,10 +28,10 @@ using std::unordered_map;
 namespace android {
 namespace vts {
 
-// Mutates/random generates VariableSpecificationMessage of TYPE_STRUCT.
-class ProtoFuzzerStructMutator : public ProtoFuzzerTypeMutator {
+// Mutates/random generates VariableSpecificationMessage of TYPE_UNION.
+class ProtoFuzzerUnionMutator : public ProtoFuzzerTypeMutator {
  public:
-  ProtoFuzzerStructMutator(
+  ProtoFuzzerUnionMutator(
       Random &rand, ProtoFuzzerMutator *mutator,
       const unordered_map<string, VariableSpecificationMessage>
           &predefined_types)
@@ -47,4 +47,4 @@ class ProtoFuzzerStructMutator : public ProtoFuzzerTypeMutator {
 }  // namespace vts
 }  // namespace android
 
-#endif  // __VTS_PROTO_FUZZER_STRUCT_MUTATOR_H__
+#endif  // __VTS_PROTO_FUZZER_UNION_MUTATOR_H__

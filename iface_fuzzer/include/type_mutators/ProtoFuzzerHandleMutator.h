@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __VTS_PROTO_FUZZER_STRUCT_MUTATOR_H__
-#define __VTS_PROTO_FUZZER_STRUCT_MUTATOR_H__
+#ifndef __VTS_PROTO_FUZZER_HANDLE_MUTATOR_H__
+#define __VTS_PROTO_FUZZER_HANDLE_MUTATOR_H__
 
 #include "test/vts/proto/ComponentSpecificationMessage.pb.h"
 #include "type_mutators/ProtoFuzzerTypeMutator.h"
@@ -28,23 +28,29 @@ using std::unordered_map;
 namespace android {
 namespace vts {
 
-// Mutates/random generates VariableSpecificationMessage of TYPE_STRUCT.
-class ProtoFuzzerStructMutator : public ProtoFuzzerTypeMutator {
+// Mutates/random generates VariableSpecificationMessage of TYPE_HANDLE.
+class ProtoFuzzerHandleMutator : public ProtoFuzzerTypeMutator {
  public:
-  ProtoFuzzerStructMutator(
+  ProtoFuzzerHandleMutator(
       Random &rand, ProtoFuzzerMutator *mutator,
       const unordered_map<string, VariableSpecificationMessage>
           &predefined_types)
       : ProtoFuzzerTypeMutator(rand, mutator, predefined_types) {}
 
+  // TODO(trong): once vts driver suports TYPE_HANDLE, these will need
+  // implementation.
   VariableSpecificationMessage RandomGen(
-      const VariableSpecificationMessage &var_spec) override;
+      const VariableSpecificationMessage &var_spec) override {
+    return VariableSpecificationMessage{var_spec};
+  }
 
   VariableSpecificationMessage Mutate(
-      const VariableSpecificationMessage &var_spec) override;
+      const VariableSpecificationMessage &var_spec) override {
+    return VariableSpecificationMessage{var_spec};
+  }
 };
 
 }  // namespace vts
 }  // namespace android
 
-#endif  // __VTS_PROTO_FUZZER_STRUCT_MUTATOR_H__
+#endif  // __VTS_PROTO_FUZZER_HANDLE_MUTATOR_H__

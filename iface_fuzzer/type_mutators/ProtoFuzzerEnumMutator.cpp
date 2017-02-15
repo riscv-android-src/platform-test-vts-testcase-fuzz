@@ -16,12 +16,6 @@
 
 #include "type_mutators/ProtoFuzzerEnumMutator.h"
 
-#include <cstring>
-#include <iostream>
-
-using std::cout;
-using std::endl;
-using std::memcpy;
 using std::string;
 
 namespace android {
@@ -30,43 +24,25 @@ namespace vts {
 VariableSpecificationMessage ProtoFuzzerEnumMutator::RandomGen(
     const VariableSpecificationMessage &var_spec) {
   VariableSpecificationMessage result;
-  result.set_name(var_spec.predefined_type());
+  string name = (var_spec.has_predefined_type()) ? var_spec.predefined_type()
+                                                 : var_spec.name();
+  result.set_name(name);
   result.set_type(TYPE_ENUM);
 
   const EnumDataValueMessage &blueprint =
-      predefined_types_.at(result.name()).enum_value();
+      FindPredefinedType(result.name()).enum_value();
 
   size_t size = blueprint.enumerator_size();
   size_t idx = rand_(size);
 
-  EnumDataValueMessage *enum_value = result.mutable_enum_value();
-
-  enum_value->add_enumerator(blueprint.enumerator(idx));
-  *(enum_value->add_scalar_value()) = blueprint.scalar_value(idx);
-  enum_value->set_scalar_type(blueprint.scalar_type());
-
+  *(result.mutable_scalar_value()) = blueprint.scalar_value(idx);
+  result.set_scalar_type(blueprint.scalar_type());
   return result;
 }
 
 VariableSpecificationMessage ProtoFuzzerEnumMutator::Mutate(
     const VariableSpecificationMessage &var_spec) {
-  VariableSpecificationMessage result;
-  result.set_name(var_spec.name());
-  result.set_type(TYPE_ENUM);
-
-  const EnumDataValueMessage &blueprint =
-      predefined_types_.at(result.name()).enum_value();
-
-  size_t size = blueprint.enumerator_size();
-  size_t idx = rand_(size);
-
-  EnumDataValueMessage *enum_value = result.mutable_enum_value();
-
-  enum_value->add_enumerator(blueprint.enumerator(idx));
-  *(enum_value->add_scalar_value()) = blueprint.scalar_value(idx);
-  enum_value->set_scalar_type(blueprint.scalar_type());
-
-  return result;
+  return RandomGen(var_spec);
 }
 
 }  // namespace vts
