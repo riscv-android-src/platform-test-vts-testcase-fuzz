@@ -24,7 +24,7 @@
 #include "ProtoFuzzerUtils.h"
 #include "test/vts-testcase/fuzz/iface_fuzzer/proto/ExecutionSpecificationMessage.pb.h"
 #include "test/vts/proto/ComponentSpecificationMessage.pb.h"
-#include "type_mutators/ProtoFuzzerScalarMutator.h"
+#include "type_mutators/ProtoFuzzerTypeMutator.h"
 
 using std::string;
 using std::unique_ptr;
@@ -33,6 +33,22 @@ using std::unordered_map;
 namespace android {
 namespace vts {
 
+using BiasedRandomScalarGen = std::function<uint64_t(Random &rand)>;
+using OddsEnumTreatedLikeScalar = std::pair<uint64_t, uint64_t>;
+
+// Encapsulates heuristic strategy for biased mutation/random generation.
+struct ProtoFuzzerMutatorBias {
+  ProtoFuzzerMutatorBias(BiasedRandomScalarGen scalar_bias =
+                             [](Random &rand) { return rand.Rand(); },
+                         OddsEnumTreatedLikeScalar enum_bias = {0, 1})
+      : scalar_bias_(scalar_bias), enum_bias_(enum_bias) {}
+
+  // Used to generate biased random scalars.
+  BiasedRandomScalarGen scalar_bias_;
+  // Used to to decide if enum will be mutated/generated like a scalar.
+  OddsEnumTreatedLikeScalar enum_bias_;
+};
+
 // Provides methods to mutate or randomly generate
 // ExecutionSpecificationMessage, FunctionSpecificationMessage, or
 // VariableSpecificationMessage.
@@ -40,7 +56,8 @@ class ProtoFuzzerMutator {
  public:
   ProtoFuzzerMutator(
       Random &rand,
-      unordered_map<string, VariableSpecificationMessage> predefined_types);
+      unordered_map<string, VariableSpecificationMessage> predefined_types,
+      const ProtoFuzzerMutatorBias &mutator_bias);
 
   // Generates a random ExecutionSpecificationMessage.
   ExecutionSpecificationMessage RandomGen(
@@ -62,6 +79,9 @@ class ProtoFuzzerMutator {
   // Mutates a VariableSpecificationMessage.
   VariableSpecificationMessage Mutate(
       const VariableSpecificationMessage &var_spec);
+
+  // Used for biased mutation/random generation of variables.
+  const ProtoFuzzerMutatorBias &mutator_bias_;
 
  private:
   // Finds mutator of given type.

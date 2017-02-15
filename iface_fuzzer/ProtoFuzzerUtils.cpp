@@ -125,11 +125,10 @@ FuzzerBase *InitHalDriver(const ComponentSpecificationMessage &comp_spec) {
   // Clear dlerror().
   dlerror();
   string function_name = GetFunctionNamePrefix(comp_spec);
-  typedef FuzzerBase *(*loader_func)();
-  auto hal_loader =
-      (loader_func)dlsym(handle, function_name.c_str());
+  using loader_func = FuzzerBase *(*)();
+  auto hal_loader = (loader_func)dlsym(handle, function_name.c_str());
   if ((error = dlerror()) != NULL) {
-    cerr <<  __func__ << ": Can't find: " << function_name << endl;
+    cerr << __func__ << ": Can't find: " << function_name << endl;
     cerr << error << endl;
     exit(1);
   }
