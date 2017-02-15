@@ -17,11 +17,9 @@
 #ifndef __VTS_PROTO_FUZZER_SCALAR_MUTATOR_H__
 #define __VTS_PROTO_FUZZER_SCALAR_MUTATOR_H__
 
+#include "ProtoFuzzerMutator.h"
 #include "test/vts/proto/ComponentSpecificationMessage.pb.h"
 #include "type_mutators/ProtoFuzzerTypeMutator.h"
-
-using std::string;
-using std::unordered_map;
 
 namespace android {
 namespace vts {

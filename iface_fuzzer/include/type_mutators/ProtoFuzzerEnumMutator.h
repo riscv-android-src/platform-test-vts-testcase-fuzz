@@ -17,23 +17,21 @@
 #ifndef __VTS_PROTO_FUZZER_ENUM_MUTATOR_H__
 #define __VTS_PROTO_FUZZER_ENUM_MUTATOR_H__
 
+#include "ProtoFuzzerMutator.h"
 #include "test/vts/proto/ComponentSpecificationMessage.pb.h"
-#include "type_mutators/ProtoFuzzerTypeMutator.h"
-
-using std::string;
-using std::unordered_map;
+#include "type_mutators/ProtoFuzzerScalarMutator.h"
 
 namespace android {
 namespace vts {
 
 // Mutates/random generates VariableSpecificationMessage of TYPE_ENUM.
-class ProtoFuzzerEnumMutator : public ProtoFuzzerTypeMutator {
+class ProtoFuzzerEnumMutator : public ProtoFuzzerScalarMutator {
  public:
   ProtoFuzzerEnumMutator(
       Random &rand, ProtoFuzzerMutator *mutator,
       const unordered_map<string, VariableSpecificationMessage>
           &predefined_types)
-      : ProtoFuzzerTypeMutator(rand, mutator, predefined_types) {}
+      : ProtoFuzzerScalarMutator(rand, mutator, predefined_types) {}
 
   VariableSpecificationMessage RandomGen(
       const VariableSpecificationMessage &var_spec) override;
