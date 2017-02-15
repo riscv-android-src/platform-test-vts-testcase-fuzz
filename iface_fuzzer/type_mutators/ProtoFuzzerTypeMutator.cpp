@@ -24,7 +24,8 @@ using std::string;
 namespace android {
 namespace vts {
 
-const VariableSpecificationMessage &ProtoFuzzerTypeMutator::FindPredefinedType(string name) {
+const VariableSpecificationMessage &ProtoFuzzerTypeMutator::FindPredefinedType(
+    string name) {
   auto var_spec = predefined_types_.find(name);
   if (var_spec == predefined_types_.end()) {
     cerr << "Predefined type not found: " << name << endl;
