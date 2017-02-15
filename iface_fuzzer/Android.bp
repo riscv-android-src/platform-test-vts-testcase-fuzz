@@ -19,9 +19,12 @@ cc_library_shared {
     srcs: [
         "ProtoFuzzerUtils.cpp",
         "ProtoFuzzerMutator.cpp",
+        "type_mutators/ProtoFuzzerTypeMutator.cpp",
+        "type_mutators/ProtoFuzzerArrayMutator.cpp",
         "type_mutators/ProtoFuzzerEnumMutator.cpp",
         "type_mutators/ProtoFuzzerScalarMutator.cpp",
         "type_mutators/ProtoFuzzerStructMutator.cpp",
+        "type_mutators/ProtoFuzzerUnionMutator.cpp",
     ],
     include_dirs: [
         "test/vts/drivers/hal/common/include",
