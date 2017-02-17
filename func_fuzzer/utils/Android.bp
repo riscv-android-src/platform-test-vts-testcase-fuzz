@@ -1,0 +1,4 @@
+cc_library_shared {
+    name: "libvts_func_fuzzer_utils",
+    srcs: ["FuncFuzzerUtils.cpp"],
+}
