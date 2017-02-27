@@ -13,7 +13,8 @@
 // limitations under the License.
 
 subdirs = [
-     "iface_fuzzer",
-     "iface_fuzzer/proto",
-     "iface_fuzzer/test",
+    "func_fuzzer",
+    "iface_fuzzer",
+    "iface_fuzzer/proto",
+    "iface_fuzzer/test",
 ]
