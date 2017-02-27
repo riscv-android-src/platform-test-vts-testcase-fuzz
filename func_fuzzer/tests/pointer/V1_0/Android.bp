@@ -1,0 +1,69 @@
+// This file was auto-generated. Do not edit manually.
+genrule {
+    name: "android.hardware.tests.pointer@1.0-vts.func_fuzzer.Graph_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.pointer@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/pointer/1.0/ $(genDir)/android/hardware/tests/pointer/1.0/",
+    srcs: [
+        ":android.hardware.tests.pointer@1.0_hal",
+    ],
+    out: [
+        "android/hardware/tests/pointer/1.0/Graph.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.pointer@1.0-vts.func_fuzzer.Graph",
+    srcs: [":android.hardware.tests.pointer@1.0-vts.func_fuzzer.Graph_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.pointer@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.tests.pointer@1.0-vts.func_fuzzer.Pointer_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.pointer@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/pointer/1.0/ $(genDir)/android/hardware/tests/pointer/1.0/",
+    srcs: [
+        ":android.hardware.tests.pointer@1.0_hal",
+    ],
+    out: [
+        "android/hardware/tests/pointer/1.0/Pointer.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.pointer@1.0-vts.func_fuzzer.Pointer",
+    srcs: [":android.hardware.tests.pointer@1.0-vts.func_fuzzer.Pointer_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.pointer@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+

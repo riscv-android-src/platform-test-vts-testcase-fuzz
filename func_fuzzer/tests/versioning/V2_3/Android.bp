@@ -1,0 +1,103 @@
+// This file was auto-generated. Do not edit manually.
+genrule {
+    name: "android.hardware.tests.versioning@2.3-vts.func_fuzzer.Bar_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.versioning@2.3 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/versioning/2.3/ $(genDir)/android/hardware/tests/versioning/2.3/",
+    srcs: [
+        ":android.hardware.tests.versioning@2.3_hal",
+    ],
+    out: [
+        "android/hardware/tests/versioning/2.3/Bar.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.versioning@2.3-vts.func_fuzzer.Bar",
+    srcs: [":android.hardware.tests.versioning@2.3-vts.func_fuzzer.Bar_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.versioning@2.3",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.tests.versioning@2.3-vts.func_fuzzer.Baz_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.versioning@2.3 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/versioning/2.3/ $(genDir)/android/hardware/tests/versioning/2.3/",
+    srcs: [
+        ":android.hardware.tests.versioning@2.3_hal",
+    ],
+    out: [
+        "android/hardware/tests/versioning/2.3/Baz.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.versioning@2.3-vts.func_fuzzer.Baz",
+    srcs: [":android.hardware.tests.versioning@2.3-vts.func_fuzzer.Baz_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.versioning@2.3",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.tests.versioning@2.3-vts.func_fuzzer.Foo_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.versioning@2.3 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/versioning/2.3/ $(genDir)/android/hardware/tests/versioning/2.3/",
+    srcs: [
+        ":android.hardware.tests.versioning@2.3_hal",
+    ],
+    out: [
+        "android/hardware/tests/versioning/2.3/Foo.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.versioning@2.3-vts.func_fuzzer.Foo",
+    srcs: [":android.hardware.tests.versioning@2.3-vts.func_fuzzer.Foo_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.versioning@2.3",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
