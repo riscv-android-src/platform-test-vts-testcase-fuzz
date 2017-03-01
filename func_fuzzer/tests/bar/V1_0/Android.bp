@@ -1,0 +1,137 @@
+// This file was auto-generated. Do not edit manually.
+genrule {
+    name: "android.hardware.tests.bar@1.0-vts.func_fuzzer.Bar_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.bar@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/bar/1.0/ $(genDir)/android/hardware/tests/bar/1.0/",
+    srcs: [
+        ":android.hardware.tests.bar@1.0_hal",
+    ],
+    out: [
+        "android/hardware/tests/bar/1.0/Bar.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.bar@1.0-vts.func_fuzzer.Bar",
+    srcs: [":android.hardware.tests.bar@1.0-vts.func_fuzzer.Bar_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.bar@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.tests.bar@1.0-vts.func_fuzzer.Complicated_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.bar@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/bar/1.0/ $(genDir)/android/hardware/tests/bar/1.0/",
+    srcs: [
+        ":android.hardware.tests.bar@1.0_hal",
+    ],
+    out: [
+        "android/hardware/tests/bar/1.0/Complicated.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.bar@1.0-vts.func_fuzzer.Complicated",
+    srcs: [":android.hardware.tests.bar@1.0-vts.func_fuzzer.Complicated_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.bar@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.tests.bar@1.0-vts.func_fuzzer.ImportRules_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.bar@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/bar/1.0/ $(genDir)/android/hardware/tests/bar/1.0/",
+    srcs: [
+        ":android.hardware.tests.bar@1.0_hal",
+    ],
+    out: [
+        "android/hardware/tests/bar/1.0/ImportRules.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.bar@1.0-vts.func_fuzzer.ImportRules",
+    srcs: [":android.hardware.tests.bar@1.0-vts.func_fuzzer.ImportRules_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.bar@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.tests.bar@1.0-vts.func_fuzzer.ImportTypes_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.bar@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/bar/1.0/ $(genDir)/android/hardware/tests/bar/1.0/",
+    srcs: [
+        ":android.hardware.tests.bar@1.0_hal",
+    ],
+    out: [
+        "android/hardware/tests/bar/1.0/ImportTypes.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.bar@1.0-vts.func_fuzzer.ImportTypes",
+    srcs: [":android.hardware.tests.bar@1.0-vts.func_fuzzer.ImportTypes_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.bar@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
