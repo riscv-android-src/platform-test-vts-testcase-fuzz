@@ -1,0 +1,137 @@
+// This file was auto-generated. Do not edit manually.
+genrule {
+    name: "android.hardware.radio@1.0-vts.func_fuzzer.Radio_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.radio@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/radio/1.0/ $(genDir)/android/hardware/radio/1.0/",
+    srcs: [
+        ":android.hardware.radio@1.0_hal",
+    ],
+    out: [
+        "android/hardware/radio/1.0/Radio.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.radio@1.0-vts.func_fuzzer.Radio",
+    srcs: [":android.hardware.radio@1.0-vts.func_fuzzer.Radio_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.radio@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.radio@1.0-vts.func_fuzzer.RadioIndication_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.radio@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/radio/1.0/ $(genDir)/android/hardware/radio/1.0/",
+    srcs: [
+        ":android.hardware.radio@1.0_hal",
+    ],
+    out: [
+        "android/hardware/radio/1.0/RadioIndication.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.radio@1.0-vts.func_fuzzer.RadioIndication",
+    srcs: [":android.hardware.radio@1.0-vts.func_fuzzer.RadioIndication_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.radio@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.radio@1.0-vts.func_fuzzer.RadioResponse_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.radio@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/radio/1.0/ $(genDir)/android/hardware/radio/1.0/",
+    srcs: [
+        ":android.hardware.radio@1.0_hal",
+    ],
+    out: [
+        "android/hardware/radio/1.0/RadioResponse.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.radio@1.0-vts.func_fuzzer.RadioResponse",
+    srcs: [":android.hardware.radio@1.0-vts.func_fuzzer.RadioResponse_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.radio@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.radio@1.0-vts.func_fuzzer.Sap_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.radio@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/radio/1.0/ $(genDir)/android/hardware/radio/1.0/",
+    srcs: [
+        ":android.hardware.radio@1.0_hal",
+    ],
+    out: [
+        "android/hardware/radio/1.0/Sap.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.radio@1.0-vts.func_fuzzer.Sap",
+    srcs: [":android.hardware.radio@1.0-vts.func_fuzzer.Sap_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.radio@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
