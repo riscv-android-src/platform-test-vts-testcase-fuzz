@@ -1,0 +1,273 @@
+// This file was auto-generated. Do not edit manually.
+genrule {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.Wifi_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.wifi@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/wifi/1.0/ $(genDir)/android/hardware/wifi/1.0/",
+    srcs: [
+        ":android.hardware.wifi@1.0_hal",
+    ],
+    out: [
+        "android/hardware/wifi/1.0/Wifi.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.Wifi",
+    srcs: [":android.hardware.wifi@1.0-vts.func_fuzzer.Wifi_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.wifi@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiApIface_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.wifi@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/wifi/1.0/ $(genDir)/android/hardware/wifi/1.0/",
+    srcs: [
+        ":android.hardware.wifi@1.0_hal",
+    ],
+    out: [
+        "android/hardware/wifi/1.0/WifiApIface.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiApIface",
+    srcs: [":android.hardware.wifi@1.0-vts.func_fuzzer.WifiApIface_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.wifi@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiChip_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.wifi@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/wifi/1.0/ $(genDir)/android/hardware/wifi/1.0/",
+    srcs: [
+        ":android.hardware.wifi@1.0_hal",
+    ],
+    out: [
+        "android/hardware/wifi/1.0/WifiChip.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiChip",
+    srcs: [":android.hardware.wifi@1.0-vts.func_fuzzer.WifiChip_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.wifi@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiIface_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.wifi@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/wifi/1.0/ $(genDir)/android/hardware/wifi/1.0/",
+    srcs: [
+        ":android.hardware.wifi@1.0_hal",
+    ],
+    out: [
+        "android/hardware/wifi/1.0/WifiIface.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiIface",
+    srcs: [":android.hardware.wifi@1.0-vts.func_fuzzer.WifiIface_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.wifi@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiNanIface_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.wifi@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/wifi/1.0/ $(genDir)/android/hardware/wifi/1.0/",
+    srcs: [
+        ":android.hardware.wifi@1.0_hal",
+    ],
+    out: [
+        "android/hardware/wifi/1.0/WifiNanIface.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiNanIface",
+    srcs: [":android.hardware.wifi@1.0-vts.func_fuzzer.WifiNanIface_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.wifi@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiP2pIface_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.wifi@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/wifi/1.0/ $(genDir)/android/hardware/wifi/1.0/",
+    srcs: [
+        ":android.hardware.wifi@1.0_hal",
+    ],
+    out: [
+        "android/hardware/wifi/1.0/WifiP2pIface.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiP2pIface",
+    srcs: [":android.hardware.wifi@1.0-vts.func_fuzzer.WifiP2pIface_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.wifi@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiRttController_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.wifi@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/wifi/1.0/ $(genDir)/android/hardware/wifi/1.0/",
+    srcs: [
+        ":android.hardware.wifi@1.0_hal",
+    ],
+    out: [
+        "android/hardware/wifi/1.0/WifiRttController.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiRttController",
+    srcs: [":android.hardware.wifi@1.0-vts.func_fuzzer.WifiRttController_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.wifi@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiStaIface_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.wifi@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/wifi/1.0/ $(genDir)/android/hardware/wifi/1.0/",
+    srcs: [
+        ":android.hardware.wifi@1.0_hal",
+    ],
+    out: [
+        "android/hardware/wifi/1.0/WifiStaIface.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.wifi@1.0-vts.func_fuzzer.WifiStaIface",
+    srcs: [":android.hardware.wifi@1.0-vts.func_fuzzer.WifiStaIface_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.wifi@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+

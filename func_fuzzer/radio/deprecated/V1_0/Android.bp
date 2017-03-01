@@ -1,0 +1,103 @@
+// This file was auto-generated. Do not edit manually.
+genrule {
+    name: "android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHook_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.radio.deprecated@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/radio/deprecated/1.0/ $(genDir)/android/hardware/radio/deprecated/1.0/",
+    srcs: [
+        ":android.hardware.radio.deprecated@1.0_hal",
+    ],
+    out: [
+        "android/hardware/radio/deprecated/1.0/OemHook.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHook",
+    srcs: [":android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHook_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.radio.deprecated@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHookIndication_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.radio.deprecated@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/radio/deprecated/1.0/ $(genDir)/android/hardware/radio/deprecated/1.0/",
+    srcs: [
+        ":android.hardware.radio.deprecated@1.0_hal",
+    ],
+    out: [
+        "android/hardware/radio/deprecated/1.0/OemHookIndication.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHookIndication",
+    srcs: [":android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHookIndication_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.radio.deprecated@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHookResponse_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.radio.deprecated@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/radio/deprecated/1.0/ $(genDir)/android/hardware/radio/deprecated/1.0/",
+    srcs: [
+        ":android.hardware.radio.deprecated@1.0_hal",
+    ],
+    out: [
+        "android/hardware/radio/deprecated/1.0/OemHookResponse.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHookResponse",
+    srcs: [":android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHookResponse_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.radio.deprecated@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+

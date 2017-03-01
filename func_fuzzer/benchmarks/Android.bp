@@ -1,4 +1,4 @@
 // This file was auto-generated. Do not edit manually.
 subdirs = [
-    "V1_0",
+    "msgq/V1_0",
 ]

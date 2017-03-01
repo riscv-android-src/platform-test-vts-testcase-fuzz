@@ -53,7 +53,7 @@ FuncFuzzerParams ExtractFuncFuzzerParams(int argc, char **argv) {
       case 'h':
         usage();
         exit(0);
-      case 's':
+      case 't':
         params.target_func_ = optarg;
         break;
       default:

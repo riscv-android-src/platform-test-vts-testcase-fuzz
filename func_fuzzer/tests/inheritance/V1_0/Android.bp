@@ -1,0 +1,137 @@
+// This file was auto-generated. Do not edit manually.
+genrule {
+    name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Child_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.inheritance@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/inheritance/1.0/ $(genDir)/android/hardware/tests/inheritance/1.0/",
+    srcs: [
+        ":android.hardware.tests.inheritance@1.0_hal",
+    ],
+    out: [
+        "android/hardware/tests/inheritance/1.0/Child.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Child",
+    srcs: [":android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Child_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.inheritance@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Fetcher_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.inheritance@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/inheritance/1.0/ $(genDir)/android/hardware/tests/inheritance/1.0/",
+    srcs: [
+        ":android.hardware.tests.inheritance@1.0_hal",
+    ],
+    out: [
+        "android/hardware/tests/inheritance/1.0/Fetcher.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Fetcher",
+    srcs: [":android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Fetcher_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.inheritance@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Grandparent_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.inheritance@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/inheritance/1.0/ $(genDir)/android/hardware/tests/inheritance/1.0/",
+    srcs: [
+        ":android.hardware.tests.inheritance@1.0_hal",
+    ],
+    out: [
+        "android/hardware/tests/inheritance/1.0/Grandparent.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Grandparent",
+    srcs: [":android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Grandparent_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.inheritance@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
+genrule {
+    name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Parent_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.tests.inheritance@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/tests/inheritance/1.0/ $(genDir)/android/hardware/tests/inheritance/1.0/",
+    srcs: [
+        ":android.hardware.tests.inheritance@1.0_hal",
+    ],
+    out: [
+        "android/hardware/tests/inheritance/1.0/Parent.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Parent",
+    srcs: [":android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Parent_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.tests.inheritance@1.0",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
