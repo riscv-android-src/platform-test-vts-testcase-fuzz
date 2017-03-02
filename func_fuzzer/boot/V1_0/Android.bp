@@ -20,6 +20,7 @@ cc_binary {
     ],
     shared_libs: [
         "android.hardware.boot@1.0",
+        "libcutils",
         "libutils",
         "libhidlbase",
         "libhidltransport",

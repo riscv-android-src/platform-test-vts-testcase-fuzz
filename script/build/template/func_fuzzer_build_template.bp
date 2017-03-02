@@ -19,6 +19,7 @@ cc_binary {
     ],
     shared_libs: [
         "android.hardware.{HAL_NAME}@{HAL_VERSION}",
+        "libcutils",
         "libutils",
         "libhidlbase",
         "libhidltransport",
