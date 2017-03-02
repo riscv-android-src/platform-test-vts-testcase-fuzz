@@ -20,6 +20,7 @@ cc_binary {
     ],
     shared_libs: [
         "android.hardware.tests.libhwbinder@1.0",
+        "libcutils",
         "libutils",
         "libhidlbase",
         "libhidltransport",
