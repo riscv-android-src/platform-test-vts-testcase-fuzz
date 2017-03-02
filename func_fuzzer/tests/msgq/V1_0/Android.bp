@@ -20,6 +20,7 @@ cc_binary {
     ],
     shared_libs: [
         "android.hardware.tests.msgq@1.0",
+        "libcutils",
         "libutils",
         "libhidlbase",
         "libhidltransport",

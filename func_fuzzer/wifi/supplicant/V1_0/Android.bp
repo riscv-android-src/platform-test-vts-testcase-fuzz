@@ -20,6 +20,7 @@ cc_binary {
     ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
+        "libcutils",
         "libutils",
         "libhidlbase",
         "libhidltransport",
@@ -54,6 +55,7 @@ cc_binary {
     ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
+        "libcutils",
         "libutils",
         "libhidlbase",
         "libhidltransport",
@@ -88,6 +90,7 @@ cc_binary {
     ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
+        "libcutils",
         "libutils",
         "libhidlbase",
         "libhidltransport",
@@ -122,6 +125,7 @@ cc_binary {
     ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
+        "libcutils",
         "libutils",
         "libhidlbase",
         "libhidltransport",
@@ -156,6 +160,7 @@ cc_binary {
     ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
+        "libcutils",
         "libutils",
         "libhidlbase",
         "libhidltransport",
@@ -190,6 +195,7 @@ cc_binary {
     ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
+        "libcutils",
         "libutils",
         "libhidlbase",
         "libhidltransport",
@@ -224,6 +230,7 @@ cc_binary {
     ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
+        "libcutils",
         "libutils",
         "libhidlbase",
         "libhidltransport",
