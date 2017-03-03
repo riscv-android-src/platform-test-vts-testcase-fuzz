@@ -1,0 +1,5 @@
+// This file was auto-generated. Do not edit manually.
+subdirs = [
+    "vehicle/V2_0",
+    "vehicle/V2_1",
+]

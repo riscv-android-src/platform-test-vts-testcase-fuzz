@@ -1,0 +1,36 @@
+// This file was auto-generated. Do not edit manually.
+genrule {
+    name: "android.hardware.dumpstate@1.0-vts.func_fuzzer.DumpstateDevice_genc++",
+    tools: ["hidl-gen", "vtsc"],
+    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.dumpstate@1.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/dumpstate/1.0/ $(genDir)/android/hardware/dumpstate/1.0/",
+    srcs: [
+        ":android.hardware.dumpstate@1.0_hal",
+    ],
+    out: [
+        "android/hardware/dumpstate/1.0/DumpstateDevice.vts.cpp",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.dumpstate@1.0-vts.func_fuzzer.DumpstateDevice",
+    srcs: [":android.hardware.dumpstate@1.0-vts.func_fuzzer.DumpstateDevice_genc++"],
+    include_dirs: [
+        "external/llvm/lib/Fuzzer",
+        "test/vts-testcase/fuzz/func_fuzzer/utils",
+    ],
+    shared_libs: [
+        "android.hardware.dumpstate@1.0",
+        "libcutils",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhardware",
+        "libvts_func_fuzzer_utils",
+    ],
+    static_libs: ["libLLVMFuzzer"],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-fno-omit-frame-pointer",
+    ],
+}
+
