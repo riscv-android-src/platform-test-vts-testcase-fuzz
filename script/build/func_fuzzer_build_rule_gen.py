@@ -21,10 +21,23 @@ from importlib import import_module
 
 
 class FuncFuzzerBuildRuleGen(object):
-    """Build rule generator for test/vts-testcase/fuzz."""
+    """Build rule generator for test/vts-testcase/fuzz.
 
-    def __init__(self):
-        """BuildRuleGen constructor."""
+    Attributes:
+        _android_build_top: string, equal to environment variable ANDROID_BUILD_TOP.
+        _project_path: string, path to test/vts-testcase/fuzz.
+        _func_fuzzer_dir: string, path to test/vts-testcase/fuzz/func_fuzzer.
+        _func_fuzzer_build_template: string, path to fuzzer build template file.
+        _utils: test/vts-testcase/hal/script/build/build_rule_gen_utils module.
+        _vts_spec_parser: tools that generates and parses vts spec with hidl-gen.
+        _warning_header: string, warning header for every generated file.
+    """
+    def __init__(self, warning_header):
+        """BuildRuleGen constructor.
+
+        Args:
+            warning_header: string, warning header for every generated file.
+        """
         self._android_build_top = os.environ.get('ANDROID_BUILD_TOP')
         if not self._android_build_top:
             print 'Run "lunch" command first.'
@@ -42,6 +55,7 @@ class FuncFuzzerBuildRuleGen(object):
         vts_spec_parser = import_module('vts_spec_parser')
         self._utils = import_module('build_rule_gen_utils')
         self._vts_spec_parser = vts_spec_parser.VtsSpecParser()
+        self._warning_header = warning_header
 
     def UpdateBuildRule(self):
         """Updates build rules under test/vts-testcase/fuzz."""
@@ -54,7 +68,7 @@ class FuncFuzzerBuildRuleGen(object):
         """Updates test/vts-testcase/fuzz/Android.bp"""
         self._utils.WriteBuildRule(
             os.path.join(self._func_fuzzer_dir, 'Android.bp'),
-            self._utils.OnlySubdirsBpRule(['*']))
+            self._utils.OnlySubdirsBpRule(self._warning_header, ['*']))
 
     def UpdateSecondLevelBuildRule(self, hal_list):
         """Updates test/vts-testcase/fuzz/<hal_name>/Android.bp"""
@@ -69,8 +83,9 @@ class FuncFuzzerBuildRuleGen(object):
 
         for k, v in top_level_dirs.items():
             file_path = os.path.join(self._func_fuzzer_dir, k, 'Android.bp')
-            self._utils.WriteBuildRule(file_path,
-                                       self._utils.OnlySubdirsBpRule(sorted(v)))
+            self._utils.WriteBuildRule(
+                file_path,
+                self._utils.OnlySubdirsBpRule(self._warning_header, sorted(v)))
 
     def UpdateHalDirBuildRule(self, hal_list):
         """Updates build rules for function fuzzers.
@@ -114,7 +129,7 @@ class FuncFuzzerBuildRuleGen(object):
         vts_spec_names = self._vts_spec_parser.VtsSpecNames(hal_name,
                                                             hal_version)
 
-        result = self._utils.WARNING_HEADER
+        result = self._warning_header
         for vts_spec in vts_spec_names:
             hal_iface_name = vts_spec.replace('.vts', '')
             if not self._IsFuzzable(hal_iface_name):
