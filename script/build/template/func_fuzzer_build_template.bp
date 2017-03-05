@@ -20,9 +20,11 @@ cc_binary {
     shared_libs: [
         "android.hardware.{HAL_NAME}@{HAL_VERSION}",
         "libcutils",
+        "liblog",
         "libutils",
         "libhidlbase",
         "libhidltransport",
+        "libhwbinder",
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
