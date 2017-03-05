@@ -21,9 +21,11 @@ cc_binary {
     shared_libs: [
         "android.hardware.renderscript@1.0",
         "libcutils",
+        "liblog",
         "libutils",
         "libhidlbase",
         "libhidltransport",
+        "libhwbinder",
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
@@ -56,9 +58,11 @@ cc_binary {
     shared_libs: [
         "android.hardware.renderscript@1.0",
         "libcutils",
+        "liblog",
         "libutils",
         "libhidlbase",
         "libhidltransport",
+        "libhwbinder",
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
