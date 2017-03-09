@@ -20,13 +20,11 @@
     <target_preparer class="com.android.tradefed.targetprep.VtsPythonVirtualenvPreparer" />
     <test class="com.android.tradefed.testtype.VtsMultiDeviceTest">
         <option name="test-module-name" value="ISensorsFuzzTest" />
-        <option name="binary-test-sources" value="
-            ISensorsFlush_fuzzer,
-            ISensorsActivate_fuzzer,
-            ISensorsSetDelay_fuzzer,
-            ISensorsBatch_fuzzer,
-            ISensorsInjectSensorData_fuzzer
-            "/>
+        <option name="binary-test-source" value="ISensorsFlush_fuzzer" />
+        <option name="binary-test-source" value="ISensorsActivate_fuzzer" />
+        <option name="binary-test-source" value="ISensorsSetDelay_fuzzer" />
+        <option name="binary-test-source" value="ISensorsBatch_fuzzer" />
+        <option name="binary-test-source" value="ISensorsInjectSensorData_fuzzer" />
         <option name="binary-test-type" value="llvmfuzzer" />
         <option name="test-config-path" value="vts/testcases/fuzz/simple_fuzzer/sensors/ISensorsFuzzTest.config" />
     </test>
