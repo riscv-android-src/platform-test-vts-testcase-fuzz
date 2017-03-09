@@ -42,14 +42,14 @@ class LibFuzzerTest(base_test.BaseTestClass):
         """Creates a remote shell instance, and copies data files."""
         required_params = [
             keys.ConfigKeys.IKEY_DATA_FILE_PATH,
-            keys.ConfigKeys.IKEY_BINARY_TEST_SOURCES,
+            keys.ConfigKeys.IKEY_BINARY_TEST_SOURCE,
         ]
         self.getUserParams(required_params)
 
         logging.info('%s: %s', keys.ConfigKeys.IKEY_DATA_FILE_PATH,
                      self.data_file_path)
-        logging.info('%s: %s', keys.ConfigKeys.IKEY_BINARY_TEST_SOURCES,
-                     self.binary_test_sources)
+        logging.info('%s: %s', keys.ConfigKeys.IKEY_BINARY_TEST_SOURCE,
+                     self.binary_test_source)
 
         self._dut = self.registerController(android_device, False)[0]
         self._dut.adb.shell('mkdir %s -p' % config.FUZZER_TEST_DIR)
@@ -74,7 +74,7 @@ class LibFuzzerTest(base_test.BaseTestClass):
         """
         test_cases = map(
             lambda x: LibFuzzerTestCase(x, config.FUZZER_DEFAULT_PARAMS, {}),
-            self.binary_test_sources)
+            self.binary_test_source)
         return test_cases
 
     # TODO: retrieve the corpus.
