@@ -52,11 +52,13 @@ class LibFuzzerTest(base_test.BaseTestClass):
                      self.binary_test_source)
 
         self._dut = self.registerController(android_device, False)[0]
+        self._dut.stop()
         self._dut.adb.shell('mkdir %s -p' % config.FUZZER_TEST_DIR)
 
     def tearDownClass(self):
         """Deletes all copied data."""
         self._dut.adb.shell('rm -rf %s' % self.data_file_path)
+        self._dut.start()
 
     def PushFiles(self, src):
         """adb pushes test case file to target."""
