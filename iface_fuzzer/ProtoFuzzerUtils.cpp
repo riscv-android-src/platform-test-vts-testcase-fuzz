@@ -16,11 +16,12 @@
 
 #include "ProtoFuzzerUtils.h"
 
+#include <dirent.h>
+#include <dlfcn.h>
+#include <getopt.h>
+#include <algorithm>
 #include <sstream>
 
-#include <getopt.h>
-
-#include "dlfcn.h"
 #include "specification_parser/InterfaceSpecificationParser.h"
 #include "utils/InterfaceSpecUtil.h"
 
@@ -29,6 +30,9 @@ using std::cerr;
 using std::string;
 using std::unordered_map;
 using std::vector;
+
+namespace android {
+namespace vts {
 
 static void usage() {
   fprintf(
@@ -49,11 +53,10 @@ static void usage() {
 
 static struct option long_options[] = {
     {"help", no_argument, 0, 'h'},
-    {"vts_spec_files", required_argument, 0, 's'},
-    {"vts_exec_size", required_argument, 0, 'e'}};
-
-namespace android {
-namespace vts {
+    {"vts_spec_dir", required_argument, 0, 'd'},
+    {"vts_exec_size", required_argument, 0, 'e'},
+    {"vts_service_name", required_argument, 0, 's'},
+    {"vts_target_iface", required_argument, 0, 't'}};
 
 static string GetDriverName(const ComponentSpecificationMessage &comp_spec) {
   stringstream version;
@@ -71,20 +74,33 @@ static string GetServiceName(const ComponentSpecificationMessage &comp_spec) {
   return service_name;
 }
 
-vector<ComponentSpecificationMessage> ExtractCompSpecs(
-    const char *vts_spec_files) {
-  vector<ComponentSpecificationMessage> comp_specs;
-  string input(vts_spec_files);
-  std::istringstream iss(input);
-
-  string vts_spec_file;
-  while (std::getline(iss, vts_spec_file, ':')) {
-    ComponentSpecificationMessage comp_spec;
-    InterfaceSpecificationParser::parse(vts_spec_file.c_str(), &comp_spec);
-    comp_specs.emplace_back(std::move(comp_spec));
+static vector<ComponentSpecificationMessage> ExtractCompSpecs(string dir_path) {
+  vector<ComponentSpecificationMessage> result{};
+  DIR *dir;
+  struct dirent *ent;
+  if (!(dir = opendir(dir_path.c_str()))) {
+    cerr << "Could not open directory: " << dir_path << endl;
+    exit(1);
   }
+  while ((ent = readdir(dir))) {
+    string vts_spec_name{ent->d_name};
+    if (vts_spec_name.find(".vts") != string::npos) {
+      string vts_spec_path = dir_path + "/" + vts_spec_name;
+      ComponentSpecificationMessage comp_spec{};
+      InterfaceSpecificationParser::parse(vts_spec_path.c_str(), &comp_spec);
+      result.emplace_back(std::move(comp_spec));
+    }
+  }
+  return result;
+}
 
-  return comp_specs;
+static void ExtractPredefinedTypesFromVar(
+    const VariableSpecificationMessage &var_spec,
+    unordered_map<string, VariableSpecificationMessage> &predefined_types) {
+  predefined_types[var_spec.name()] = var_spec;
+  for (const auto &sub_var_spec : var_spec.sub_struct()) {
+    ExtractPredefinedTypesFromVar(sub_var_spec, predefined_types);
+  }
 }
 
 ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
@@ -96,11 +112,17 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
       case 'h':
         usage();
         exit(0);
-      case 's':
+      case 'd':
         params.comp_specs_ = ExtractCompSpecs(optarg);
         break;
       case 'e':
         params.exec_size_ = atoi(optarg);
+        break;
+      case 's':
+        params.service_name_ = optarg;
+        break;
+      case 't':
+        params.target_iface_ = optarg;
         break;
       default:
         // Ignore. This option will be handled by libfuzzer.
@@ -110,10 +132,28 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
   return params;
 }
 
-// TODO(trong): this should be done using FuzzerWrapper.
-FuzzerBase *InitHalDriver(const ComponentSpecificationMessage &comp_spec) {
-  const char *error;
+ComponentSpecificationMessage FindTargetCompSpec(
+    const std::vector<ComponentSpecificationMessage> &specs,
+    const std::string& target_iface) {
+  if (target_iface.empty()) {
+    cerr << "Target interface not specified." << endl;
+    exit(1);
+  }
+  auto spec = std::find_if(specs.begin(), specs.end(), [target_iface](auto x) {
+    return x.component_name().compare(target_iface) == 0;
+  });
+  if (spec == specs.end()) {
+    cerr << "Target interface doesn't match any of the loaded .vts files."
+         << endl;
+    exit(1);
+  }
+  return *spec;
+}
 
+// TODO(trong): this should be done using FuzzerWrapper.
+FuzzerBase *InitHalDriver(const ComponentSpecificationMessage &comp_spec,
+                          string service_name) {
+  const char *error;
   string driver_name = GetDriverName(comp_spec);
   void *handle = dlopen(driver_name.c_str(), RTLD_LAZY);
   if (!handle) {
@@ -135,23 +175,16 @@ FuzzerBase *InitHalDriver(const ComponentSpecificationMessage &comp_spec) {
 
   FuzzerBase *hal = hal_loader();
   // For fuzzing, we always use passthrough mode.
-  // TODO(trong): use "default" service name after HALs move to it.
-  if (!hal->GetService(true, GetServiceName(comp_spec).c_str())) {
-    if (!hal->GetService(true, "default")) {
-      cerr << __func__ << " failed." << endl;
-      exit(1);
-    }
+  // If service_name was not specified, use "default".
+  if (service_name.empty()) {
+    service_name = "default";
+  }
+  if (!hal->GetService(true, service_name.c_str())) {
+    cerr << __func__ << ": GetService(true, " << service_name << ") failed."
+         << endl;
+    exit(1);
   }
   return hal;
-}
-
-void ExtractPredefinedTypesFromVar(
-    const VariableSpecificationMessage &var_spec,
-    unordered_map<string, VariableSpecificationMessage> &predefined_types) {
-  predefined_types[var_spec.name()] = var_spec;
-  for (const auto &sub_var_spec : var_spec.sub_struct()) {
-    ExtractPredefinedTypesFromVar(sub_var_spec, predefined_types);
-  }
 }
 
 unordered_map<string, VariableSpecificationMessage> ExtractPredefinedTypes(
