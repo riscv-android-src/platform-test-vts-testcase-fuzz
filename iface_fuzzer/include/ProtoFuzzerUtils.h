@@ -27,12 +27,6 @@
 #include "test/vts-testcase/fuzz/iface_fuzzer/proto/ExecutionSpecificationMessage.pb.h"
 #include "test/vts/proto/ComponentSpecificationMessage.pb.h"
 
-using std::cout;
-using std::cerr;
-using std::string;
-using std::unordered_map;
-using std::vector;
-
 namespace android {
 namespace vts {
 
@@ -54,22 +48,32 @@ class Random {
 
 // Additional non-libfuzzer parameters passed to the fuzzer.
 struct ProtoFuzzerParams {
-  // Number of function calls per execution (fixed throught fuzzer run).
+  // Number of function calls per execution (fixed throughout fuzzer run).
   size_t exec_size_;
   // VTS specs supplied to the fuzzer.
-  vector<ComponentSpecificationMessage> comp_specs_;
+  std::vector<ComponentSpecificationMessage> comp_specs_;
+  // Service name of target interface, e.g. "INfc".
+  std::string service_name_;
+  // Name of target interface, e.g. "default".
+  std::string target_iface_;
 };
 
 // Parses command-line flags to create a ProtoFuzzerParams instance.
 ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv);
 
+// Returns ComponentSpecificationMessage corresponding to targeted interface.
+ComponentSpecificationMessage FindTargetCompSpec(
+    const std::vector<ComponentSpecificationMessage> &specs,
+    const std::string &target_iface);
+
 // Loads VTS HAL driver library.
-FuzzerBase *InitHalDriver(const ComponentSpecificationMessage &comp_spec);
+FuzzerBase *InitHalDriver(const ComponentSpecificationMessage &comp_spec,
+                          std::string service_name);
 
 // Creates a key, value look-up table with keys being names of predefined types,
 // and values being their definitions.
-unordered_map<string, VariableSpecificationMessage> ExtractPredefinedTypes(
-    const vector<ComponentSpecificationMessage> &specs);
+std::unordered_map<std::string, VariableSpecificationMessage>
+ExtractPredefinedTypes(const std::vector<ComponentSpecificationMessage> &specs);
 
 // Call every API from call sequence specified by the
 // ExecutionSpecificationMessage.

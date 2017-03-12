@@ -37,10 +37,16 @@ using std::vector;
 namespace android {
 namespace vts {
 
+// 64-bit random number generator.
 static Random random{static_cast<uint64_t>(time(0))};
-static size_t kExecSize;
-static ComponentSpecificationMessage comp_spec;
+// Parameters that passed in to fuzzer.
+static ProtoFuzzerParams params;
+// ComponentSpecificationMessage corresponding to the interface targeted by
+// fuzzer.
+static ComponentSpecificationMessage target_comp_spec;
+// VTS hal driver used to call functions of targeted interface.
 static unique_ptr<FuzzerBase> hal;
+// Used to mutate inputs to hal driver.
 static unique_ptr<ProtoFuzzerMutator> mutator;
 
 static ProtoFuzzerMutatorBias mutator_bias{
@@ -69,14 +75,12 @@ static ProtoFuzzerMutatorBias mutator_bias{
     {1, 1000}};
 
 extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
-  ProtoFuzzerParams params{ExtractProtoFuzzerParams(*argc, *argv)};
-  kExecSize = params.exec_size_;
-
-  comp_spec = params.comp_specs_.front();
+  params = ExtractProtoFuzzerParams(*argc, *argv);
+  target_comp_spec =
+      FindTargetCompSpec(params.comp_specs_, params.target_iface_);
   mutator = make_unique<ProtoFuzzerMutator>(
       random, ExtractPredefinedTypes(params.comp_specs_), mutator_bias);
-
-  hal.reset(InitHalDriver(comp_spec));
+  hal.reset(InitHalDriver(target_comp_spec, params.service_name_));
   return 0;
 }
 
@@ -84,9 +88,10 @@ extern "C" size_t LLVMFuzzerCustomMutator(uint8_t *data, size_t size,
                                           size_t max_size, unsigned int seed) {
   ExecutionSpecificationMessage exec_spec;
   if (!exec_spec.ParseFromArray(data, size)) {
-    exec_spec = mutator->RandomGen(comp_spec.interface(), kExecSize);
+    exec_spec =
+        mutator->RandomGen(target_comp_spec.interface(), params.exec_size_);
   } else {
-    mutator->Mutate(comp_spec.interface(), &exec_spec);
+    mutator->Mutate(target_comp_spec.interface(), &exec_spec);
   }
   exec_spec.SerializeToArray(data, exec_spec.ByteSize());
   return exec_spec.ByteSize();
