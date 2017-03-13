@@ -72,7 +72,7 @@ class LibFuzzerTestCase(object):
         ld_path = 'LD_LIBRARY_PATH=/data/local/tmp/64:/data/local/tmp/32:$LD_LIBRARY_PATH'
         test_cmd = '%s ./%s %s %s' % (ld_path, self._binary_name, corpus_dir,
                                       test_flags)
-        return '&&'.join([cd_cmd, chmod_cmd, test_cmd])
+        return ' && '.join([cd_cmd, chmod_cmd, test_cmd])
 
     @property
     def test_name(self):
