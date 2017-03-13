@@ -151,7 +151,10 @@ class LibFuzzerTest(base_test.BaseTestClass):
             test_case: LibFuzzerTestCase object
             result: dict(str, str, int), command results from shell.
         """
-        logging.info('Test result: %s' % result)
+        logging.info('Test case results.')
+        logging.info('stdout: %s' % result[const.STDOUT])
+        logging.info('stderr: %s' % result[const.STDERR])
+        logging.info('exit code: %s' % result[const.EXIT_CODE])
         if not self._dut.hasBooted():
             self._dut.waitForBootCompletion()
             asserts.fail('%s left the device in unresponsive state.' %
