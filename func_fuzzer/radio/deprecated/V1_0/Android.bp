@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHook",
     srcs: [":android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHook_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.radio.deprecated@1.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHookIndication",
     srcs: [":android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHookIndication_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.radio.deprecated@1.0",
         "libcutils",
@@ -89,10 +81,6 @@ genrule {
 cc_binary {
     name: "android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHookResponse",
     srcs: [":android.hardware.radio.deprecated@1.0-vts.func_fuzzer.OemHookResponse_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.radio.deprecated@1.0",
         "libcutils",

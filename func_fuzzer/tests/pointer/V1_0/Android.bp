@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.pointer@1.0-vts.func_fuzzer.Graph",
     srcs: [":android.hardware.tests.pointer@1.0-vts.func_fuzzer.Graph_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.pointer@1.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.pointer@1.0-vts.func_fuzzer.Pointer",
     srcs: [":android.hardware.tests.pointer@1.0-vts.func_fuzzer.Pointer_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.pointer@1.0",
         "libcutils",

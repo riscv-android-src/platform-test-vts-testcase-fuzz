@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.baz@1.0-vts.func_fuzzer.Base",
     srcs: [":android.hardware.tests.baz@1.0-vts.func_fuzzer.Base_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.baz@1.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.baz@1.0-vts.func_fuzzer.Baz",
     srcs: [":android.hardware.tests.baz@1.0-vts.func_fuzzer.Baz_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.baz@1.0",
         "libcutils",

@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.radio@1.0-vts.func_fuzzer.Radio",
     srcs: [":android.hardware.radio@1.0-vts.func_fuzzer.Radio_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.radio@1.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.radio@1.0-vts.func_fuzzer.RadioIndication",
     srcs: [":android.hardware.radio@1.0-vts.func_fuzzer.RadioIndication_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.radio@1.0",
         "libcutils",
@@ -89,10 +81,6 @@ genrule {
 cc_binary {
     name: "android.hardware.radio@1.0-vts.func_fuzzer.RadioResponse",
     srcs: [":android.hardware.radio@1.0-vts.func_fuzzer.RadioResponse_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.radio@1.0",
         "libcutils",
@@ -126,10 +114,6 @@ genrule {
 cc_binary {
     name: "android.hardware.radio@1.0-vts.func_fuzzer.Sap",
     srcs: [":android.hardware.radio@1.0-vts.func_fuzzer.Sap_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.radio@1.0",
         "libcutils",

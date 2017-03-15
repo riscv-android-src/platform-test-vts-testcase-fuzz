@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.bluetooth@1.0-vts.func_fuzzer.BluetoothHci",
     srcs: [":android.hardware.bluetooth@1.0-vts.func_fuzzer.BluetoothHci_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.bluetooth@1.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.bluetooth@1.0-vts.func_fuzzer.BluetoothHciCallbacks",
     srcs: [":android.hardware.bluetooth@1.0-vts.func_fuzzer.BluetoothHciCallbacks_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.bluetooth@1.0",
         "libcutils",

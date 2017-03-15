@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.Supplicant",
     srcs: [":android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.Supplicant_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.SupplicantIface",
     srcs: [":android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.SupplicantIface_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
         "libcutils",
@@ -89,10 +81,6 @@ genrule {
 cc_binary {
     name: "android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.SupplicantNetwork",
     srcs: [":android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.SupplicantNetwork_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
         "libcutils",
@@ -126,10 +114,6 @@ genrule {
 cc_binary {
     name: "android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.SupplicantP2pIface",
     srcs: [":android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.SupplicantP2pIface_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
         "libcutils",
@@ -163,10 +147,6 @@ genrule {
 cc_binary {
     name: "android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.SupplicantP2pNetwork",
     srcs: [":android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.SupplicantP2pNetwork_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
         "libcutils",
@@ -200,10 +180,6 @@ genrule {
 cc_binary {
     name: "android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.SupplicantStaIface",
     srcs: [":android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.SupplicantStaIface_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
         "libcutils",
@@ -237,10 +213,6 @@ genrule {
 cc_binary {
     name: "android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.SupplicantStaNetwork",
     srcs: [":android.hardware.wifi.supplicant@1.0-vts.func_fuzzer.SupplicantStaNetwork_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.wifi.supplicant@1.0",
         "libcutils",
