@@ -13,10 +13,6 @@ genrule {
 cc_binary {
     name: "android.hardware.{HAL_NAME}@{HAL_VERSION}-vts.func_fuzzer.{HAL_IFACE_NAME}",
     srcs: [":android.hardware.{HAL_NAME}@{HAL_VERSION}-vts.func_fuzzer.{HAL_IFACE_NAME}_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.{HAL_NAME}@{HAL_VERSION}",
         "libcutils",
