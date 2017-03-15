@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.bar@1.0-vts.func_fuzzer.Bar",
     srcs: [":android.hardware.tests.bar@1.0-vts.func_fuzzer.Bar_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.bar@1.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.bar@1.0-vts.func_fuzzer.Complicated",
     srcs: [":android.hardware.tests.bar@1.0-vts.func_fuzzer.Complicated_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.bar@1.0",
         "libcutils",
@@ -89,10 +81,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.bar@1.0-vts.func_fuzzer.ImportRules",
     srcs: [":android.hardware.tests.bar@1.0-vts.func_fuzzer.ImportRules_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.bar@1.0",
         "libcutils",
@@ -126,10 +114,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.bar@1.0-vts.func_fuzzer.ImportTypes",
     srcs: [":android.hardware.tests.bar@1.0-vts.func_fuzzer.ImportTypes_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.bar@1.0",
         "libcutils",

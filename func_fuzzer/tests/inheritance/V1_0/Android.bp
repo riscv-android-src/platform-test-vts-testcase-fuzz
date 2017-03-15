@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Child",
     srcs: [":android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Child_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.inheritance@1.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Fetcher",
     srcs: [":android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Fetcher_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.inheritance@1.0",
         "libcutils",
@@ -89,10 +81,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Grandparent",
     srcs: [":android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Grandparent_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.inheritance@1.0",
         "libcutils",
@@ -126,10 +114,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Parent",
     srcs: [":android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Parent_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.inheritance@1.0",
         "libcutils",
