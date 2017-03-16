@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.broadcastradio@1.0-vts.func_fuzzer.BroadcastRadio",
     srcs: [":android.hardware.broadcastradio@1.0-vts.func_fuzzer.BroadcastRadio_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.broadcastradio@1.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.broadcastradio@1.0-vts.func_fuzzer.BroadcastRadioFactory",
     srcs: [":android.hardware.broadcastradio@1.0-vts.func_fuzzer.BroadcastRadioFactory_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.broadcastradio@1.0",
         "libcutils",
@@ -89,10 +81,6 @@ genrule {
 cc_binary {
     name: "android.hardware.broadcastradio@1.0-vts.func_fuzzer.Tuner",
     srcs: [":android.hardware.broadcastradio@1.0-vts.func_fuzzer.Tuner_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.broadcastradio@1.0",
         "libcutils",

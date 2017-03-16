@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tv.input@1.0-vts.func_fuzzer.TvInput",
     srcs: [":android.hardware.tv.input@1.0-vts.func_fuzzer.TvInput_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tv.input@1.0",
         "libcutils",

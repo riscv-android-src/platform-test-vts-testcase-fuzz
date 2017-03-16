@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.automotive.vehicle@2.1-vts.func_fuzzer.Vehicle",
     srcs: [":android.hardware.automotive.vehicle@2.1-vts.func_fuzzer.Vehicle_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.automotive.vehicle@2.1",
         "libcutils",

@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.drm@1.0-vts.func_fuzzer.CryptoFactory",
     srcs: [":android.hardware.drm@1.0-vts.func_fuzzer.CryptoFactory_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.drm@1.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.drm@1.0-vts.func_fuzzer.CryptoPlugin",
     srcs: [":android.hardware.drm@1.0-vts.func_fuzzer.CryptoPlugin_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.drm@1.0",
         "libcutils",
@@ -89,10 +81,6 @@ genrule {
 cc_binary {
     name: "android.hardware.drm@1.0-vts.func_fuzzer.DrmFactory",
     srcs: [":android.hardware.drm@1.0-vts.func_fuzzer.DrmFactory_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.drm@1.0",
         "libcutils",
@@ -126,10 +114,6 @@ genrule {
 cc_binary {
     name: "android.hardware.drm@1.0-vts.func_fuzzer.DrmPlugin",
     srcs: [":android.hardware.drm@1.0-vts.func_fuzzer.DrmPlugin_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.drm@1.0",
         "libcutils",
@@ -163,10 +147,6 @@ genrule {
 cc_binary {
     name: "android.hardware.drm@1.0-vts.func_fuzzer.DrmPluginListener",
     srcs: [":android.hardware.drm@1.0-vts.func_fuzzer.DrmPluginListener_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.drm@1.0",
         "libcutils",

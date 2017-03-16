@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.graphics.mapper@2.0-vts.func_fuzzer.Mapper",
     srcs: [":android.hardware.graphics.mapper@2.0-vts.func_fuzzer.Mapper_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.graphics.mapper@2.0",
         "libcutils",
