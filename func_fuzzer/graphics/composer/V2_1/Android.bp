@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.graphics.composer@2.1-vts.func_fuzzer.Composer",
     srcs: [":android.hardware.graphics.composer@2.1-vts.func_fuzzer.Composer_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.graphics.composer@2.1",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.graphics.composer@2.1-vts.func_fuzzer.ComposerClient",
     srcs: [":android.hardware.graphics.composer@2.1-vts.func_fuzzer.ComposerClient_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.graphics.composer@2.1",
         "libcutils",

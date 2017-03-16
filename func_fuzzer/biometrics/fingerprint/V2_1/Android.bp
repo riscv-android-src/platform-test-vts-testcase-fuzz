@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.biometrics.fingerprint@2.1-vts.func_fuzzer.BiometricsFingerprint",
     srcs: [":android.hardware.biometrics.fingerprint@2.1-vts.func_fuzzer.BiometricsFingerprint_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.biometrics.fingerprint@2.1",
         "libcutils",

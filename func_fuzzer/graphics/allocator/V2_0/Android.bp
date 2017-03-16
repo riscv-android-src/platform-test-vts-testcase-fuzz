@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.graphics.allocator@2.0-vts.func_fuzzer.Allocator",
     srcs: [":android.hardware.graphics.allocator@2.0-vts.func_fuzzer.Allocator_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.graphics.allocator@2.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.graphics.allocator@2.0-vts.func_fuzzer.AllocatorClient",
     srcs: [":android.hardware.graphics.allocator@2.0-vts.func_fuzzer.AllocatorClient_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.graphics.allocator@2.0",
         "libcutils",

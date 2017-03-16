@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.AcousticEchoCancelerEffect",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.AcousticEchoCancelerEffect_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.AutomaticGainControlEffect",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.AutomaticGainControlEffect_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",
@@ -89,10 +81,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.BassBoostEffect",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.BassBoostEffect_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",
@@ -126,10 +114,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.DownmixEffect",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.DownmixEffect_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",
@@ -163,10 +147,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.Effect",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.Effect_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",
@@ -200,10 +180,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.EffectsFactory",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.EffectsFactory_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",
@@ -237,10 +213,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.EnvironmentalReverbEffect",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.EnvironmentalReverbEffect_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",
@@ -274,10 +246,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.EqualizerEffect",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.EqualizerEffect_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",
@@ -311,10 +279,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.LoudnessEnhancerEffect",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.LoudnessEnhancerEffect_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",
@@ -348,10 +312,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.NoiseSuppressionEffect",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.NoiseSuppressionEffect_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",
@@ -385,10 +345,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.PresetReverbEffect",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.PresetReverbEffect_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",
@@ -422,10 +378,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.VirtualizerEffect",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.VirtualizerEffect_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",
@@ -459,10 +411,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio.effect@2.0-vts.func_fuzzer.VisualizerEffect",
     srcs: [":android.hardware.audio.effect@2.0-vts.func_fuzzer.VisualizerEffect_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio.effect@2.0",
         "libcutils",

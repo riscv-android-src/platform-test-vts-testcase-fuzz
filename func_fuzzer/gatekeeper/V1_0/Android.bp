@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.gatekeeper@1.0-vts.func_fuzzer.Gatekeeper",
     srcs: [":android.hardware.gatekeeper@1.0-vts.func_fuzzer.Gatekeeper_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.gatekeeper@1.0",
         "libcutils",

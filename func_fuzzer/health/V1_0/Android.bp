@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.health@1.0-vts.func_fuzzer.Health",
     srcs: [":android.hardware.health@1.0-vts.func_fuzzer.Health_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.health@1.0",
         "libcutils",

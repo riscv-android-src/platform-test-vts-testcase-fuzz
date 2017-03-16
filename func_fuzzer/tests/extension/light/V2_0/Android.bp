@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.tests.extension.light@2.0-vts.func_fuzzer.ExtLight",
     srcs: [":android.hardware.tests.extension.light@2.0-vts.func_fuzzer.ExtLight_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.tests.extension.light@2.0",
         "libcutils",

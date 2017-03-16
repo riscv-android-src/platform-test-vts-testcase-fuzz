@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.keymaster@3.0-vts.func_fuzzer.KeymasterDevice",
     srcs: [":android.hardware.keymaster@3.0-vts.func_fuzzer.KeymasterDevice_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.keymaster@3.0",
         "libcutils",

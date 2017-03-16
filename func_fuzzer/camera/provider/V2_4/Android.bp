@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.camera.provider@2.4-vts.func_fuzzer.CameraProvider",
     srcs: [":android.hardware.camera.provider@2.4-vts.func_fuzzer.CameraProvider_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.camera.provider@2.4",
         "libcutils",

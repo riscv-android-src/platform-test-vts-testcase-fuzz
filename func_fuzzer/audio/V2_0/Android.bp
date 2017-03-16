@@ -15,10 +15,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio@2.0-vts.func_fuzzer.Device",
     srcs: [":android.hardware.audio@2.0-vts.func_fuzzer.Device_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio@2.0",
         "libcutils",
@@ -52,10 +48,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio@2.0-vts.func_fuzzer.DevicesFactory",
     srcs: [":android.hardware.audio@2.0-vts.func_fuzzer.DevicesFactory_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio@2.0",
         "libcutils",
@@ -89,10 +81,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio@2.0-vts.func_fuzzer.PrimaryDevice",
     srcs: [":android.hardware.audio@2.0-vts.func_fuzzer.PrimaryDevice_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio@2.0",
         "libcutils",
@@ -126,10 +114,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio@2.0-vts.func_fuzzer.Stream",
     srcs: [":android.hardware.audio@2.0-vts.func_fuzzer.Stream_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio@2.0",
         "libcutils",
@@ -163,10 +147,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio@2.0-vts.func_fuzzer.StreamIn",
     srcs: [":android.hardware.audio@2.0-vts.func_fuzzer.StreamIn_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio@2.0",
         "libcutils",
@@ -200,10 +180,6 @@ genrule {
 cc_binary {
     name: "android.hardware.audio@2.0-vts.func_fuzzer.StreamOut",
     srcs: [":android.hardware.audio@2.0-vts.func_fuzzer.StreamOut_genc++"],
-    include_dirs: [
-        "external/llvm/lib/Fuzzer",
-        "test/vts-testcase/fuzz/func_fuzzer/utils",
-    ],
     shared_libs: [
         "android.hardware.audio@2.0",
         "libcutils",
