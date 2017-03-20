@@ -32,7 +32,7 @@ class ConfigGen(object):
     """
 
     def __init__(self):
-        """BuildRuleGen constructor. """
+        """ConfigGen constructor. """
         self._android_build_top = os.environ.get('ANDROID_BUILD_TOP')
         if not self._android_build_top:
             print 'Run "lunch" command first.'
@@ -58,8 +58,11 @@ class ConfigGen(object):
             hal_list: list of tuple of strings. For example,
                 [('vibrator', '1.3'), ('sensors', '1.7')]
         """
-        hal_list = self._vts_spec_parser.HalNamesAndVersions()
         config_dir = os.path.join(self._project_path, 'config')
+        self._utils.RemoveFilesInDirIf(
+            config_dir,
+            lambda x: x == 'AndroidTest.xml' or 'Android.mk')
+
         mk_template_path = os.path.join(self._template_dir, 'template.mk')
         xml_template_path = os.path.join(self._template_dir, 'template.xml')
         with open(mk_template_path) as template_file:
@@ -67,6 +70,7 @@ class ConfigGen(object):
         with open(xml_template_path) as template_file:
             xml_template = str(template_file.read())
 
+        hal_list = self._vts_spec_parser.HalNamesAndVersions()
         for hal_name, hal_version in hal_list:
             if not self._IsTestable(hal_name, hal_version):
                 continue

@@ -26,7 +26,7 @@ Config Files:
 2. files matching: test/vts-testcase/fuzz/<hal_name>/<hal_version>/func_fuzzer/AndroidTest.xml
 
 Usage:
-    python test/vts-testcase/fuzz/update_makefiles.py --build --config
+    python test/vts-testcase/fuzz/update_makefiles.py
 """
 
 import argparse
@@ -52,6 +52,11 @@ if __name__ == '__main__':
         required=False,
         help='Whether to create update config files.')
     args = parser.parse_args()
+
+    if not args.build and not args.config:
+        print 'Updating build rules and config files.'
+        args.build = True
+        args.config = True
 
     if args.build:
         print 'Updating build rules.'
