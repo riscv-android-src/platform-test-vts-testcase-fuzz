@@ -17,6 +17,7 @@
 #ifndef __VTS_PROTO_FUZZER_MUTATOR_H_
 #define __VTS_PROTO_FUZZER_MUTATOR_H_
 
+#include <functional>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -24,17 +25,17 @@
 #include "ProtoFuzzerUtils.h"
 #include "test/vts-testcase/fuzz/iface_fuzzer/proto/ExecutionSpecificationMessage.pb.h"
 #include "test/vts/proto/ComponentSpecificationMessage.pb.h"
-#include "type_mutators/ProtoFuzzerTypeMutator.h"
-
-using std::string;
-using std::unique_ptr;
-using std::unordered_map;
 
 namespace android {
 namespace vts {
+namespace fuzzer {
 
 using BiasedRandomScalarGen = std::function<uint64_t(Random &rand)>;
 using OddsEnumTreatedLikeScalar = std::pair<uint64_t, uint64_t>;
+using VarMutateFn = std::function<VarInstance(const VarInstance &)>;
+using VarRandomGenFn = std::function<VarInstance(const VarSpec &)>;
+using VarTransformFn = std::function<VariableSpecificationMessage(
+    const VariableSpecificationMessage &)>;
 
 // Encapsulates heuristic strategy for biased mutation/random generation.
 struct ProtoFuzzerMutatorBias {
@@ -49,53 +50,70 @@ struct ProtoFuzzerMutatorBias {
   OddsEnumTreatedLikeScalar enum_bias_;
 };
 
-// Provides methods to mutate or randomly generate
-// ExecutionSpecificationMessage, FunctionSpecificationMessage, or
-// VariableSpecificationMessage.
+// Provides methods for mutation or random generation.
 class ProtoFuzzerMutator {
  public:
-  ProtoFuzzerMutator(
-      Random &rand,
-      unordered_map<string, VariableSpecificationMessage> predefined_types,
-      const ProtoFuzzerMutatorBias &mutator_bias);
-
-  // Generates a random ExecutionSpecificationMessage.
-  ExecutionSpecificationMessage RandomGen(
-      const InterfaceSpecificationMessage &iface_spec, size_t num_calls);
-  // Mutates in-place an ExecutionSpecificationMessage.
-  void Mutate(const InterfaceSpecificationMessage &iface_spec,
-              ExecutionSpecificationMessage *exec_spec);
-
-  // Generates a random FunctionSpecificationMessage.
-  FunctionSpecificationMessage RandomGen(
-      const FunctionSpecificationMessage &func_spec);
-  // Mutates a FunctionSpecificationMessage.
-  FunctionSpecificationMessage Mutate(
-      const FunctionSpecificationMessage &func_spec);
-
-  // Generates a random VariableSpecificationMessage.
-  VariableSpecificationMessage RandomGen(
-      const VariableSpecificationMessage &var_spec);
-  // Mutates a VariableSpecificationMessage.
-  VariableSpecificationMessage Mutate(
-      const VariableSpecificationMessage &var_spec);
-
-  // Used for biased mutation/random generation of variables.
-  const ProtoFuzzerMutatorBias &mutator_bias_;
+  ProtoFuzzerMutator(Random &, std::unordered_map<std::string, TypeSpec>,
+                     ProtoFuzzerMutatorBias);
+  // Generates a random ExecSpec.
+  ExecSpec RandomGen(const IfaceSpec &, size_t);
+  // Mutates in-place an ExecSpec.
+  void Mutate(const IfaceSpec &, ExecSpec *);
+  // Generates a random FuncSpec.
+  FuncSpec RandomGen(const FuncSpec &);
+  // Mutates a FuncSpec.
+  FuncSpec Mutate(const FuncSpec &);
+  // Generates a random VarInstance.
+  VarInstance RandomGen(const VarSpec &);
+  // Mutates a VarInstance.
+  VarInstance Mutate(const VarInstance &);
 
  private:
-  // Finds mutator of given type.
-  ProtoFuzzerTypeMutator *FindTypeMutator(VariableType type);
+  // Used for mutation/random generation of VarInstance.
+  VarInstance ArrayRandomGen(const VarSpec &);
+  VarInstance ArrayMutate(const VarInstance &);
+  VarInstance EnumRandomGen(const VarSpec &);
+  VarInstance EnumMutate(const VarInstance &);
+  VarInstance ScalarRandomGen(const VarSpec &);
+  VarInstance ScalarMutate(const VarInstance &);
+  VarInstance StructRandomGen(const VarSpec &);
+  VarInstance StructMutate(const VarInstance &);
+  VarInstance UnionRandomGen(const VarSpec &);
+  VarInstance UnionMutate(const VarInstance &);
+  VarInstance VectorRandomGen(const VarSpec &);
+  VarInstance VectorMutate(const VarInstance &);
+
+  // Used for mutation/random generation of ScalarData.
+  ScalarData RandomGen(const ScalarData &, const std::string &);
+  ScalarData Mutate(const ScalarData &, const string &);
+  // Used for mutation/random generation of variables of fundamental data types
+  // e.g. char, int, double.
+  template <typename T>
+  T RandomGen(T);
+  template <typename T>
+  T Mutate(T);
+  bool RandomGen(bool);
+  bool Mutate(bool);
+  float Mutate(float);
+  double Mutate(double);
+
+  // Looks up predefined type by name.
+  const TypeSpec &FindPredefinedType(std::string);
+
   // 64-bit random number generator.
   Random &rand_;
   // Used to look up definition of a predefined type by its name.
-  unordered_map<string, VariableSpecificationMessage> predefined_types_;
-  // Used to delegate mutation/random generation of VariableSpecifationMessages
-  // of different VariableType to mutator for that VariableType.
-  unordered_map<VariableType, unique_ptr<ProtoFuzzerTypeMutator>>
-      type_mutators_;
+  std::unordered_map<std::string, TypeSpec> predefined_types_;
+  // Used to delegate mutation/random generation of VariableSpecifationMessage
+  // of different VariableType to mutation/random delegation function for that
+  // VariableType.
+  std::unordered_map<VariableType, VarMutateFn> mutate_fns_;
+  std::unordered_map<VariableType, VarRandomGenFn> random_gen_fns_;
+  // Used for biased mutation/random generation of variables.
+  ProtoFuzzerMutatorBias mutator_bias_;
 };
 
+}  // namespace fuzzer
 }  // namespace vts
 }  // namespace android
 
