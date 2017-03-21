@@ -29,6 +29,23 @@
 
 namespace android {
 namespace vts {
+namespace fuzzer {
+
+// Use shorter names for convenience.
+using CompSpec = ComponentSpecificationMessage;
+using ExecSpec = ExecutionSpecificationMessage;
+using FuncSpec = FunctionSpecificationMessage;
+using IfaceSpec = InterfaceSpecificationMessage;
+
+// VariableSpecificationMessage can be used to describe 3 things: a type
+// declaration, a variable declaration, or a runtime variable instance. These
+// use cases correspond to TypeSpec, VarSpec, and VarInstance respectively.
+using TypeSpec = VariableSpecificationMessage;
+using VarInstance = TypeSpec;
+using VarSpec = TypeSpec;
+
+using EnumData = EnumDataValueMessage;
+using ScalarData = ScalarDataValueMessage;
 
 // 64-bit random number generator.
 class Random {
@@ -51,34 +68,32 @@ struct ProtoFuzzerParams {
   // Number of function calls per execution (fixed throughout fuzzer run).
   size_t exec_size_;
   // VTS specs supplied to the fuzzer.
-  std::vector<ComponentSpecificationMessage> comp_specs_;
+  std::vector<CompSpec> comp_specs_;
   // Service name of target interface, e.g. "INfc".
-  std::string service_name_;
+  std::string service_name_ = "default";
   // Name of target interface, e.g. "default".
   std::string target_iface_;
 };
 
 // Parses command-line flags to create a ProtoFuzzerParams instance.
-ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv);
+ProtoFuzzerParams ExtractProtoFuzzerParams(int, char **);
 
-// Returns ComponentSpecificationMessage corresponding to targeted interface.
-ComponentSpecificationMessage FindTargetCompSpec(
-    const std::vector<ComponentSpecificationMessage> &specs,
-    const std::string &target_iface);
+// Returns CompSpec corresponding to targeted interface.
+CompSpec FindTargetCompSpec(const std::vector<CompSpec> &, const std::string &);
 
 // Loads VTS HAL driver library.
-FuzzerBase *InitHalDriver(const ComponentSpecificationMessage &comp_spec,
-                          std::string service_name);
+FuzzerBase *InitHalDriver(const CompSpec &, std::string);
 
 // Creates a key, value look-up table with keys being names of predefined types,
 // and values being their definitions.
-std::unordered_map<std::string, VariableSpecificationMessage>
-ExtractPredefinedTypes(const std::vector<ComponentSpecificationMessage> &specs);
+std::unordered_map<std::string, TypeSpec> ExtractPredefinedTypes(
+    const std::vector<CompSpec> &);
 
 // Call every API from call sequence specified by the
 // ExecutionSpecificationMessage.
-void Execute(FuzzerBase *hal, const ExecutionSpecificationMessage &exec_spec);
+void Execute(FuzzerBase *, const ExecutionSpecificationMessage &);
 
+}  // namespace fuzzer
 }  // namespace vts
 }  // namespace android
 

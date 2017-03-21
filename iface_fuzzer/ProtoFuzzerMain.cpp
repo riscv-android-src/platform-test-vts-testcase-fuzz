@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#include <FuzzerInterface.h>
 #include "ProtoFuzzerMutator.h"
 
 #include "specification_parser/InterfaceSpecificationParser.h"
@@ -36,14 +35,15 @@ using std::vector;
 
 namespace android {
 namespace vts {
+namespace fuzzer {
 
 // 64-bit random number generator.
 static Random random{static_cast<uint64_t>(time(0))};
 // Parameters that passed in to fuzzer.
 static ProtoFuzzerParams params;
-// ComponentSpecificationMessage corresponding to the interface targeted by
+// CompSpec corresponding to the interface targeted by
 // fuzzer.
-static ComponentSpecificationMessage target_comp_spec;
+static CompSpec target_comp_spec;
 // VTS hal driver used to call functions of targeted interface.
 static unique_ptr<FuzzerBase> hal;
 // Used to mutate inputs to hal driver.
@@ -86,13 +86,14 @@ extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
 
 extern "C" size_t LLVMFuzzerCustomMutator(uint8_t *data, size_t size,
                                           size_t max_size, unsigned int seed) {
-  ExecutionSpecificationMessage exec_spec;
+  ExecSpec exec_spec;
   if (!exec_spec.ParseFromArray(data, size)) {
     exec_spec =
         mutator->RandomGen(target_comp_spec.interface(), params.exec_size_);
   } else {
     mutator->Mutate(target_comp_spec.interface(), &exec_spec);
   }
+  cout << exec_spec.DebugString() << endl;
   exec_spec.SerializeToArray(data, exec_spec.ByteSize());
   return exec_spec.ByteSize();
 }
@@ -107,7 +108,7 @@ size_t LLVMFuzzerCustomCrossOver(const uint8_t *data1, size_t size1,
 }
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  ExecutionSpecificationMessage exec_spec;
+  ExecSpec exec_spec;
   if (!exec_spec.ParseFromArray(data, size) || exec_spec.api_size() == 0) {
     return 0;
   }
@@ -115,5 +116,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   return 0;
 }
 
+}  // namespace fuzzer
 }  // namespace vts
 }  // namespace android
