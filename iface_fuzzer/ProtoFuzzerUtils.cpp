@@ -64,7 +64,7 @@ static string GetDriverName(const CompSpec &comp_spec) {
   version.precision(1);
   version << fixed << comp_spec.component_type_version();
   string driver_name =
-      comp_spec.package() + ".vts.driver@" + version.str() + ".so";
+      comp_spec.package() + "@" + version.str() + "-vts.driver.so";
   return driver_name;
 }
 
