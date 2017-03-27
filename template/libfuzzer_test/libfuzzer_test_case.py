@@ -16,6 +16,8 @@
 
 import os
 
+from vts.utils.python.os import path_utils
+
 from vts.testcases.fuzz.template.libfuzzer_test import libfuzzer_test_config as config
 
 
@@ -23,25 +25,24 @@ class LibFuzzerTestCase(object):
     """Represents libfuzzer test case.
 
     Attributes:
-        _bin_target_path: string, path to binary on target.
-        _dir: string, directory of binary on target.
+        _bin_host_path: string, path to binary on host.
         _bin_name: string, name of the binary.
         _test_name: string, name of the test case.
         _libfuzzer_params: dict, libfuzzer-specific parameters.
         _additional_params: dict, additional parameters.
     """
 
-    def __init__(self, bin_target_path, libfuzzer_params, additional_params):
-        self._bin_target_path = bin_target_path
+    def __init__(self, bin_host_path, libfuzzer_params, additional_params):
+        self._bin_host_path = bin_host_path
         self._libfuzzer_params = libfuzzer_params
         self._additional_params = additional_params
-        [self._dir, self._binary_name] = os.path.split(bin_target_path)
+        self._binary_name = os.path.basename(bin_host_path)
         self._test_name = self._binary_name
 
     def GetCorpusName(self):
-        """Returns coprus directory name. """
-        corpus_dir = os.path.join(config.FUZZER_TEST_DIR,
-                                  '%s_corpus' % self._test_name)
+        """Returns corpus directory name on target."""
+        corpus_dir = path_utils.JoinTargetPath(
+            config.FUZZER_TEST_DIR, '%s_corpus' % self._test_name)
         return corpus_dir
 
     def CreateFuzzerFlags(self):
@@ -85,6 +86,6 @@ class LibFuzzerTestCase(object):
         self._test_name = name
 
     @property
-    def bin_target_path(self):
-        """Path to binary for this test case."""
-        return self._bin_target_path
+    def bin_host_path(self):
+        """Host path to binary for this test case."""
+        return self._bin_host_path
