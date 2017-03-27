@@ -91,7 +91,7 @@ class LibFuzzerTest(base_test.BaseTestClass):
         Args:
             test_case: LibFuzzerTestCase object
         """
-        self.PushFiles(test_case.bin_target_path)
+        self.PushFiles(test_case.bin_host_path)
         self.CreateCorpusDir(test_case)
         fuzz_cmd = test_case.GetRunCommand()
         logging.info('Executing: %s', fuzz_cmd)
