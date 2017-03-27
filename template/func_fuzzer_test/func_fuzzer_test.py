@@ -67,18 +67,18 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
                 registered on device under test.
         """
         # TODO: find a more robust way to query registered interfaces.
-        cmd = 'lshal | grep -v \* | grep -o %s::[[:alpha:]]* | sort -u' % hal_package
+        cmd = '"lshal | grep -v \* | grep -o %s::[[:alpha:]]* | sort -u"' % hal_package
         out = str(self._dut.adb.shell(cmd)).split()
         interfaces = map(lambda x: x.split('::')[-1], out)
         return interfaces
 
-    def _FuzzerBinTargetPath(self, hal_package, vts_spec_name):
-        """Returns path to fuzzer binary on target."""
+    def _FuzzerBinHostPath(self, hal_package, vts_spec_name):
+        """Returns path to fuzzer binary on host."""
         vts_spec_name = vts_spec_name.replace('.vts', '')
         bin_name = hal_package + '-vts.func_fuzzer.' + vts_spec_name
-        bin_target_path = os.path.join(self.data_file_path, 'DATA', 'bin',
+        bin_host_path = os.path.join(self.data_file_path, 'DATA', 'bin',
                                        bin_name)
-        return str(bin_target_path)
+        return str(bin_host_path)
 
     def _CreateTestCasesFromSpec(self, hal_package, vts_spec_name,
                                  vts_spec_proto):
@@ -97,10 +97,9 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
         for api in vts_spec_proto.interface.api:
             additional_params = {'vts_target_func': api.name}
             libfuzzer_params = config.FUZZER_DEFAULT_PARAMS
-            bin_target_path = self._FuzzerBinTargetPath(hal_package,
-                                                        vts_spec_name)
+            bin_host_path = self._FuzzerBinHostPath(hal_package, vts_spec_name)
             test_case = libfuzzer_test_case.LibFuzzerTestCase(
-                bin_target_path, libfuzzer_params, additional_params)
+                bin_host_path, libfuzzer_params, additional_params)
             test_case.test_name = api.name
             test_cases.append(test_case)
         return test_cases
