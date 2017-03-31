@@ -20,6 +20,12 @@ import sys
 from importlib import import_module
 
 
+class FuzzerType(object):
+    """Types of fuzzers."""
+    FUNC_FUZZER = 0
+    IFACE_FUZZER = 1
+
+
 class ConfigGen(object):
     """Config generator for test/vts-testcase/fuzz.
 
@@ -48,21 +54,26 @@ class ConfigGen(object):
         self._utils = import_module('build_rule_gen_utils')
         self._vts_spec_parser = vts_spec_parser.VtsSpecParser()
 
-    def UpdateFuncFuzzerConfigs(self):
-        """Updates build rules for function fuzzers.
+    def UpdateFuzzerConfigs(self):
+        """Updates build rules for fuzzers.
 
-        Updates func_fuzzer build rules for each pair of
-        (hal_name, hal_version) in hal_list.
-
-        Args:
-            hal_list: list of tuple of strings. For example,
-                [('vibrator', '1.3'), ('sensors', '1.7')]
+        Updates fuzzer configs for each pair of (hal_name, hal_version).
         """
         config_dir = os.path.join(self._project_path, 'config')
         self._utils.RemoveFilesInDirIf(
-            config_dir,
-            lambda x: x == 'AndroidTest.xml' or 'Android.mk')
+            config_dir, lambda x: x == 'AndroidTest.xml' or 'Android.mk')
 
+        self.UpdateFuzzerConfigsForType(FuzzerType.FUNC_FUZZER)
+        self.UpdateFuzzerConfigsForType(FuzzerType.IFACE_FUZZER)
+
+    def UpdateFuzzerConfigsForType(self, fuzzer_type):
+        """Updates build rules for fuzzers.
+
+        Updates fuzzer configs for given fuzzer type.
+
+        Args:
+            fuzzer_type: FuzzerType, type of fuzzer.
+        """
         mk_template_path = os.path.join(self._template_dir, 'template.mk')
         xml_template_path = os.path.join(self._template_dir, 'template.xml')
         with open(mk_template_path) as template_file:
@@ -74,28 +85,28 @@ class ConfigGen(object):
         for hal_name, hal_version in hal_list:
             if not self._IsTestable(hal_name, hal_version):
                 continue
+            fuzzer_type_subdir = self._FuzzerTypeUnderscore(fuzzer_type)
             config_dir = os.path.join(
                 self._project_path, 'config', self._utils.HalNameDir(hal_name),
-                self._utils.HalVerDir(hal_version), 'func_fuzzer')
+                self._utils.HalVerDir(hal_version), fuzzer_type_subdir)
             mk_file_path = os.path.join(config_dir, 'Android.mk')
             xml_file_path = os.path.join(config_dir, 'AndroidTest.xml')
-            mk_string = self._FillOutTemplate(
-                hal_name, hal_version,
-                self._FuncFuzzerTestName(hal_name, hal_version), mk_template)
+            mk_string = self._FillOutTemplate(hal_name, hal_version,
+                                              fuzzer_type, mk_template)
 
-            xml_string = self._FillOutTemplate(
-                hal_name, hal_version,
-                self._FuncFuzzerTestName(hal_name, hal_version), xml_template)
+            xml_string = self._FillOutTemplate(hal_name, hal_version,
+                                               fuzzer_type, xml_template)
 
             self._utils.WriteBuildRule(mk_file_path, mk_string)
             self._utils.WriteBuildRule(xml_file_path, xml_string)
 
-    def _FuncFuzzerTestName(self, hal_name, hal_version):
-        """Returns vts hal function fuzzer test module name.
+    def _FuzzerTestName(self, hal_name, hal_version, fuzzer_type):
+        """Returns vts hal fuzzer test module name.
 
         Args:
             hal_name: string, name of the hal, e.g. 'vibrator'.
             hal_version: string, version of the hal, e.g '7.4'
+            fuzzer_type: FuzzerType, type of fuzzer.
 
         Returns:
             string, test module name, e.g. VtsHalVibratorV7_4FuncFuzzer
@@ -103,25 +114,60 @@ class ConfigGen(object):
         test_name = 'VtsHal'
         test_name += ''.join(map(lambda x: x.title(), hal_name.split('.')))
         test_name += self._utils.HalVerDir(hal_version)
-        test_name += 'FuncFuzzer'
+        test_name += self._FuzzerTypeCamel(fuzzer_type)
         return test_name
 
-    def _FillOutTemplate(self, hal_name, hal_version, test_name, template):
+    def _FuzzerTypeUnderscore(self, fuzzer_type):
+        """Returns vts hal fuzzer type string in underscore case.
+
+        Args:
+            fuzzer_type: FuzzerType, type of fuzzer.
+
+        Returns:
+            string, fuzzer type, e.g. "iface_fuzzer"
+        """
+        if fuzzer_type == FuzzerType.FUNC_FUZZER:
+            test_type = 'func_fuzzer'
+        else:
+            test_type = 'iface_fuzzer'
+        return test_type
+
+    def _FuzzerTypeCamel(self, fuzzer_type):
+        """Returns vts hal fuzzer type string in camel case.
+
+        Args:
+            fuzzer_type: FuzzerType, type of fuzzer.
+
+        Returns:
+            string, fuzzer type, e.g. "IfaceFuzzer"
+        """
+        if fuzzer_type == FuzzerType.FUNC_FUZZER:
+            test_type = 'FuncFuzzer'
+        else:
+            test_type = 'IfaceFuzzer'
+        return test_type
+
+    def _FillOutTemplate(self, hal_name, hal_version, fuzzer_type, template):
         """Returns build rules in string form by filling out given template.
 
         Args:
             hal_name: string, name of the hal, e.g. 'vibrator'.
             hal_version: string, version of the hal, e.g '7.4'
-            hal_iface_name: string, name of a hal interface, e.g 'Vibrator'
+            fuzzer_type: FuzzerType, type of fuzzer.
             template: string, build rule template to fill out.
 
         Returns:
             string, complete build rule in string form.
         """
         config = template
-        config = config.replace('{TEST_NAME}', test_name)
+        config = config.replace('{TEST_NAME}', self._FuzzerTestName(
+            hal_name, hal_version, fuzzer_type))
         config = config.replace('{HAL_NAME}', hal_name)
         config = config.replace('{HAL_VERSION}', hal_version)
+        config = config.replace('{TEST_TYPE_CAMEL}',
+                                self._FuzzerTypeCamel(fuzzer_type))
+        config = config.replace('{TEST_TYPE_UNDERSCORE}',
+                                self._FuzzerTypeUnderscore(fuzzer_type))
         return config
 
     def _IsTestable(self, hal_name, hal_version):
