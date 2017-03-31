@@ -49,6 +49,9 @@ class FuncFuzzerBuildRuleGen(object):
         self._func_fuzzer_build_template = os.path.join(
             self._project_path, 'script', 'build', 'template',
             'func_fuzzer_build_template.bp')
+        self._func_fuzzer_build_defaults = os.path.join(
+            self._project_path, 'script', 'build', 'template',
+            'func_fuzzer_build_defaults.bp')
 
         sys.path.append(
             os.path.join(self._android_build_top, 'test', 'vts-testcase', 'hal',
@@ -70,9 +73,12 @@ class FuncFuzzerBuildRuleGen(object):
 
     def UpdateTopLevelBuildRule(self):
         """Updates test/vts-testcase/fuzz/func_fuzzer/Android.bp"""
+        build_rule = self._warning_header
+        with open(self._func_fuzzer_build_defaults) as build_file:
+            build_rule += str(build_file.read())
+
         self._utils.WriteBuildRule(
-            os.path.join(self._func_fuzzer_dir, 'Android.bp'),
-            self._utils.OnlySubdirsBpRule(self._warning_header, ['*']))
+            os.path.join(self._func_fuzzer_dir, 'Android.bp'), build_rule)
 
     def UpdateSecondLevelBuildRule(self, hal_list):
         """Updates test/vts-testcase/fuzz/func_fuzzer/<hal_name>/Android.bp"""
