@@ -14,6 +14,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.audio@2.0-vts.func_fuzzer.Device",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.audio@2.0-vts.func_fuzzer.Device_genc++"],
     shared_libs: [
         "android.hardware.audio@2.0",
@@ -26,7 +27,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",
@@ -47,6 +47,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.audio@2.0-vts.func_fuzzer.DevicesFactory",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.audio@2.0-vts.func_fuzzer.DevicesFactory_genc++"],
     shared_libs: [
         "android.hardware.audio@2.0",
@@ -59,7 +60,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",
@@ -80,6 +80,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.audio@2.0-vts.func_fuzzer.PrimaryDevice",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.audio@2.0-vts.func_fuzzer.PrimaryDevice_genc++"],
     shared_libs: [
         "android.hardware.audio@2.0",
@@ -92,7 +93,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",
@@ -113,6 +113,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.audio@2.0-vts.func_fuzzer.Stream",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.audio@2.0-vts.func_fuzzer.Stream_genc++"],
     shared_libs: [
         "android.hardware.audio@2.0",
@@ -125,7 +126,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",
@@ -146,6 +146,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.audio@2.0-vts.func_fuzzer.StreamIn",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.audio@2.0-vts.func_fuzzer.StreamIn_genc++"],
     shared_libs: [
         "android.hardware.audio@2.0",
@@ -158,7 +159,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",
@@ -179,6 +179,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.audio@2.0-vts.func_fuzzer.StreamOut",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.audio@2.0-vts.func_fuzzer.StreamOut_genc++"],
     shared_libs: [
         "android.hardware.audio@2.0",
@@ -191,7 +192,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",
