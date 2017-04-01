@@ -13,4 +13,5 @@ subdirs = [
     "versioning/V1_0",
     "versioning/V2_2",
     "versioning/V2_3",
+    "versioning/V2_4",
 ]
