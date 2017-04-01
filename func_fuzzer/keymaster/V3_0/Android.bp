@@ -14,6 +14,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.keymaster@3.0-vts.func_fuzzer.KeymasterDevice",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.keymaster@3.0-vts.func_fuzzer.KeymasterDevice_genc++"],
     shared_libs: [
         "android.hardware.keymaster@3.0",
@@ -26,7 +27,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",

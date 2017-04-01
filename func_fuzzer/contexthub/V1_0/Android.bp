@@ -14,6 +14,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.contexthub@1.0-vts.func_fuzzer.Contexthub",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.contexthub@1.0-vts.func_fuzzer.Contexthub_genc++"],
     shared_libs: [
         "android.hardware.contexthub@1.0",
@@ -26,7 +27,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",

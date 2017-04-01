@@ -14,6 +14,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.biometrics.fingerprint@2.1-vts.func_fuzzer.BiometricsFingerprint",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.biometrics.fingerprint@2.1-vts.func_fuzzer.BiometricsFingerprint_genc++"],
     shared_libs: [
         "android.hardware.biometrics.fingerprint@2.1",
@@ -26,7 +27,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",

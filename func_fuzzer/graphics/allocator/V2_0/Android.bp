@@ -14,6 +14,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.graphics.allocator@2.0-vts.func_fuzzer.Allocator",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.graphics.allocator@2.0-vts.func_fuzzer.Allocator_genc++"],
     shared_libs: [
         "android.hardware.graphics.allocator@2.0",
@@ -26,7 +27,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",
@@ -47,6 +47,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.graphics.allocator@2.0-vts.func_fuzzer.AllocatorClient",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.graphics.allocator@2.0-vts.func_fuzzer.AllocatorClient_genc++"],
     shared_libs: [
         "android.hardware.graphics.allocator@2.0",
@@ -59,7 +60,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",
