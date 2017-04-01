@@ -49,7 +49,7 @@ static unique_ptr<FuzzerBase> hal;
 // Used to mutate inputs to hal driver.
 static unique_ptr<ProtoFuzzerMutator> mutator;
 
-static ProtoFuzzerMutatorBias mutator_bias{
+static ProtoFuzzerMutatorConfig mutator_config{
     // Heuristic: values close to 0 are likely to be meaningful scalar input
     // values.
     [](Random &rand) {
@@ -79,8 +79,9 @@ extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
   target_comp_spec =
       FindTargetCompSpec(params.comp_specs_, params.target_iface_);
   mutator = make_unique<ProtoFuzzerMutator>(
-      random, ExtractPredefinedTypes(params.comp_specs_), mutator_bias);
-  hal.reset(InitHalDriver(target_comp_spec, params.service_name_));
+      random, ExtractPredefinedTypes(params.comp_specs_), mutator_config);
+  hal.reset(
+      InitHalDriver(target_comp_spec, params.service_name_, params.get_stub_));
   return 0;
 }
 

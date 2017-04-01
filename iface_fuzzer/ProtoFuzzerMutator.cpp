@@ -30,10 +30,10 @@ namespace fuzzer {
 
 ProtoFuzzerMutator::ProtoFuzzerMutator(
     Random &rand, unordered_map<string, TypeSpec> predefined_types,
-    ProtoFuzzerMutatorBias mutator_bias)
+    ProtoFuzzerMutatorConfig mutator_config)
     : rand_(rand),
       predefined_types_(predefined_types),
-      mutator_bias_(mutator_bias) {
+      mutator_config_(mutator_config) {
   // Default function used for mutation/random generation. Used for types for
   // which the notion of mutation/random generation is not defined, e.g.
   // TYPE_HANDLE, TYPE_HIDL_CALLBACK.
@@ -98,9 +98,13 @@ ExecSpec ProtoFuzzerMutator::RandomGen(const IfaceSpec &iface_spec,
 
 void ProtoFuzzerMutator::Mutate(const IfaceSpec &iface_spec,
                                 ExecSpec *exec_spec) {
-  bool coin_flip = rand_(2);
+  // Mutate a randomly chosen function call with probability
+  // odds_for/(odds_for + odds_against).
+  uint64_t odds_for = mutator_config_.func_mutated_.first;
+  uint64_t odds_against = mutator_config_.func_mutated_.second;
+  uint64_t rand_num = rand_(odds_for + odds_against);
 
-  if (coin_flip) {
+  if (rand_num < odds_for) {
     // Mutate a random function in execution.
     size_t idx = rand_(exec_spec->api_size());
     const FuncSpec &rand_api = exec_spec->api(idx);
@@ -119,6 +123,7 @@ FuncSpec ProtoFuzzerMutator::RandomGen(const FuncSpec &func_spec) {
   FuncSpec result{func_spec};
   // We'll repopulate arg field.
   result.clear_arg();
+  result.clear_return_type_hidl();
   for (const auto &var_spec : func_spec.arg()) {
     VarInstance rand_var_spec = RandomGen(var_spec);
     auto *new_var = result.add_arg();
