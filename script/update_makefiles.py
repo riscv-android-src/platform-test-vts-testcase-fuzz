@@ -24,6 +24,9 @@ Build rules:
 Config Files:
 1. files matching: test/vts-testcase/fuzz/<hal_name>/<hal_version>/func_fuzzer/Android.mk
 2. files matching: test/vts-testcase/fuzz/<hal_name>/<hal_version>/func_fuzzer/AndroidTest.xml
+3. files matching: test/vts-testcase/fuzz/<hal_name>/<hal_version>/iface_fuzzer/Android.mk
+4. files matching: test/vts-testcase/fuzz/<hal_name>/<hal_version>/iface_fuzzer/AndroidTest.xml
+
 
 Usage:
     python test/vts-testcase/fuzz/update_makefiles.py
@@ -69,4 +72,4 @@ if __name__ == '__main__':
     if args.config:
         print 'Updating config files.'
         config_gen = ConfigGen()
-        config_gen.UpdateFuncFuzzerConfigs()
+        config_gen.UpdateFuzzerConfigs()
