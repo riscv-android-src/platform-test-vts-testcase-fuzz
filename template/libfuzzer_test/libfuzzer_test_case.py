@@ -71,8 +71,8 @@ class LibFuzzerTestCase(object):
         cd_cmd = 'cd %s' % config.FUZZER_TEST_DIR
         chmod_cmd = 'chmod 777 %s' % self._binary_name
         ld_path = 'LD_LIBRARY_PATH=/data/local/tmp/64:/data/local/tmp/32:$LD_LIBRARY_PATH'
-        test_cmd = '%s ./%s %s %s' % (ld_path, self._binary_name, corpus_dir,
-                                      test_flags)
+        test_cmd = '%s ./%s %s %s > /dev/null' % (ld_path, self._binary_name,
+                                                  corpus_dir, test_flags)
         return ' && '.join([cd_cmd, chmod_cmd, test_cmd])
 
     @property
