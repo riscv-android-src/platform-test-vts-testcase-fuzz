@@ -14,6 +14,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Child",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Child_genc++"],
     shared_libs: [
         "android.hardware.tests.inheritance@1.0",
@@ -26,7 +27,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",
@@ -47,6 +47,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Fetcher",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Fetcher_genc++"],
     shared_libs: [
         "android.hardware.tests.inheritance@1.0",
@@ -59,7 +60,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",
@@ -80,6 +80,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Grandparent",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Grandparent_genc++"],
     shared_libs: [
         "android.hardware.tests.inheritance@1.0",
@@ -92,7 +93,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",
@@ -113,6 +113,7 @@ genrule {
 
 cc_binary {
     name: "android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Parent",
+    defaults: ["func_fuzzer_defaults"],
     srcs: [":android.hardware.tests.inheritance@1.0-vts.func_fuzzer.Parent_genc++"],
     shared_libs: [
         "android.hardware.tests.inheritance@1.0",
@@ -125,7 +126,6 @@ cc_binary {
         "libhardware",
         "libvts_func_fuzzer_utils",
     ],
-    static_libs: ["libLLVMFuzzer"],
     cflags: [
         "-Wno-unused-parameter",
         "-fno-omit-frame-pointer",
