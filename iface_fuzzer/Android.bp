@@ -54,7 +54,7 @@ cc_binary {
         "libvts_proto_fuzzer_proto",
     ],
     static_libs: [
-        "libLLVMFuzzer",
+        "libFuzzer",
     ],
     cflags: [
         "-Wno-unused-parameter",
