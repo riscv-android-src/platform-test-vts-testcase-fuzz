@@ -72,8 +72,8 @@ VarInstance ProtoFuzzerMutator::EnumRandomGen(const VarSpec &var_spec) {
 
   // Mutate this enum like a scalar with probability
   // odds_for/(odds_for + odds_against).
-  uint64_t odds_for = (this->mutator_bias_).enum_bias_.first;
-  uint64_t odds_against = (this->mutator_bias_).enum_bias_.second;
+  uint64_t odds_for = (this->mutator_config_).enum_bias_.first;
+  uint64_t odds_against = (this->mutator_config_).enum_bias_.second;
   uint64_t rand_num = rand_(odds_for + odds_against);
   if (rand_num < odds_for) {
     scalar_value = Mutate(scalar_value, scalar_type);
@@ -122,11 +122,11 @@ VarInstance ProtoFuzzerMutator::StructMutate(const VarInstance &var_instance) {
 
 VarInstance ProtoFuzzerMutator::UnionRandomGen(const VarSpec &var_spec) {
   VarInstance result{VarInstanceStubFromSpec(var_spec)};
-  size_t size = var_spec.union_value_size();
+  const TypeSpec &blueprint = FindPredefinedType(result.predefined_type());
+  size_t size = blueprint.union_value_size();
   for (size_t i = 0; i < size; ++i) {
     result.add_union_value();
   }
-  const TypeSpec &blueprint = FindPredefinedType(result.name());
   size_t idx = rand_(size);
   *result.mutable_union_value(idx) =
       this->RandomGen(blueprint.union_value(idx));
@@ -136,15 +136,20 @@ VarInstance ProtoFuzzerMutator::UnionRandomGen(const VarSpec &var_spec) {
 VarInstance ProtoFuzzerMutator::UnionMutate(const VarInstance &var_instance) {
   VarInstance result{var_instance};
   size_t size = result.union_value_size();
-  size_t idx = rand_(size);
-  *result.mutable_union_value(idx) = this->Mutate(result.union_value(idx));
+  for (size_t i = 0; i < size; ++i) {
+    if (result.union_value(i).has_name()) {
+      *result.mutable_union_value(i) = this->Mutate(result.union_value(i));
+    }
+  }
   return result;
 }
 
 VarInstance ProtoFuzzerMutator::VectorRandomGen(const VarSpec &var_spec) {
   VarInstance result{VarInstanceStubFromSpec(var_spec)};
-  // TODO(trong): implement way to specify size of randomly generated vector.
-  *result.add_vector_value() = this->RandomGen(var_spec.vector_value(0));
+  size_t size = mutator_config_.default_vector_size_;
+  for (size_t i = 0; i < size; ++i) {
+    *result.add_vector_value() = this->RandomGen(var_spec.vector_value(0));
+  }
   return result;
 }
 
@@ -225,7 +230,7 @@ ScalarData ProtoFuzzerMutator::Mutate(const ScalarData &scalar_value,
 template <typename T>
 T ProtoFuzzerMutator::RandomGen(T value) {
   // Generate a biased random scalar.
-  uint64_t rand_int = mutator_bias_.scalar_bias_(rand_);
+  uint64_t rand_int = mutator_config_.scalar_bias_(rand_);
 
   T result;
   memcpy(&result, &rand_int, sizeof(T));
