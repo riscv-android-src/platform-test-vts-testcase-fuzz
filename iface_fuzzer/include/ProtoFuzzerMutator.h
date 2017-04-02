@@ -31,30 +31,29 @@ namespace vts {
 namespace fuzzer {
 
 using BiasedRandomScalarGen = std::function<uint64_t(Random &rand)>;
-using OddsEnumTreatedLikeScalar = std::pair<uint64_t, uint64_t>;
+using Odds = std::pair<uint64_t, uint64_t>;
 using VarMutateFn = std::function<VarInstance(const VarInstance &)>;
 using VarRandomGenFn = std::function<VarInstance(const VarSpec &)>;
 using VarTransformFn = std::function<VariableSpecificationMessage(
     const VariableSpecificationMessage &)>;
 
 // Encapsulates heuristic strategy for biased mutation/random generation.
-struct ProtoFuzzerMutatorBias {
-  ProtoFuzzerMutatorBias(BiasedRandomScalarGen scalar_bias =
-                             [](Random &rand) { return rand.Rand(); },
-                         OddsEnumTreatedLikeScalar enum_bias = {0, 1})
-      : scalar_bias_(scalar_bias), enum_bias_(enum_bias) {}
-
-  // Used to generate biased random scalars.
-  BiasedRandomScalarGen scalar_bias_;
-  // Used to to decide if enum will be mutated/generated like a scalar.
-  OddsEnumTreatedLikeScalar enum_bias_;
+struct ProtoFuzzerMutatorConfig {
+  // Generates biased random scalars.
+  BiasedRandomScalarGen scalar_bias_ = [](Random &rand) { return rand.Rand(); };
+  // Used to decide if enum will be mutated/generated like a scalar.
+  Odds enum_bias_ = {0, 1};
+  // Odds that a function in an execution is mutated rather than regenerated.
+  Odds func_mutated_ = {100, 1};
+  // Default size used to randomly generate a vector.
+  size_t default_vector_size_ = 64;
 };
 
 // Provides methods for mutation or random generation.
 class ProtoFuzzerMutator {
  public:
   ProtoFuzzerMutator(Random &, std::unordered_map<std::string, TypeSpec>,
-                     ProtoFuzzerMutatorBias);
+                     ProtoFuzzerMutatorConfig);
   // Generates a random ExecSpec.
   ExecSpec RandomGen(const IfaceSpec &, size_t);
   // Mutates in-place an ExecSpec.
@@ -110,7 +109,7 @@ class ProtoFuzzerMutator {
   std::unordered_map<VariableType, VarMutateFn> mutate_fns_;
   std::unordered_map<VariableType, VarRandomGenFn> random_gen_fns_;
   // Used for biased mutation/random generation of variables.
-  ProtoFuzzerMutatorBias mutator_bias_;
+  ProtoFuzzerMutatorConfig mutator_config_;
 };
 
 }  // namespace fuzzer

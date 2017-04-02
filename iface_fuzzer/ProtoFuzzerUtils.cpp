@@ -54,6 +54,7 @@ static void usage() {
 
 static struct option long_options[] = {
     {"help", no_argument, 0, 'h'},
+    {"vts_binder_mode", no_argument, 0, 'b'},
     {"vts_spec_dir", required_argument, 0, 'd'},
     {"vts_exec_size", required_argument, 0, 'e'},
     {"vts_service_name", required_argument, 0, 's'},
@@ -128,6 +129,9 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
       case 'h':
         usage();
         exit(0);
+      case 'b':
+        params.get_stub_ = false;
+        break;
       case 'd':
         params.comp_specs_ = ExtractCompSpecs(optarg);
         break;
@@ -166,7 +170,8 @@ CompSpec FindTargetCompSpec(const vector<CompSpec> &specs,
 }
 
 // TODO(trong): this should be done using FuzzerWrapper.
-FuzzerBase *InitHalDriver(const CompSpec &comp_spec, string service_name) {
+FuzzerBase *InitHalDriver(const CompSpec &comp_spec, string service_name,
+                          bool get_stub) {
   const char *error;
   string driver_name = GetDriverName(comp_spec);
   void *handle = dlopen(driver_name.c_str(), RTLD_LAZY);
@@ -188,8 +193,13 @@ FuzzerBase *InitHalDriver(const CompSpec &comp_spec, string service_name) {
   }
 
   FuzzerBase *hal = hal_loader();
-  // For fuzzing, we always use passthrough mode.
-  if (!hal->GetService(true, service_name.c_str())) {
+  // For fuzzing, only passthrough mode provides coverage.
+  if (get_stub) {
+    cout << "HAL used in passthrough mode." << endl;
+  } else {
+    cout << "HAL used in binderized mode." << endl;
+  }
+  if (!hal->GetService(get_stub, service_name.c_str())) {
     cerr << __func__ << ": GetService(true, " << service_name << ") failed."
          << endl;
     exit(1);
