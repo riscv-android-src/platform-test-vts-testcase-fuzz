@@ -101,6 +101,7 @@ static vector<CompSpec> ExtractCompSpecs(string dir_path) {
   while ((ent = readdir(dir))) {
     string vts_spec_name{ent->d_name};
     if (vts_spec_name.find(".vts") != string::npos) {
+      cout << "Loading: " << vts_spec_name << endl;
       string vts_spec_path = dir_path + "/" + vts_spec_name;
       CompSpec comp_spec{};
       InterfaceSpecificationParser::parse(vts_spec_path.c_str(), &comp_spec);

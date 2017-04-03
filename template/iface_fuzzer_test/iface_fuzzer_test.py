@@ -52,9 +52,9 @@ class IfaceFuzzerTest(func_fuzzer_test.FuncFuzzerTest):
         # Push corresponding VTS drivers.
         driver_name = 'android.hardware.%s@%s-vts.driver.so' % (hal_name,
                                                                 hal_version)
-        driver32 = os.path.join(self.data_file_path, 'DATA', 'lib', driver_name)
-        driver64 = os.path.join(self.data_file_path, 'DATA', 'lib64',
-                                driver_name)
+        asan_path = os.path.join(self.data_file_path, 'DATA', 'asan', 'system')
+        driver32 = os.path.join(asan_path, 'lib', driver_name)
+        driver64 = os.path.join(asan_path, 'lib64', driver_name)
         try:
             self._dut.adb.push(src_dir, self._VTS_SPEC_DIR_TARGET)
             self._dut.adb.push(driver32, 'data/local/tmp/32')
