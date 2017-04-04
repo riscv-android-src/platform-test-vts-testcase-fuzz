@@ -55,7 +55,7 @@ class LibFuzzerTest(base_test.BaseTestClass):
         self._dut.stop()
         self._dut.adb.shell('mkdir %s -p' % config.FUZZER_TEST_DIR)
 
-    def tearDown(self):
+    def tearDownClass(self):
         """Deletes all copied data."""
         self._dut.adb.shell('rm -rf %s' % config.FUZZER_TEST_DIR)
         self._dut.start()
