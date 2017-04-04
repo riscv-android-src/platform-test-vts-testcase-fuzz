@@ -73,6 +73,9 @@ struct ProtoFuzzerParams {
   std::string service_name_ = "default";
   // Name of target interface, e.g. "default".
   std::string target_iface_;
+  // Controls whether HAL is opened in passthrough or binder mode.
+  // Passthrough mode is default. Used for testsing.
+  bool get_stub_ = true;
 };
 
 // Parses command-line flags to create a ProtoFuzzerParams instance.
@@ -82,7 +85,7 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int, char **);
 CompSpec FindTargetCompSpec(const std::vector<CompSpec> &, const std::string &);
 
 // Loads VTS HAL driver library.
-FuzzerBase *InitHalDriver(const CompSpec &, std::string);
+FuzzerBase *InitHalDriver(const CompSpec &, std::string, bool);
 
 // Creates a key, value look-up table with keys being names of predefined types,
 // and values being their definitions.
