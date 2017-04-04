@@ -58,6 +58,9 @@ ProtoFuzzerMutator::ProtoFuzzerMutator(
   random_gen_fns_[TYPE_HIDL_CALLBACK] = default_transform;
   mutate_fns_[TYPE_HIDL_CALLBACK] = default_transform;
 
+  random_gen_fns_[TYPE_HIDL_INTERFACE] = default_transform;
+  mutate_fns_[TYPE_HIDL_INTERFACE] = default_transform;
+
   random_gen_fns_[TYPE_SCALAR] =
       std::bind(&ProtoFuzzerMutator::ScalarRandomGen, this, _1);
   mutate_fns_[TYPE_SCALAR] =
