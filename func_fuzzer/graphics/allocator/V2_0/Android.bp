@@ -33,36 +33,3 @@ cc_binary {
     ],
 }
 
-genrule {
-    name: "android.hardware.graphics.allocator@2.0-vts.func_fuzzer.AllocatorClient_genc++",
-    tools: ["hidl-gen", "vtsc"],
-    cmd: "$(location hidl-gen) -o $(genDir) -Lvts -randroid.hardware:hardware/interfaces -randroid.hidl:system/libhidl/transport android.hardware.graphics.allocator@2.0 && $(location vtsc) -mFUZZER -tSOURCE -b$(genDir) android/hardware/graphics/allocator/2.0/ $(genDir)/android/hardware/graphics/allocator/2.0/",
-    srcs: [
-        ":android.hardware.graphics.allocator@2.0_hal",
-    ],
-    out: [
-        "android/hardware/graphics/allocator/2.0/AllocatorClient.vts.cpp",
-    ],
-}
-
-cc_binary {
-    name: "android.hardware.graphics.allocator@2.0-vts.func_fuzzer.AllocatorClient",
-    defaults: ["func_fuzzer_defaults"],
-    srcs: [":android.hardware.graphics.allocator@2.0-vts.func_fuzzer.AllocatorClient_genc++"],
-    shared_libs: [
-        "android.hardware.graphics.allocator@2.0",
-        "libcutils",
-        "liblog",
-        "libutils",
-        "libhidlbase",
-        "libhidltransport",
-        "libhwbinder",
-        "libhardware",
-        "libvts_func_fuzzer_utils",
-    ],
-    cflags: [
-        "-Wno-unused-parameter",
-        "-fno-omit-frame-pointer",
-    ],
-}
-
