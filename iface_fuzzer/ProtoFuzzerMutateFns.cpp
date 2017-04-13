@@ -91,8 +91,9 @@ VarInstance ProtoFuzzerMutator::EnumMutate(const VarInstance &var_instance) {
 
 VarInstance ProtoFuzzerMutator::ScalarRandomGen(const VarSpec &var_spec) {
   VarInstance result{VarInstanceStubFromSpec(var_spec)};
+  result.set_scalar_type(var_spec.scalar_type());
   (*result.mutable_scalar_value()) =
-      RandomGen(var_spec.scalar_value(), var_spec.scalar_type());
+      RandomGen(result.scalar_value(), result.scalar_type());
   return result;
 }
 
