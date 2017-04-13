@@ -215,6 +215,9 @@ unordered_map<string, TypeSpec> ExtractPredefinedTypes(
     for (const auto &var_spec : comp_spec.attribute()) {
       ExtractPredefinedTypesFromVar(var_spec, predefined_types);
     }
+    for (const auto &var_spec : comp_spec.interface().attribute()) {
+      ExtractPredefinedTypesFromVar(var_spec, predefined_types);
+    }
   }
   return predefined_types;
 }
