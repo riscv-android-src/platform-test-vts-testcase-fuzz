@@ -71,6 +71,11 @@ ProtoFuzzerMutator::ProtoFuzzerMutator(
   mutate_fns_[TYPE_SCALAR] =
       std::bind(&ProtoFuzzerMutator::ScalarMutate, this, _1);
 
+  random_gen_fns_[TYPE_STRING] =
+      std::bind(&ProtoFuzzerMutator::StringRandomGen, this, _1);
+  mutate_fns_[TYPE_STRING] =
+      std::bind(&ProtoFuzzerMutator::StringMutate, this, _1);
+
   random_gen_fns_[TYPE_STRUCT] =
       std::bind(&ProtoFuzzerMutator::StructRandomGen, this, _1);
   mutate_fns_[TYPE_STRUCT] =
