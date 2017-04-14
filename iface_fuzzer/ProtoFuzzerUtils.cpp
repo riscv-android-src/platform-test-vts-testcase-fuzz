@@ -40,15 +40,22 @@ static void usage() {
       stdout,
       "Usage:\n"
       "\n"
-      "./<fuzzer> <vts flags> -- <libfuzzer flags>\n"
+      "./vts_proto_fuzzer <vts flags> -- <libfuzzer flags>\n"
       "\n"
       "VTS flags (strictly in form --flag=value):\n"
       "\n"
-      " vts_spec_files \tColumn-separated list of paths to vts spec files.\n"
-      " vts_exec_size \t\tNumber of function calls per fuzzer execution.\n"
+      "\tvts_binder_mode: if set, fuzzer will open the HAL in binder mode.\n"
+      "\tvts_exec_size: number of function calls per 1 run of "
+      "LLVMFuzzerTestOneInput.\n"
+      "\tvts_service_name: registered service name of target interface, e.g. "
+      "\"default\".\n"
+      "\tvts_spec_dir: \":\"-separated list of directories on the target "
+      "containing .vts spec files.\n"
+      "\tvts_target_iface: name of interface targeted for fuzz, e.g. "
+      "\"INfc\".\n"
       "\n"
       "libfuzzer flags (strictly in form -flag=value):\n"
-      " Use -help=1 to see libfuzzer flags\n"
+      "\tUse -help=1 to see libfuzzer flags\n"
       "\n");
 }
 
@@ -90,23 +97,28 @@ static void TrimCompSpec(CompSpec *comp_spec) {
   }
 }
 
-static vector<CompSpec> ExtractCompSpecs(string dir_path) {
+static vector<CompSpec> ExtractCompSpecs(string arg) {
   vector<CompSpec> result{};
-  DIR *dir;
-  struct dirent *ent;
-  if (!(dir = opendir(dir_path.c_str()))) {
-    cerr << "Could not open directory: " << dir_path << endl;
-    exit(1);
-  }
-  while ((ent = readdir(dir))) {
-    string vts_spec_name{ent->d_name};
-    if (vts_spec_name.find(".vts") != string::npos) {
-      cout << "Loading: " << vts_spec_name << endl;
-      string vts_spec_path = dir_path + "/" + vts_spec_name;
-      CompSpec comp_spec{};
-      InterfaceSpecificationParser::parse(vts_spec_path.c_str(), &comp_spec);
-      TrimCompSpec(&comp_spec);
-      result.emplace_back(std::move(comp_spec));
+  string dir_path;
+  std::istringstream iss(arg);
+
+  while (std::getline(iss, dir_path, ':')) {
+    DIR *dir;
+    struct dirent *ent;
+    if (!(dir = opendir(dir_path.c_str()))) {
+      cerr << "Could not open directory: " << dir_path << endl;
+      exit(1);
+    }
+    while ((ent = readdir(dir))) {
+      string vts_spec_name{ent->d_name};
+      if (vts_spec_name.find(".vts") != string::npos) {
+        cout << "Loading: " << vts_spec_name << endl;
+        string vts_spec_path = dir_path + "/" + vts_spec_name;
+        CompSpec comp_spec{};
+        InterfaceSpecificationParser::parse(vts_spec_path.c_str(), &comp_spec);
+        TrimCompSpec(&comp_spec);
+        result.emplace_back(std::move(comp_spec));
+      }
     }
   }
   return result;
