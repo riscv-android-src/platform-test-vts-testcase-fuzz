@@ -46,7 +46,7 @@ struct ProtoFuzzerMutatorConfig {
   // Odds that a function in an execution is mutated rather than regenerated.
   Odds func_mutated_ = {100, 1};
   // Default size used to randomly generate a vector.
-  size_t default_vector_size_ = 64;
+  size_t default_vector_size_ = 8;
   // Default size used to randomly generate a string.
   size_t default_string_size_ = 16;
 };
