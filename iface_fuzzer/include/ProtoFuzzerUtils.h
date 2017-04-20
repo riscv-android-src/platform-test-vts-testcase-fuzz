@@ -74,8 +74,8 @@ struct ProtoFuzzerParams {
   // Name of target interface, e.g. "default".
   std::string target_iface_;
   // Controls whether HAL is opened in passthrough or binder mode.
-  // Passthrough mode is default. Used for testsing.
-  bool get_stub_ = true;
+  // Passthrough mode is default. Used for testing.
+  bool binder_mode_ = false;
 };
 
 // Parses command-line flags to create a ProtoFuzzerParams instance.
