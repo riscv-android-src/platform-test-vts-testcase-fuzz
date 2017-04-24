@@ -69,9 +69,7 @@ struct ProtoFuzzerParams {
   size_t exec_size_;
   // VTS specs supplied to the fuzzer.
   std::vector<CompSpec> comp_specs_;
-  // Service name of target interface, e.g. "INfc".
-  std::string service_name_ = "default";
-  // Name of target interface, e.g. "default".
+  // Name of target interface, e.g. "INfc".
   std::string target_iface_;
   // Controls whether HAL is opened in passthrough or binder mode.
   // Passthrough mode is default. Used for testing.
@@ -85,7 +83,7 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int, char **);
 CompSpec FindTargetCompSpec(const std::vector<CompSpec> &, const std::string &);
 
 // Loads VTS HAL driver library.
-FuzzerBase *InitHalDriver(const CompSpec &, std::string, bool);
+FuzzerBase *InitHalDriver(const CompSpec &, bool);
 
 // Creates a key, value look-up table with keys being names of predefined types,
 // and values being their definitions.

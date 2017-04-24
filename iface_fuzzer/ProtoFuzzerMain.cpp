@@ -80,8 +80,7 @@ extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
       FindTargetCompSpec(params.comp_specs_, params.target_iface_);
   mutator = make_unique<ProtoFuzzerMutator>(
       random, ExtractPredefinedTypes(params.comp_specs_), mutator_config);
-  hal.reset(InitHalDriver(target_comp_spec, params.service_name_,
-                          params.binder_mode_));
+  hal.reset(InitHalDriver(target_comp_spec, params.binder_mode_));
   return 0;
 }
 
