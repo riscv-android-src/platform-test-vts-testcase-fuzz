@@ -23,7 +23,11 @@
 #include <sstream>
 
 #include "specification_parser/InterfaceSpecificationParser.h"
+#include "vintf/HalManifest.h"
+#include "vintf/VintfObject.h"
 #include "utils/InterfaceSpecUtil.h"
+
+using android::vintf::HalManifest;
 
 using std::cout;
 using std::cerr;
@@ -47,8 +51,6 @@ static void usage() {
       "\tvts_binder_mode: if set, fuzzer will open the HAL in binder mode.\n"
       "\tvts_exec_size: number of function calls per 1 run of "
       "LLVMFuzzerTestOneInput.\n"
-      "\tvts_service_name: registered service name of target interface, e.g. "
-      "\"default\".\n"
       "\tvts_spec_dir: \":\"-separated list of directories on the target "
       "containing .vts spec files.\n"
       "\tvts_target_iface: name of interface targeted for fuzz, e.g. "
@@ -64,7 +66,6 @@ static struct option long_options[] = {
     {"vts_binder_mode", no_argument, 0, 'b'},
     {"vts_spec_dir", required_argument, 0, 'd'},
     {"vts_exec_size", required_argument, 0, 'e'},
-    {"vts_service_name", required_argument, 0, 's'},
     {"vts_target_iface", required_argument, 0, 't'}};
 
 static string GetDriverName(const CompSpec &comp_spec) {
@@ -77,9 +78,25 @@ static string GetDriverName(const CompSpec &comp_spec) {
 }
 
 static string GetServiceName(const CompSpec &comp_spec) {
-  // Infer HAL service name from its package name.
-  string prefix = "android.hardware.";
-  string service_name = comp_spec.package().substr(prefix.size());
+  static const HalManifest *vendor_manifest =
+      ::android::vintf::VintfObject::GetDeviceHalManifest();
+  string hal_name = comp_spec.package();
+  string iface_name = comp_spec.component_name();
+
+  auto instance_names = vendor_manifest->getInstances(hal_name, iface_name);
+  if (instance_names.empty()) {
+    cerr << "HAL service name not available in VINTF." << endl;
+    exit(1);
+  }
+
+  // For fuzzing we don't care which instance of the HAL is targeted.
+  string service_name = *instance_names.begin();
+  cout << "Available HAL instances: " << endl;
+  for (const string &instance_name : instance_names) {
+    cout << instance_name << endl;
+  }
+  cout << "Using HAL instance: " << service_name << endl;
+
   return service_name;
 }
 
@@ -151,9 +168,6 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
       case 'e':
         params.exec_size_ = atoi(optarg);
         break;
-      case 's':
-        params.service_name_ = optarg;
-        break;
       case 't':
         params.target_iface_ = optarg;
         break;
@@ -183,8 +197,7 @@ CompSpec FindTargetCompSpec(const vector<CompSpec> &specs,
 }
 
 // TODO(trong): this should be done using FuzzerWrapper.
-FuzzerBase *InitHalDriver(const CompSpec &comp_spec, string service_name,
-                          bool binder_mode) {
+FuzzerBase *InitHalDriver(const CompSpec &comp_spec, bool binder_mode) {
   const char *error;
   string driver_name = GetDriverName(comp_spec);
   void *handle = dlopen(driver_name.c_str(), RTLD_LAZY);
@@ -206,6 +219,11 @@ FuzzerBase *InitHalDriver(const CompSpec &comp_spec, string service_name,
   }
 
   FuzzerBase *hal = hal_loader();
+  string service_name = GetServiceName(comp_spec);
+  cerr << "HAL name: " << comp_spec.package() << endl
+       << "Interface name: " << comp_spec.component_name() << endl
+       << "Service name: " << service_name << endl;
+
   // For fuzzing, only passthrough mode provides coverage.
   // If binder mode is not requested, attempt to open HAL in passthrough mode.
   // If the attempt fails, fall back to binder mode.
