@@ -17,8 +17,6 @@
 
 import logging
 import os
-import shutil
-import tempfile
 
 from vts.runners.host import keys
 from vts.runners.host import test_runner
@@ -26,7 +24,6 @@ from vts.utils.python.controllers import adb
 from vts.utils.python.controllers import android_device
 from vts.utils.python.common import vts_spec_utils
 
-from vts.testcases.fuzz.iface_fuzzer.proto import ExecutionSpecificationMessage_pb2 as ExecSpecMsg
 from vts.testcases.fuzz.template.libfuzzer_test import libfuzzer_test_config as config
 from vts.testcases.fuzz.template.libfuzzer_test import libfuzzer_test_case
 from vts.testcases.fuzz.template.func_fuzzer_test import func_fuzzer_test
@@ -112,11 +109,10 @@ class IfaceFuzzerTest(func_fuzzer_test.FuncFuzzerTest):
                 'vts_exec_size': 16,
                 'vts_target_iface': iface,
             }
-            libfuzzer_params = config.FUZZER_DEFAULT_PARAMS.copy()
-            libfuzzer_params.update({
+            libfuzzer_params = {
                 'max_len': 65536,
                 'max_total_time': 10,
-            })
+            }
             bin_host_path = os.path.join(self.data_file_path, 'DATA', 'bin',
                                          'vts_proto_fuzzer')
             test_case = libfuzzer_test_case.LibFuzzerTestCase(
@@ -125,26 +121,6 @@ class IfaceFuzzerTest(func_fuzzer_test.FuncFuzzerTest):
             test_cases.append(test_case)
 
         return test_cases
-
-    # Override
-    def LogCrashReport(self, test_case):
-        """See base class."""
-        tmp_dir = tempfile.mkdtemp()
-        crash_report_path = os.path.join(tmp_dir, 'crash_report')
-
-        touch_cmd = 'touch %s' % config.FUZZER_TEST_CRASH_REPORT
-        self._dut.adb.shell(touch_cmd)
-        self._dut.adb.pull('%s %s' %
-                           (config.FUZZER_TEST_CRASH_REPORT, crash_report_path))
-
-        crash_report = ExecSpecMsg.ExecutionSpecificationMessage()
-        with open(crash_report_path, 'r') as crash_report_file:
-            r = crash_report_file.read()
-            crash_report.ParseFromString(r)
-
-        logging.info('FUZZER_TEST_CRASH_REPORT for %s:\n %s',
-                     test_case.test_name, crash_report)
-        shutil.rmtree(tmp_dir)
 
 
 if __name__ == '__main__':
