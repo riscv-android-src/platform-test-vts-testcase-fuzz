@@ -24,8 +24,7 @@
 #include <vector>
 
 #include "fuzz_tester/FuzzerBase.h"
-#include "test/vts-testcase/fuzz/iface_fuzzer/proto/ExecutionSpecificationMessage.pb.h"
-#include "test/vts/proto/ComponentSpecificationMessage.pb.h"
+#include "test/vts/proto/ExecutionSpecificationMessage.pb.h"
 
 namespace android {
 namespace vts {
