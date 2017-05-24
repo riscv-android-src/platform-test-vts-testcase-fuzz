@@ -93,8 +93,8 @@ class IfaceFuzzerTest(func_fuzzer_test.FuncFuzzerTest):
         hal_name, hal_version = vts_spec_utils.HalPackageToNameAndVersion(
             hal_package)
 
-        imported_hals = self._vts_spec_parser.ImportedHals(hal_name,
-                                                           hal_version)
+        imported_hals = self._vts_spec_parser.IndirectImportedHals(hal_name,
+                                                                   hal_version)
         self._PushVtsResources(hal_name, hal_version)
         for name, version in imported_hals:
             self._PushVtsResources(name, version)
