@@ -92,22 +92,36 @@ ProtoFuzzerMutator::ProtoFuzzerMutator(
       std::bind(&ProtoFuzzerMutator::VectorMutate, this, _1);
 }
 
-ExecSpec ProtoFuzzerMutator::RandomGen(const IfaceSpec &iface_spec,
+// TODO(trong): add a mutator config option which controls how an interface is
+// selected.
+const CompSpec *ProtoFuzzerMutator::RandomSelectIface(const IfaceDescTbl &tbl) {
+  size_t rand_idx = rand_(tbl.size());
+  auto it = tbl.begin();
+  std::advance(it, rand_idx);
+  return it->second.comp_spec_;
+}
+
+ExecSpec ProtoFuzzerMutator::RandomGen(const IfaceDescTbl &tbl,
                                        size_t num_calls) {
   ExecSpec result{};
-
   for (size_t i = 0; i < num_calls; ++i) {
+    const CompSpec *comp_spec = RandomSelectIface(tbl);
+    string iface_name = comp_spec->component_name();
+    const IfaceSpec &iface_spec = comp_spec->interface();
+
+    // Generate a random interface function call.
+    FuncCall rand_call{};
+    rand_call.set_hidl_interface_name(iface_name);
     size_t num_apis = iface_spec.api_size();
     size_t rand_api_idx = rand_(num_apis);
     FuncSpec rand_api = RandomGen(iface_spec.api(rand_api_idx));
-    result.add_api()->Swap(&rand_api);
+    *rand_call.mutable_api() = rand_api;
+    *result.add_function_call() = rand_call;
   }
-
   return result;
 }
 
-void ProtoFuzzerMutator::Mutate(const IfaceSpec &iface_spec,
-                                ExecSpec *exec_spec) {
+void ProtoFuzzerMutator::Mutate(const IfaceDescTbl &tbl, ExecSpec *exec_spec) {
   // Mutate a randomly chosen function call with probability
   // odds_for/(odds_for + odds_against).
   uint64_t odds_for = mutator_config_.func_mutated_.first;
@@ -116,16 +130,21 @@ void ProtoFuzzerMutator::Mutate(const IfaceSpec &iface_spec,
 
   if (rand_num < odds_for) {
     // Mutate a random function in execution.
-    size_t idx = rand_(exec_spec->api_size());
-    const FuncSpec &rand_api = exec_spec->api(idx);
-    (*exec_spec->mutable_api(idx)) = Mutate(rand_api);
+    size_t idx = rand_(exec_spec->function_call_size());
+    const FuncSpec &rand_api = exec_spec->function_call(idx).api();
+    *exec_spec->mutable_function_call(idx)->mutable_api() = Mutate(rand_api);
   } else {
     // Generate a random function call in place of randomly chosen function in
     // execution.
-    size_t func_idx = rand_(exec_spec->api_size());
+    const CompSpec *comp_spec = RandomSelectIface(tbl);
+    string iface_name = comp_spec->component_name();
+    const IfaceSpec &iface_spec = comp_spec->interface();
+
+    size_t func_idx = rand_(exec_spec->function_call_size());
     size_t blueprint_idx = rand_(iface_spec.api_size());
-    *(exec_spec->mutable_api(func_idx)) =
-        RandomGen(iface_spec.api(blueprint_idx));
+    FuncCall *func_call = exec_spec->mutable_function_call(func_idx);
+    func_call->set_hidl_interface_name(iface_name);
+    *func_call->mutable_api() = RandomGen(iface_spec.api(blueprint_idx));
   }
 }
 
