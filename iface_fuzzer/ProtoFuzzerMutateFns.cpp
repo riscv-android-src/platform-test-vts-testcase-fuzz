@@ -301,9 +301,7 @@ T ProtoFuzzerMutator::Mutate(T value) {
   return value ^ mask;
 }
 
-bool ProtoFuzzerMutator::Mutate(bool value) {
-  return RandomGen(value);
-}
+bool ProtoFuzzerMutator::Mutate(bool value) { return RandomGen(value); }
 
 float ProtoFuzzerMutator::Mutate(float value) {
   uint32_t copy;
