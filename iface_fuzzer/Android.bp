@@ -20,6 +20,7 @@ cc_library_shared {
         "ProtoFuzzerUtils.cpp",
         "ProtoFuzzerMutator.cpp",
         "ProtoFuzzerMutateFns.cpp",
+        "ProtoFuzzerRunner.cpp",
     ],
     include_dirs: [
         "test/vts/drivers/hal/common/include",
