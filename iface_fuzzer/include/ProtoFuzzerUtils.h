@@ -33,6 +33,7 @@ namespace fuzzer {
 // Use shorter names for convenience.
 using CompSpec = ComponentSpecificationMessage;
 using ExecSpec = ExecutionSpecificationMessage;
+using FuncCall = FunctionCallMessage;
 using FuncSpec = FunctionSpecificationMessage;
 using IfaceSpec = InterfaceSpecificationMessage;
 
@@ -78,20 +79,14 @@ struct ProtoFuzzerParams {
 // Parses command-line flags to create a ProtoFuzzerParams instance.
 ProtoFuzzerParams ExtractProtoFuzzerParams(int, char **);
 
-// Returns CompSpec corresponding to targeted interface.
-CompSpec FindTargetCompSpec(const std::vector<CompSpec> &, const std::string &);
-
-// Loads VTS HAL driver library.
-FuzzerBase *InitHalDriver(const CompSpec &, bool);
+// Returns CompSpec corresponding to given interface name.
+const CompSpec &FindCompSpec(const std::vector<CompSpec> &,
+                             const std::string &);
 
 // Creates a key, value look-up table with keys being names of predefined types,
 // and values being their definitions.
 std::unordered_map<std::string, TypeSpec> ExtractPredefinedTypes(
     const std::vector<CompSpec> &);
-
-// Call every API from call sequence specified by the
-// ExecutionSpecificationMessage.
-void Execute(FuzzerBase *, const ExecutionSpecificationMessage &);
 
 }  // namespace fuzzer
 }  // namespace vts
