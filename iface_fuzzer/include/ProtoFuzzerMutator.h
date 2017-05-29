@@ -22,6 +22,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "ProtoFuzzerRunner.h"
 #include "ProtoFuzzerUtils.h"
 
 namespace android {
@@ -55,9 +56,9 @@ class ProtoFuzzerMutator {
   ProtoFuzzerMutator(Random &, std::unordered_map<std::string, TypeSpec>,
                      ProtoFuzzerMutatorConfig);
   // Generates a random ExecSpec.
-  ExecSpec RandomGen(const IfaceSpec &, size_t);
+  ExecSpec RandomGen(const IfaceDescTbl &, size_t);
   // Mutates in-place an ExecSpec.
-  void Mutate(const IfaceSpec &, ExecSpec *);
+  void Mutate(const IfaceDescTbl &, ExecSpec *);
   // Generates a random FuncSpec.
   FuncSpec RandomGen(const FuncSpec &);
   // Mutates a FuncSpec.
@@ -68,6 +69,9 @@ class ProtoFuzzerMutator {
   VarInstance Mutate(const VarInstance &);
 
  private:
+  // Randomly selects an interface.
+  const CompSpec *RandomSelectIface(const IfaceDescTbl &);
+
   // Used for mutation/random generation of VarInstance.
   VarInstance ArrayRandomGen(const VarSpec &);
   VarInstance ArrayMutate(const VarInstance &);

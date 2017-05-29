@@ -17,17 +17,12 @@
 #include "ProtoFuzzerUtils.h"
 
 #include <dirent.h>
-#include <dlfcn.h>
 #include <getopt.h>
 #include <algorithm>
 #include <sstream>
 
 #include "specification_parser/InterfaceSpecificationParser.h"
-#include "vintf/HalManifest.h"
-#include "vintf/VintfObject.h"
 #include "utils/InterfaceSpecUtil.h"
-
-using android::vintf::HalManifest;
 
 using std::cout;
 using std::cerr;
@@ -67,38 +62,6 @@ static struct option long_options[] = {
     {"vts_spec_dir", required_argument, 0, 'd'},
     {"vts_exec_size", required_argument, 0, 'e'},
     {"vts_target_iface", required_argument, 0, 't'}};
-
-static string GetDriverName(const CompSpec &comp_spec) {
-  stringstream version;
-  version.precision(1);
-  version << fixed << comp_spec.component_type_version();
-  string driver_name =
-      comp_spec.package() + "@" + version.str() + "-vts.driver.so";
-  return driver_name;
-}
-
-static string GetServiceName(const CompSpec &comp_spec) {
-  static const HalManifest *vendor_manifest =
-      ::android::vintf::VintfObject::GetDeviceHalManifest();
-  string hal_name = comp_spec.package();
-  string iface_name = comp_spec.component_name();
-
-  auto instance_names = vendor_manifest->getInstances(hal_name, iface_name);
-  if (instance_names.empty()) {
-    cerr << "HAL service name not available in VINTF." << endl;
-    exit(1);
-  }
-
-  // For fuzzing we don't care which instance of the HAL is targeted.
-  string service_name = *instance_names.begin();
-  cout << "Available HAL instances: " << endl;
-  for (const string &instance_name : instance_names) {
-    cout << instance_name << endl;
-  }
-  cout << "Using HAL instance: " << service_name << endl;
-
-  return service_name;
-}
 
 // Removes information from CompSpec not needed by fuzzer.
 static void TrimCompSpec(CompSpec *comp_spec) {
@@ -179,73 +142,6 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
   return params;
 }
 
-CompSpec FindTargetCompSpec(const vector<CompSpec> &specs,
-                            const string &target_iface) {
-  if (target_iface.empty()) {
-    cerr << "Target interface not specified." << endl;
-    exit(1);
-  }
-  auto spec = std::find_if(specs.begin(), specs.end(), [target_iface](auto x) {
-    return x.component_name().compare(target_iface) == 0;
-  });
-  if (spec == specs.end()) {
-    cerr << "Target interface doesn't match any of the loaded .vts files."
-         << endl;
-    exit(1);
-  }
-  return *spec;
-}
-
-// TODO(trong): this should be done using FuzzerWrapper.
-FuzzerBase *InitHalDriver(const CompSpec &comp_spec, bool binder_mode) {
-  const char *error;
-  string driver_name = GetDriverName(comp_spec);
-  void *handle = dlopen(driver_name.c_str(), RTLD_LAZY);
-  if (!handle) {
-    cerr << __func__ << ": " << dlerror() << endl;
-    cerr << __func__ << ": Can't load shared library: " << driver_name << endl;
-    exit(-1);
-  }
-
-  // Clear dlerror().
-  dlerror();
-  string function_name = GetFunctionNamePrefix(comp_spec);
-  using loader_func = FuzzerBase *(*)();
-  auto hal_loader = (loader_func)dlsym(handle, function_name.c_str());
-  if ((error = dlerror()) != NULL) {
-    cerr << __func__ << ": Can't find: " << function_name << endl;
-    cerr << error << endl;
-    exit(1);
-  }
-
-  FuzzerBase *hal = hal_loader();
-  string service_name = GetServiceName(comp_spec);
-  cerr << "HAL name: " << comp_spec.package() << endl
-       << "Interface name: " << comp_spec.component_name() << endl
-       << "Service name: " << service_name << endl;
-
-  // For fuzzing, only passthrough mode provides coverage.
-  // If binder mode is not requested, attempt to open HAL in passthrough mode.
-  // If the attempt fails, fall back to binder mode.
-  if (!binder_mode) {
-    if (!hal->GetService(true, service_name.c_str())) {
-      cerr << __func__ << ": Failed to open HAL in passthrough mode. "
-           << "Falling back to binder mode." << endl;
-    } else {
-      cerr << "HAL opened in passthrough mode." << endl;
-      return hal;
-    }
-  }
-
-  if (!hal->GetService(false, service_name.c_str())) {
-    cerr << __func__ << ": Failed to open HAL in binder mode." << endl;
-    exit(1);
-  } else {
-      cerr << "HAL opened in binder mode." << endl;
-  }
-  return hal;
-}
-
 unordered_map<string, TypeSpec> ExtractPredefinedTypes(
     const vector<CompSpec> &specs) {
   unordered_map<string, TypeSpec> predefined_types;
@@ -258,13 +154,6 @@ unordered_map<string, TypeSpec> ExtractPredefinedTypes(
     }
   }
   return predefined_types;
-}
-
-void Execute(FuzzerBase *hal, const ExecSpec &exec_spec) {
-  FuncSpec result{};
-  for (const auto &func_spec : exec_spec.api()) {
-    hal->CallFunction(func_spec, "", &result);
-  }
 }
 
 }  // namespace fuzzer
