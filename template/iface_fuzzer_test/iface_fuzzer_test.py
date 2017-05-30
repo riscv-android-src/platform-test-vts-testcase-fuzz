@@ -109,10 +109,11 @@ class IfaceFuzzerTest(func_fuzzer_test.FuncFuzzerTest):
                 'vts_exec_size': 16,
                 'vts_target_iface': iface,
             }
-            libfuzzer_params = {
+            libfuzzer_params = config.FUZZER_DEFAULT_PARAMS.copy()
+            libfuzzer_params.update({
                 'max_len': 65536,
                 'max_total_time': 10,
-            }
+            })
             bin_host_path = os.path.join(self.data_file_path, 'DATA', 'bin',
                                          'vts_proto_fuzzer')
             test_case = libfuzzer_test_case.LibFuzzerTestCase(
@@ -121,6 +122,15 @@ class IfaceFuzzerTest(func_fuzzer_test.FuncFuzzerTest):
             test_cases.append(test_case)
 
         return test_cases
+
+    # Override
+    def LogCrashReport(self, test_case):
+        """See base class."""
+        # Re-run the failing test case in debug mode.
+        logging.info('Attempting to reproduce the failure.')
+        repro_cmd = '"%s %s"' % (test_case.GetRunCommand(debug_mode=True),
+                                 config.FUZZER_TEST_CRASH_REPORT)
+        self._dut.adb.shell(repro_cmd, no_except=True)
 
 
 if __name__ == '__main__':
