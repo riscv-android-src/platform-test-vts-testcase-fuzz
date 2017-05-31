@@ -66,6 +66,9 @@ ProtoFuzzerMutator::ProtoFuzzerMutator(
       std::bind(&ProtoFuzzerMutator::EnumRandomGen, this, _1);
   mutate_fns_[TYPE_MASK] = std::bind(&ProtoFuzzerMutator::EnumMutate, this, _1);
 
+  random_gen_fns_[TYPE_POINTER] = default_transform;
+  mutate_fns_[TYPE_POINTER] = default_transform;
+
   random_gen_fns_[TYPE_SCALAR] =
       std::bind(&ProtoFuzzerMutator::ScalarRandomGen, this, _1);
   mutate_fns_[TYPE_SCALAR] =
