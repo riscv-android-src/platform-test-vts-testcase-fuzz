@@ -172,6 +172,7 @@ void ProtoFuzzerRunner::Init(const string &iface_name, bool binder_mode) {
 
 void ProtoFuzzerRunner::Execute(const ExecSpec &exec_spec) {
   for (const auto &func_call : exec_spec.function_call()) {
+    cout << func_call.DebugString() << endl;
     Execute(func_call);
   }
 }
@@ -185,7 +186,6 @@ void ProtoFuzzerRunner::Execute(const FuncCall &func_call) {
     cerr << "Interface is not open: " << iface_name << endl;
     exit(1);
   }
-  cout << func_call.DebugString() << endl;
 
   FuncSpec result{};
   iface_desc->second.hal_->CallFunction(func_spec, "", &result);
