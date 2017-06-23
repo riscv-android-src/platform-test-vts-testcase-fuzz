@@ -21,7 +21,6 @@
 #include <algorithm>
 #include <sstream>
 
-#include "specification_parser/InterfaceSpecificationParser.h"
 #include "utils/InterfaceSpecUtil.h"
 
 using std::cout;
@@ -95,7 +94,7 @@ static vector<CompSpec> ExtractCompSpecs(string arg) {
         cout << "Loading: " << vts_spec_name << endl;
         string vts_spec_path = dir_path + "/" + vts_spec_name;
         CompSpec comp_spec{};
-        InterfaceSpecificationParser::parse(vts_spec_path.c_str(), &comp_spec);
+        ParseInterfaceSpec(vts_spec_path.c_str(), &comp_spec);
         TrimCompSpec(&comp_spec);
         result.emplace_back(std::move(comp_spec));
       }

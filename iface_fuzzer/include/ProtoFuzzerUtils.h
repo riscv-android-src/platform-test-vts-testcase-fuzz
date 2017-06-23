@@ -23,7 +23,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "fuzz_tester/FuzzerBase.h"
+#include "driver_base/DriverBase.h"
 #include "test/vts/proto/ExecutionSpecificationMessage.pb.h"
 
 namespace android {
