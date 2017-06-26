@@ -45,6 +45,8 @@ class ProtoFuzzerRunner {
   void Init(const std::string &, bool);
   // Call every API from call sequence specified by the ExecSpec.
   void Execute(const ExecSpec &);
+  // Execute the specified interface function call.
+  void Execute(const FuncCall &);
   // Accessor to interface descriptor table containing currently opened
   // interfaces.
   const IfaceDescTbl &GetOpenedIfaces() const { return opened_ifaces_; }
@@ -52,11 +54,18 @@ class ProtoFuzzerRunner {
  private:
   // Looks up interface spec by name.
   const CompSpec *FindCompSpec(std::string);
+  // Processes return value from a function call.
+  void ProcessReturnValue(const FuncSpec &result);
+  // Loads the interface corresponding to the given VTS spec. Interface is
+  // constructed with the given argument.
+  FuzzerBase *LoadInterface(const CompSpec &, uint64_t);
 
   // Keeps track of opened interfaces.
   IfaceDescTbl opened_ifaces_;
   // All loaded VTS specs indexed by name.
   std::unordered_map<std::string, CompSpec> comp_specs_;
+  // Handle to the driver library.
+  void *driver_handle_;
 };
 
 }  // namespace fuzzer
