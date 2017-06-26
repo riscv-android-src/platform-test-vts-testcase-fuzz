@@ -67,33 +67,33 @@ static string GetServiceName(const CompSpec &comp_spec) {
   return service_name;
 }
 
-static FuzzerBase *InitHalDriver(const CompSpec &comp_spec, bool binder_mode) {
+static void *Dlopen(string lib_name) {
   const char *error;
-  string driver_name = GetDriverName(comp_spec);
-  void *handle = dlopen(driver_name.c_str(), RTLD_LAZY);
-  if (!handle) {
-    cerr << __func__ << ": " << dlerror() << endl;
-    cerr << __func__ << ": Can't load shared library: " << driver_name << endl;
-    exit(1);
-  }
-
   // Clear dlerror().
   dlerror();
-  string function_name = GetFunctionNamePrefix(comp_spec);
-  using loader_func = FuzzerBase *(*)();
-  auto hal_loader = (loader_func)dlsym(handle, function_name.c_str());
+  void *handle = dlopen(lib_name.c_str(), RTLD_LAZY);
+  if (!handle) {
+    cerr << __func__ << ": " << dlerror() << endl;
+    cerr << __func__ << ": Can't load shared library: " << lib_name << endl;
+    exit(1);
+  }
+  return handle;
+}
+
+static void *Dlsym(void *handle, string function_name) {
+  const char *error;
+  // Clear dlerror().
+  dlerror();
+  void *function = dlsym(handle, function_name.c_str());
   if ((error = dlerror()) != NULL) {
     cerr << __func__ << ": Can't find: " << function_name << endl;
     cerr << error << endl;
     exit(1);
   }
+  return function;
+}
 
-  FuzzerBase *hal = hal_loader();
-  string service_name = GetServiceName(comp_spec);
-  cerr << "HAL name: " << comp_spec.package() << endl
-       << "Interface name: " << comp_spec.component_name() << endl
-       << "Service name: " << service_name << endl;
-
+static void GetService(FuzzerBase *hal, string service_name, bool binder_mode) {
   // For fuzzing, only passthrough mode provides coverage.
   // If binder mode is not requested, attempt to open HAL in passthrough mode.
   // If the attempt fails, fall back to binder mode.
@@ -103,7 +103,7 @@ static FuzzerBase *InitHalDriver(const CompSpec &comp_spec, bool binder_mode) {
            << "Falling back to binder mode." << endl;
     } else {
       cerr << "HAL opened in passthrough mode." << endl;
-      return hal;
+      return;
     }
   }
 
@@ -112,6 +112,30 @@ static FuzzerBase *InitHalDriver(const CompSpec &comp_spec, bool binder_mode) {
     exit(1);
   } else {
     cerr << "HAL opened in binder mode." << endl;
+    return;
+  }
+}
+
+FuzzerBase *ProtoFuzzerRunner::LoadInterface(const CompSpec &comp_spec,
+                                             uint64_t hidl_service = 0) {
+  FuzzerBase *hal;
+  const char *error;
+  // Clear dlerror().
+  dlerror();
+
+  // FuzzerBase can be constructed with or without an argument.
+  // Using different FuzzerBase constructors requires dlsym'ing different
+  // symbols from the driver library.
+  string function_name = GetFunctionNamePrefix(comp_spec);
+  if (hidl_service) {
+    function_name += "with_arg";
+    using loader_func = FuzzerBase *(*)(uint64_t);
+    auto hal_loader = (loader_func)Dlsym(driver_handle_, function_name.c_str());
+    hal = hal_loader(hidl_service);
+  } else {
+    using loader_func = FuzzerBase *(*)();
+    auto hal_loader = (loader_func)Dlsym(driver_handle_, function_name.c_str());
+    hal = hal_loader();
   }
   return hal;
 }
@@ -127,7 +151,18 @@ ProtoFuzzerRunner::ProtoFuzzerRunner(const vector<CompSpec> &comp_specs) {
 
 void ProtoFuzzerRunner::Init(const string &iface_name, bool binder_mode) {
   const CompSpec *comp_spec = FindCompSpec(iface_name);
-  std::shared_ptr<FuzzerBase> hal{InitHalDriver(*comp_spec, binder_mode)};
+  // dlopen VTS driver library.
+  string driver_name = GetDriverName(*comp_spec);
+  driver_handle_ = Dlopen(driver_name);
+
+  std::shared_ptr<FuzzerBase> hal{LoadInterface(*comp_spec)};
+  string service_name = GetServiceName(*comp_spec);
+  cerr << "HAL name: " << comp_spec->package() << endl
+       << "Interface name: " << comp_spec->component_name() << endl
+       << "Service name: " << service_name << endl;
+
+  // This should only be done for top-level interfaces.
+  GetService(hal.get(), service_name, binder_mode);
 
   // Register this interface as opened by the runner.
   opened_ifaces_[iface_name] = {
@@ -136,19 +171,51 @@ void ProtoFuzzerRunner::Init(const string &iface_name, bool binder_mode) {
 }
 
 void ProtoFuzzerRunner::Execute(const ExecSpec &exec_spec) {
-  for (const auto &iface_func_call : exec_spec.function_call()) {
-    string iface_name = iface_func_call.hidl_interface_name();
-    const FuncSpec &func_spec = iface_func_call.api();
+  for (const auto &func_call : exec_spec.function_call()) {
+    Execute(func_call);
+  }
+}
 
-    auto iface_desc = opened_ifaces_.find(iface_name);
-    if (iface_desc == opened_ifaces_.end()) {
-      cerr << "Interface is not open: " << iface_name << endl;
-      exit(1);
+void ProtoFuzzerRunner::Execute(const FuncCall &func_call) {
+  string iface_name = func_call.hidl_interface_name();
+  const FuncSpec &func_spec = func_call.api();
+
+  auto iface_desc = opened_ifaces_.find(iface_name);
+  if (iface_desc == opened_ifaces_.end()) {
+    cerr << "Interface is not open: " << iface_name << endl;
+    exit(1);
+  }
+  cout << func_call.DebugString() << endl;
+
+  FuncSpec result{};
+  iface_desc->second.hal_->CallFunction(func_spec, "", &result);
+
+  ProcessReturnValue(result);
+}
+
+static string StripNamespace(const string &type) {
+  size_t idx = type.find_last_of(':');
+  if (idx == string::npos) {
+    return "";
+  }
+  return type.substr(idx + 1);
+}
+
+void ProtoFuzzerRunner::ProcessReturnValue(const FuncSpec &result) {
+  for (const auto &var : result.return_type_hidl()) {
+    if (var.has_hidl_interface_pointer() && var.has_predefined_type()) {
+      uint64_t hidl_service = var.hidl_interface_pointer();
+      string type = var.predefined_type();
+      string iface_name = StripNamespace(type);
+
+      const CompSpec *comp_spec = FindCompSpec(iface_name);
+      std::shared_ptr<FuzzerBase> hal{LoadInterface(*comp_spec, hidl_service)};
+
+      // Register this interface as opened by the runner.
+      opened_ifaces_[iface_name] = {
+          .comp_spec_ = comp_spec, .hal_ = hal,
+      };
     }
-    cout << iface_func_call.DebugString() << endl;
-
-    FuncSpec result{};
-    iface_desc->second.hal_->CallFunction(func_spec, "", &result);
   }
 }
 
