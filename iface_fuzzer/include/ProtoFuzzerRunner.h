@@ -30,7 +30,7 @@ struct IfaceDesc {
   // VTS spec of the interface.
   const CompSpec *comp_spec_;
   // Handle to an interface instance.
-  std::shared_ptr<FuzzerBase> hal_;
+  std::shared_ptr<DriverBase> hal_;
 };
 
 using IfaceDescTbl = std::unordered_map<std::string, IfaceDesc>;
@@ -58,7 +58,7 @@ class ProtoFuzzerRunner {
   void ProcessReturnValue(const FuncSpec &result);
   // Loads the interface corresponding to the given VTS spec. Interface is
   // constructed with the given argument.
-  FuzzerBase *LoadInterface(const CompSpec &, uint64_t);
+  DriverBase *LoadInterface(const CompSpec &, uint64_t);
 
   // Keeps track of opened interfaces.
   IfaceDescTbl opened_ifaces_;

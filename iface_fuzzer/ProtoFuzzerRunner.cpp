@@ -93,7 +93,7 @@ static void *Dlsym(void *handle, string function_name) {
   return function;
 }
 
-static void GetService(FuzzerBase *hal, string service_name, bool binder_mode) {
+static void GetService(DriverBase *hal, string service_name, bool binder_mode) {
   // For fuzzing, only passthrough mode provides coverage.
   // If binder mode is not requested, attempt to open HAL in passthrough mode.
   // If the attempt fails, fall back to binder mode.
@@ -116,24 +116,24 @@ static void GetService(FuzzerBase *hal, string service_name, bool binder_mode) {
   }
 }
 
-FuzzerBase *ProtoFuzzerRunner::LoadInterface(const CompSpec &comp_spec,
+DriverBase *ProtoFuzzerRunner::LoadInterface(const CompSpec &comp_spec,
                                              uint64_t hidl_service = 0) {
-  FuzzerBase *hal;
+  DriverBase *hal;
   const char *error;
   // Clear dlerror().
   dlerror();
 
-  // FuzzerBase can be constructed with or without an argument.
-  // Using different FuzzerBase constructors requires dlsym'ing different
+  // DriverBase can be constructed with or without an argument.
+  // Using different DriverBase constructors requires dlsym'ing different
   // symbols from the driver library.
   string function_name = GetFunctionNamePrefix(comp_spec);
   if (hidl_service) {
     function_name += "with_arg";
-    using loader_func = FuzzerBase *(*)(uint64_t);
+    using loader_func = DriverBase *(*)(uint64_t);
     auto hal_loader = (loader_func)Dlsym(driver_handle_, function_name.c_str());
     hal = hal_loader(hidl_service);
   } else {
-    using loader_func = FuzzerBase *(*)();
+    using loader_func = DriverBase *(*)();
     auto hal_loader = (loader_func)Dlsym(driver_handle_, function_name.c_str());
     hal = hal_loader();
   }
@@ -155,7 +155,7 @@ void ProtoFuzzerRunner::Init(const string &iface_name, bool binder_mode) {
   string driver_name = GetDriverName(*comp_spec);
   driver_handle_ = Dlopen(driver_name);
 
-  std::shared_ptr<FuzzerBase> hal{LoadInterface(*comp_spec)};
+  std::shared_ptr<DriverBase> hal{LoadInterface(*comp_spec)};
   string service_name = GetServiceName(*comp_spec);
   cerr << "HAL name: " << comp_spec->package() << endl
        << "Interface name: " << comp_spec->component_name() << endl
@@ -209,7 +209,7 @@ void ProtoFuzzerRunner::ProcessReturnValue(const FuncSpec &result) {
       string iface_name = StripNamespace(type);
 
       const CompSpec *comp_spec = FindCompSpec(iface_name);
-      std::shared_ptr<FuzzerBase> hal{LoadInterface(*comp_spec, hidl_service)};
+      std::shared_ptr<DriverBase> hal{LoadInterface(*comp_spec, hidl_service)};
 
       // Register this interface as opened by the runner.
       opened_ifaces_[iface_name] = {

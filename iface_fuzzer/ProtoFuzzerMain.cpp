@@ -16,7 +16,6 @@
 
 #include "ProtoFuzzerMutator.h"
 
-#include "specification_parser/InterfaceSpecificationParser.h"
 #include "test/vts/proto/ComponentSpecificationMessage.pb.h"
 
 #include <unistd.h>
