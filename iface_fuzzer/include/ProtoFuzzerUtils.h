@@ -88,6 +88,13 @@ const CompSpec &FindCompSpec(const std::vector<CompSpec> &,
 std::unordered_map<std::string, TypeSpec> ExtractPredefinedTypes(
     const std::vector<CompSpec> &);
 
+// Serializes ExecSpec into byte form and writes it to buffer. Returns number of
+// written bytes.
+size_t ToArray(uint8_t *, size_t, ExecSpec *);
+
+// Deserializes given buffer to an ExecSpec. Returns true on success.
+bool FromArray(const uint8_t *, size_t, ExecSpec *);
+
 }  // namespace fuzzer
 }  // namespace vts
 }  // namespace android

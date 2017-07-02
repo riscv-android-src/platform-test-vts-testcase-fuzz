@@ -155,6 +155,19 @@ unordered_map<string, TypeSpec> ExtractPredefinedTypes(
   return predefined_types;
 }
 
+bool FromArray(const uint8_t *data, size_t size, ExecSpec *exec_spec) {
+  // TODO(b/63136690): Use checksum to validate exec_spec more reliably.
+  return exec_spec->ParseFromArray(data, size) && exec_spec->has_valid() &&
+         exec_spec->valid();
+}
+
+size_t ToArray(uint8_t *data, size_t size, ExecSpec *exec_spec) {
+  exec_spec->set_valid(true);
+  size_t exec_size = exec_spec->ByteSize();
+  exec_spec->SerializeToArray(data, exec_size);
+  return exec_size;
+}
+
 }  // namespace fuzzer
 }  // namespace vts
 }  // namespace android
