@@ -61,6 +61,9 @@ ProtoFuzzerMutator::ProtoFuzzerMutator(
   random_gen_fns_[TYPE_HIDL_INTERFACE] = default_transform;
   mutate_fns_[TYPE_HIDL_INTERFACE] = default_transform;
 
+  random_gen_fns_[TYPE_HIDL_MEMORY] = default_transform;
+  mutate_fns_[TYPE_HIDL_MEMORY] = default_transform;
+
   // Interpret masks as enums.
   random_gen_fns_[TYPE_MASK] =
       std::bind(&ProtoFuzzerMutator::EnumRandomGen, this, _1);
