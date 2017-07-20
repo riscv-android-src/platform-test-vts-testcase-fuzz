@@ -53,7 +53,7 @@ static string GetServiceName(const CompSpec &comp_spec) {
   auto instance_names = vendor_manifest->getInstances(hal_name, iface_name);
   if (instance_names.empty()) {
     cerr << "HAL service name not available in VINTF." << endl;
-    exit(1);
+    std::abort();
   }
 
   // For fuzzing we don't care which instance of the HAL is targeted.
@@ -75,7 +75,7 @@ static void *Dlopen(string lib_name) {
   if (!handle) {
     cerr << __func__ << ": " << dlerror() << endl;
     cerr << __func__ << ": Can't load shared library: " << lib_name << endl;
-    exit(1);
+    std::abort();
   }
   return handle;
 }
@@ -88,7 +88,7 @@ static void *Dlsym(void *handle, string function_name) {
   if ((error = dlerror()) != NULL) {
     cerr << __func__ << ": Can't find: " << function_name << endl;
     cerr << error << endl;
-    exit(1);
+    std::abort();
   }
   return function;
 }
@@ -109,7 +109,7 @@ static void GetService(DriverBase *hal, string service_name, bool binder_mode) {
 
   if (!hal->GetService(false, service_name.c_str())) {
     cerr << __func__ << ": Failed to open HAL in binder mode." << endl;
-    exit(1);
+    std::abort();
   } else {
     cerr << "HAL opened in binder mode." << endl;
     return;
@@ -184,7 +184,7 @@ void ProtoFuzzerRunner::Execute(const FuncCall &func_call) {
   auto iface_desc = opened_ifaces_.find(iface_name);
   if (iface_desc == opened_ifaces_.end()) {
     cerr << "Interface is not open: " << iface_name << endl;
-    exit(1);
+    std::abort();
   }
 
   FuncSpec result{};
@@ -223,7 +223,7 @@ const CompSpec *ProtoFuzzerRunner::FindCompSpec(std::string name) {
   auto comp_spec = comp_specs_.find(name);
   if (comp_spec == comp_specs_.end()) {
     cerr << "VTS spec not found: " << name << endl;
-    exit(1);
+    std::abort();
   }
   return &comp_spec->second;
 }
