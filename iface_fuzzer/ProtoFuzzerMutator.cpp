@@ -182,7 +182,7 @@ static VariableSpecificationMessage Transform(
   auto transform_fn = transform_fns.find(type);
   if (transform_fn == transform_fns.end()) {
     cerr << "Transformation function not found for type: " << type << endl;
-    exit(1);
+    std::abort();
   }
   return transform_fn->second(var_spec);
 }
@@ -199,7 +199,7 @@ const TypeSpec &ProtoFuzzerMutator::FindPredefinedType(string name) {
   auto type_spec = predefined_types_.find(name);
   if (type_spec == predefined_types_.end()) {
     cerr << "Predefined type not found: " << name << endl;
-    exit(1);
+    std::abort();
   }
   return type_spec->second;
 }
