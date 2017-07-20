@@ -23,8 +23,8 @@
 
 #include "utils/InterfaceSpecUtil.h"
 
-using std::cout;
 using std::cerr;
+using std::cout;
 using std::string;
 using std::unordered_map;
 using std::vector;
@@ -34,25 +34,24 @@ namespace vts {
 namespace fuzzer {
 
 static void usage() {
-  fprintf(
-      stdout,
-      "Usage:\n"
-      "\n"
-      "./vts_proto_fuzzer <vts flags> -- <libfuzzer flags>\n"
-      "\n"
-      "VTS flags (strictly in form --flag=value):\n"
-      "\n"
-      "\tvts_binder_mode: if set, fuzzer will open the HAL in binder mode.\n"
-      "\tvts_exec_size: number of function calls per 1 run of "
-      "LLVMFuzzerTestOneInput.\n"
-      "\tvts_spec_dir: \":\"-separated list of directories on the target "
-      "containing .vts spec files.\n"
-      "\tvts_target_iface: name of interface targeted for fuzz, e.g. "
-      "\"INfc\".\n"
-      "\n"
-      "libfuzzer flags (strictly in form -flag=value):\n"
-      "\tUse -help=1 to see libfuzzer flags\n"
-      "\n");
+  cout
+      << "Usage:\n"
+         "\n"
+         "./vts_proto_fuzzer <vts flags> -- <libfuzzer flags>\n"
+         "\n"
+         "VTS flags (strictly in form --flag=value):\n"
+         "\n"
+         "\tvts_binder_mode: if set, fuzzer will open the HAL in binder mode.\n"
+         "\tvts_exec_size: number of function calls per 1 run of "
+         "LLVMFuzzerTestOneInput.\n"
+         "\tvts_spec_dir: \":\"-separated list of directories on the target "
+         "containing .vts spec files.\n"
+         "\tvts_target_iface: name of interface targeted for fuzz, e.g. "
+         "\"INfc\".\n"
+         "\n"
+         "libfuzzer flags (strictly in form -flag=value):\n"
+         "\tUse -help=1 to see libfuzzer flags\n"
+         "\n";
 }
 
 static struct option long_options[] = {
