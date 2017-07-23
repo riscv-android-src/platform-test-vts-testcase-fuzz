@@ -203,7 +203,10 @@ static string StripNamespace(const string &type) {
 
 void ProtoFuzzerRunner::ProcessReturnValue(const FuncSpec &result) {
   for (const auto &var : result.return_type_hidl()) {
-    if (var.has_hidl_interface_pointer() && var.has_predefined_type()) {
+    // If result contains a pointer to an interface, register it in
+    // opened_ifaces_ table. That pointer must not be a nullptr.
+    if (var.has_hidl_interface_pointer() && var.hidl_interface_pointer() &&
+        var.has_predefined_type()) {
       uint64_t hidl_service = var.hidl_interface_pointer();
       string type = var.predefined_type();
       string iface_name = StripNamespace(type);
