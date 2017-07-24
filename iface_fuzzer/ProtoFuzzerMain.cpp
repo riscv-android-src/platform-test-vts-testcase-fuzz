@@ -20,6 +20,7 @@
 
 #include <unistd.h>
 
+#include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -70,6 +71,16 @@ static ProtoFuzzerMutatorConfig mutator_config{
     // Odds of an enum being treated like a scalar are 1:1000.
     {1, 1000}};
 
+// Executed when fuzzer process exits. We use this to print out useful
+// information about the state of the fuzzer.
+static void AtExit() {
+  // Print currently opened interfaces.
+  cerr << "Currently opened interfaces: " << endl;
+  for (const auto &iface_desc : runner->GetOpenedIfaces()) {
+    cerr << iface_desc.first << endl;
+  }
+}
+
 extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
   params = ExtractProtoFuzzerParams(*argc, *argv);
   cerr << params.DebugString() << endl;
@@ -81,6 +92,8 @@ extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
   runner = make_unique<ProtoFuzzerRunner>(params.comp_specs_);
 
   runner->Init(params.target_iface_, params.binder_mode_);
+  // Register atexit handler after all static objects' initialization.
+  std::atexit(AtExit);
   return 0;
 }
 
