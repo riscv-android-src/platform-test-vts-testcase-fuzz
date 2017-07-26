@@ -145,7 +145,7 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
   return params;
 }
 
-string ProtoFuzzerParams::DebugString() {
+string ProtoFuzzerParams::DebugString() const {
   std::stringstream ss;
   ss << "Execution size: " << exec_size_ << endl;
   ss << "Target interface: " << target_iface_ << endl;
