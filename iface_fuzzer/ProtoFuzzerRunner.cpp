@@ -25,11 +25,11 @@
 
 using android::vintf::HalManifest;
 
-using std::cout;
 using std::cerr;
+using std::cout;
 using std::string;
-using std::vector;
 using std::unordered_map;
+using std::vector;
 
 namespace android {
 namespace vts {
@@ -190,6 +190,7 @@ void ProtoFuzzerRunner::Execute(const FuncCall &func_call) {
   FuncSpec result{};
   iface_desc->second.hal_->CallFunction(func_spec, "", &result);
 
+  stats_.RegisterTouch(iface_name, func_spec.name());
   ProcessReturnValue(result);
 }
 

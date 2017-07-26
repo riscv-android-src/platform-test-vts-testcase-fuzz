@@ -17,6 +17,7 @@
 #ifndef __VTS_PROTO_FUZZER_RUNNER_H_
 #define __VTS_PROTO_FUZZER_RUNNER_H_
 
+#include "ProtoFuzzerStats.h"
 #include "ProtoFuzzerUtils.h"
 
 #include <memory>
@@ -50,6 +51,8 @@ class ProtoFuzzerRunner {
   // Accessor to interface descriptor table containing currently opened
   // interfaces.
   const IfaceDescTbl &GetOpenedIfaces() const { return opened_ifaces_; }
+  // Accessor to stats object.
+  const ProtoFuzzerStats &GetStats() const { return stats_; }
 
  private:
   // Looks up interface spec by name.
@@ -66,6 +69,9 @@ class ProtoFuzzerRunner {
   std::unordered_map<std::string, CompSpec> comp_specs_;
   // Handle to the driver library.
   void *driver_handle_;
+
+  // Collects statistical information.
+  ProtoFuzzerStats stats_;
 };
 
 }  // namespace fuzzer
