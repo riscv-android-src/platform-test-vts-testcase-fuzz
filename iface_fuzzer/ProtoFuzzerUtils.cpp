@@ -129,10 +129,10 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
         params.comp_specs_ = ExtractCompSpecs(optarg);
         break;
       case 'e':
-        params.exec_size_ = static_cast<size_t>(atoi(optarg));
+        params.exec_size_ = std::stoul(optarg);
         break;
       case 's':
-        params.seed_ = static_cast<uint64_t>(atoi(optarg));
+        params.seed_ = std::stoull(optarg);
         break;
       case 't':
         params.target_iface_ = optarg;
