@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-cc_library_shared {
+cc_library {
     name: "libvts_proto_fuzzer",
     srcs: [
         "ProtoFuzzerUtils.cpp",
@@ -53,13 +53,14 @@ cc_binary {
     ],
     shared_libs: [
         "libprotobuf-cpp-full",
+        "libvintf",
         "libvts_common",
         "libvts_multidevice_proto",
-        "libvts_proto_fuzzer",
         "libvts_proto_fuzzer_proto",
     ],
     static_libs: [
         "libFuzzer",
+        "libvts_proto_fuzzer",
     ],
     cflags: [
         "-Wall",

@@ -53,6 +53,10 @@ class ProtoFuzzerRunner {
   const IfaceDescTbl &GetOpenedIfaces() const { return opened_ifaces_; }
   // Accessor to stats object.
   const ProtoFuzzerStats &GetStats() const { return stats_; }
+  // Returns true iff there are opened interfaces that are untouched.
+  bool UntouchedIfaces() const {
+    return opened_ifaces_.size() > stats_.TouchedIfaces().size();
+  }
 
  private:
   // Looks up interface spec by name.
