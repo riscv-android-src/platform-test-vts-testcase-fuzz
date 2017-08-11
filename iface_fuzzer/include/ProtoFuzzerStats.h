@@ -19,6 +19,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 namespace android {
 namespace vts {
@@ -31,11 +32,17 @@ class ProtoFuzzerStats {
   void RegisterTouch(std::string iface_name, std::string func_name);
   // Returns collected stats in string form.
   std::string StatsString() const;
+  // Returns the set of touched interfaces.
+  const std::unordered_set<std::string> &TouchedIfaces() const {
+    return touched_ifaces_;
+  }
 
  private:
   // Counts the number of times a function was touched.
   // This object will be written to often, so we use unordered_map.
   std::unordered_map<std::string, uint64_t> touch_count_;
+  // The set of interfaces that have been touched to far.
+  std::unordered_set<std::string> touched_ifaces_;
 };
 
 }  // namespace fuzzer
