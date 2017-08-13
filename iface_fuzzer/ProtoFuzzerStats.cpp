@@ -31,8 +31,11 @@ namespace vts {
 namespace fuzzer {
 
 void ProtoFuzzerStats::RegisterTouch(string iface_name, string func_name) {
+  // Update the touch count for the full function name.
   string key = iface_name + "::" + func_name;
   touch_count_[key]++;
+  // Record that this interface has been touched.
+  touched_ifaces_.insert(std::move(iface_name));
 }
 
 string ProtoFuzzerStats::StatsString() const {
