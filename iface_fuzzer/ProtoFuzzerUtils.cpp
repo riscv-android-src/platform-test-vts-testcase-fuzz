@@ -108,7 +108,12 @@ static void ExtractPredefinedTypesFromVar(
     const TypeSpec &var_spec,
     unordered_map<string, TypeSpec> &predefined_types) {
   predefined_types[var_spec.name()] = var_spec;
+  // Find all nested struct declarations.
   for (const auto &sub_var_spec : var_spec.sub_struct()) {
+    ExtractPredefinedTypesFromVar(sub_var_spec, predefined_types);
+  }
+  // Find all nested union declarations.
+  for (const auto &sub_var_spec : var_spec.sub_union()) {
     ExtractPredefinedTypesFromVar(sub_var_spec, predefined_types);
   }
 }
