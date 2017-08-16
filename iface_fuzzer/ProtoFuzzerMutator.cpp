@@ -109,6 +109,7 @@ const CompSpec *ProtoFuzzerMutator::RandomSelectIface(const IfaceDescTbl &tbl) {
 
 ExecSpec ProtoFuzzerMutator::RandomGen(const IfaceDescTbl &tbl,
                                        size_t num_calls) {
+  cerr << "Generating a random execution." << endl;
   ExecSpec result{};
   for (size_t i = 0; i < num_calls; ++i) {
     const CompSpec *comp_spec = RandomSelectIface(tbl);
