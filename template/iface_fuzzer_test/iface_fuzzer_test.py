@@ -111,7 +111,7 @@ class IfaceFuzzerTest(func_fuzzer_test.FuncFuzzerTest):
             }
             libfuzzer_params = config.FUZZER_DEFAULT_PARAMS.copy()
             libfuzzer_params.update({
-                'max_len': 65536,
+                'max_len': 1048576,
                 'max_total_time': 600,
             })
             bin_host_path = os.path.join(self.data_file_path, 'DATA', 'bin',
