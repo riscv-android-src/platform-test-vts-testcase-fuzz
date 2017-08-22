@@ -74,8 +74,8 @@ class ProtoFuzzerParams {
   // Name of target interface, e.g. "INfc".
   std::string target_iface_;
   // Controls whether HAL is opened in passthrough or binder mode.
-  // Passthrough mode is default. Used for testing.
-  bool binder_mode_ = false;
+  // Binder mode is default. Used for testing.
+  bool binder_mode_ = true;
   // Seed used to initialize the random number generator.
   uint64_t seed_ = static_cast<uint64_t>(time(0));
   // Returns a string summarizing content of this object.
