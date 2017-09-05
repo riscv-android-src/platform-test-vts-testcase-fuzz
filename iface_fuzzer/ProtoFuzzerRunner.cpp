@@ -45,12 +45,12 @@ static string GetDriverName(const CompSpec &comp_spec) {
 }
 
 static string GetServiceName(const CompSpec &comp_spec) {
-  static const HalManifest *vendor_manifest =
-      ::android::vintf::VintfObject::GetDeviceHalManifest();
   string hal_name = comp_spec.package();
   string iface_name = comp_spec.component_name();
 
-  auto instance_names = vendor_manifest->getInstances(hal_name, iface_name);
+  auto instance_names =
+      ::android::vintf::VintfObject::GetDeviceHalManifest()->getInstances(
+          hal_name, iface_name);
   if (instance_names.empty()) {
     cerr << "HAL service name not available in VINTF." << endl;
     exit(1);
