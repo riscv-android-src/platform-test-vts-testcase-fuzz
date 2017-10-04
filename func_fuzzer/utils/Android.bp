@@ -17,5 +17,6 @@
 cc_library_shared {
     name: "libvts_func_fuzzer_utils",
     srcs: ["FuncFuzzerUtils.cpp"],
+    cflags: ["-Wall", "-Werror"],
     export_include_dirs: ["."],
 }

@@ -9,4 +9,8 @@ cc_defaults {
     static_libs: [
         "libFuzzer"
     ],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
 }
