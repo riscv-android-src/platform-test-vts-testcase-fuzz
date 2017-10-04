@@ -68,7 +68,6 @@ static string GetServiceName(const CompSpec &comp_spec) {
 }
 
 static void *Dlopen(string lib_name) {
-  const char *error;
   // Clear dlerror().
   dlerror();
   void *handle = dlopen(lib_name.c_str(), RTLD_LAZY);
@@ -119,7 +118,6 @@ static void GetService(DriverBase *hal, string service_name, bool binder_mode) {
 DriverBase *ProtoFuzzerRunner::LoadInterface(const CompSpec &comp_spec,
                                              uint64_t hidl_service = 0) {
   DriverBase *hal;
-  const char *error;
   // Clear dlerror().
   dlerror();
 
