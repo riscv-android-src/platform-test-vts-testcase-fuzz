@@ -35,6 +35,8 @@ cc_library {
         "libvts_proto_fuzzer_proto",
     ],
     cflags: [
+        "-Wall",
+        "-Werror",
         "-Wno-unused-parameter",
     ],
 }
@@ -61,6 +63,8 @@ cc_binary {
         "libvts_proto_fuzzer",
     ],
     cflags: [
+        "-Wall",
+        "-Werror",
         "-Wno-unused-parameter",
         "-Wno-macro-redefined",
         "-Wno-extra-tokens",
