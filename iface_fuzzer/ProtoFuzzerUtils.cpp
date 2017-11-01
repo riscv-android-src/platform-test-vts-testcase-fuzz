@@ -86,7 +86,7 @@ static vector<CompSpec> ExtractCompSpecs(string arg) {
     struct dirent *ent;
     if (!(dir = opendir(dir_path.c_str()))) {
       cerr << "Could not open directory: " << dir_path << endl;
-      exit(1);
+      std::abort();
     }
     while ((ent = readdir(dir))) {
       string vts_spec_name{ent->d_name};
@@ -120,7 +120,7 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
     switch (opt) {
       case 'h':
         usage();
-        exit(0);
+        std::abort();
       case 'b':
         params.binder_mode_ = true;
         break;
