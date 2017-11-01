@@ -17,9 +17,9 @@
 #include "ProtoFuzzerMutator.h"
 #include <iostream>
 
-using std::endl;
 using std::cerr;
 using std::cout;
+using std::endl;
 using std::make_unique;
 using std::unordered_map;
 using namespace std::placeholders;

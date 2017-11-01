@@ -79,7 +79,7 @@ class ProtoFuzzerParams {
   // Seed used to initialize the random number generator.
   uint64_t seed_ = static_cast<uint64_t>(time(0));
   // Returns a string summarizing content of this object.
-  string DebugString();
+  string DebugString() const;
 };
 
 // Parses command-line flags to create a ProtoFuzzerParams instance.
