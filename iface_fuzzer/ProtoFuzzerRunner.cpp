@@ -213,6 +213,11 @@ void ProtoFuzzerRunner::ProcessReturnValue(const FuncSpec &result) {
       const CompSpec *comp_spec = FindCompSpec(iface_name);
       std::shared_ptr<DriverBase> hal{LoadInterface(*comp_spec, hidl_service)};
 
+      // If this interface has not been seen before, record the fact.
+      if (opened_ifaces_.find(iface_name) == opened_ifaces_.end()) {
+        cerr << "Discovered new interface: " << iface_name << endl;
+      }
+
       // Register this interface as opened by the runner.
       opened_ifaces_[iface_name] = {
           .comp_spec_ = comp_spec, .hal_ = hal,
