@@ -83,14 +83,13 @@ extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
 extern "C" size_t LLVMFuzzerCustomMutator(uint8_t *data, size_t size,
                                           size_t max_size, unsigned int seed) {
   ExecSpec exec_spec{};
-  if (!exec_spec.ParseFromArray(data, size)) {
+  if (!FromArray(data, size, &exec_spec)) {
     exec_spec =
         mutator->RandomGen(runner->GetOpenedIfaces(), params.exec_size_);
   } else {
     mutator->Mutate(runner->GetOpenedIfaces(), &exec_spec);
   }
-  exec_spec.SerializeToArray(data, exec_spec.ByteSize());
-  return exec_spec.ByteSize();
+  return ToArray(data, size, &exec_spec);
 }
 
 // TODO(trong): implement a meaningful cross-over mechanism.
@@ -103,9 +102,9 @@ size_t LLVMFuzzerCustomCrossOver(const uint8_t *data1, size_t size1,
 }
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  ExecSpec exec_spec;
-  if (!exec_spec.ParseFromArray(data, size) ||
-      exec_spec.function_call_size() == 0) {
+  ExecSpec exec_spec{};
+  if (!FromArray(data, size, &exec_spec)) {
+    cerr << "Failed to deserialize an ExecSpec." << endl;
     return 0;
   }
   runner->Execute(exec_spec);
