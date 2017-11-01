@@ -48,6 +48,8 @@ static void usage() {
          "containing .vts spec files.\n"
          "\tvts_target_iface: name of interface targeted for fuzz, e.g. "
          "\"INfc\".\n"
+         "\tvts_seed: optional integral argument used to initalize the random "
+         "number generator.\n"
          "\n"
          "libfuzzer flags (strictly in form -flag=value):\n"
          "\tUse -help=1 to see libfuzzer flags\n"
@@ -59,6 +61,7 @@ static struct option long_options[] = {
     {"vts_binder_mode", no_argument, 0, 'b'},
     {"vts_spec_dir", required_argument, 0, 'd'},
     {"vts_exec_size", required_argument, 0, 'e'},
+    {"vts_seed", required_argument, 0, 's'},
     {"vts_target_iface", required_argument, 0, 't'}};
 
 // Removes information from CompSpec not needed by fuzzer.
@@ -90,7 +93,6 @@ static vector<CompSpec> ExtractCompSpecs(string arg) {
     while ((ent = readdir(dir))) {
       string vts_spec_name{ent->d_name};
       if (vts_spec_name.find(".vts") != string::npos) {
-        cout << "Loading: " << vts_spec_name << endl;
         string vts_spec_path = dir_path + "/" + vts_spec_name;
         CompSpec comp_spec{};
         ParseInterfaceSpec(vts_spec_path.c_str(), &comp_spec);
@@ -127,7 +129,10 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
         params.comp_specs_ = ExtractCompSpecs(optarg);
         break;
       case 'e':
-        params.exec_size_ = atoi(optarg);
+        params.exec_size_ = static_cast<size_t>(atoi(optarg));
+        break;
+      case 's':
+        params.seed_ = static_cast<uint64_t>(atoi(optarg));
         break;
       case 't':
         params.target_iface_ = optarg;
@@ -138,6 +143,19 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
     }
   }
   return params;
+}
+
+string ProtoFuzzerParams::DebugString() {
+  std::stringstream ss;
+  ss << "Execution size: " << exec_size_ << endl;
+  ss << "Target interface: " << target_iface_ << endl;
+  ss << "Binder mode: " << binder_mode_ << endl;
+  ss << "Seed: " << seed_ << endl;
+  ss << "Loaded specs: " << endl;
+  for (const auto &spec : comp_specs_) {
+    ss << spec.component_name() << endl;
+  }
+  return ss.str();
 }
 
 unordered_map<string, TypeSpec> ExtractPredefinedTypes(
