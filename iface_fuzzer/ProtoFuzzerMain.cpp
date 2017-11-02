@@ -37,7 +37,7 @@ namespace vts {
 namespace fuzzer {
 
 // 64-bit random number generator.
-static Random random{static_cast<uint64_t>(time(0))};
+static unique_ptr<Random> random;
 // Parameters that were passed in to fuzzer.
 static ProtoFuzzerParams params;
 // Used to mutate inputs to hal driver.
@@ -72,8 +72,12 @@ static ProtoFuzzerMutatorConfig mutator_config{
 
 extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
   params = ExtractProtoFuzzerParams(*argc, *argv);
+  cerr << params.DebugString() << endl;
+
+  random = make_unique<Random>(params.seed_);
   mutator = make_unique<ProtoFuzzerMutator>(
-      random, ExtractPredefinedTypes(params.comp_specs_), mutator_config);
+      *random.get(), ExtractPredefinedTypes(params.comp_specs_),
+      mutator_config);
   runner = make_unique<ProtoFuzzerRunner>(params.comp_specs_);
 
   runner->Init(params.target_iface_, params.binder_mode_);
