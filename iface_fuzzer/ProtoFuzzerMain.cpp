@@ -102,7 +102,11 @@ extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
 extern "C" size_t LLVMFuzzerCustomMutator(uint8_t *data, size_t size,
                                           size_t max_size, unsigned int seed) {
   ExecSpec exec_spec{};
-  if (!FromArray(data, size, &exec_spec)) {
+  // An Execution is randomly generated if:
+  // 1. It can't be serialized from the given buffer OR
+  // 2. The runner has opened interfaces that have not been touched.
+  // Otherwise, the Execution is mutated.
+  if (!FromArray(data, size, &exec_spec) || runner->UntouchedIfaces()) {
     exec_spec =
         mutator->RandomGen(runner->GetOpenedIfaces(), params.exec_size_);
   } else {
