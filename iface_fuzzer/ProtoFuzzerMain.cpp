@@ -79,6 +79,8 @@ static void AtExit() {
   for (const auto &iface_desc : runner->GetOpenedIfaces()) {
     cerr << iface_desc.first << endl;
   }
+  cerr << endl;
+  cerr << runner->GetStats().StatsString();
 }
 
 extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
