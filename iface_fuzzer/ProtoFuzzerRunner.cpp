@@ -21,9 +21,11 @@
 
 #include "utils/InterfaceSpecUtil.h"
 #include "vintf/HalManifest.h"
+#include "vintf/Version.h"
 #include "vintf/VintfObject.h"
 
 using android::vintf::HalManifest;
+using android::vintf::Version;
 
 using std::cerr;
 using std::cout;
@@ -46,11 +48,17 @@ static string GetDriverName(const CompSpec &comp_spec) {
 
 static string GetServiceName(const CompSpec &comp_spec) {
   string hal_name = comp_spec.package();
+  string hal_version = GetVersionString(comp_spec.component_type_version());
   string iface_name = comp_spec.component_name();
+
+  size_t major_version =
+      std::stoul(hal_version.substr(0, hal_version.find(".")));
+  size_t minor_version =
+      std::stoul(hal_version.substr(hal_version.find(".") + 1));
 
   auto instance_names =
       ::android::vintf::VintfObject::GetDeviceHalManifest()->getInstances(
-          hal_name, iface_name);
+          hal_name, Version(major_version, minor_version), iface_name);
   if (instance_names.empty()) {
     cerr << "HAL service name not available in VINTF." << endl;
     std::abort();
