@@ -63,7 +63,6 @@ class ConfigGen(object):
         self._utils.RemoveFilesInDirIf(
             config_dir, lambda x: x == 'AndroidTest.xml' or 'Android.mk')
 
-        self.UpdateFuzzerConfigsForType(FuzzerType.FUNC_FUZZER)
         self.UpdateFuzzerConfigsForType(FuzzerType.IFACE_FUZZER)
 
     def UpdateFuzzerConfigsForType(self, fuzzer_type):
