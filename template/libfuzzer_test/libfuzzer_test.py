@@ -53,7 +53,7 @@ class LibFuzzerTest(base_test.BaseTestClass):
         logging.info('%s: %s', keys.ConfigKeys.IKEY_BINARY_TEST_SOURCE,
                      self.binary_test_source)
 
-        self._dut = self.registerController(android_device, False)[0]
+        self._dut = self.android_devices[0]
         self._dut.stop()
         self._dut.adb.shell('mkdir %s -p' % config.FUZZER_TEST_DIR)
 
