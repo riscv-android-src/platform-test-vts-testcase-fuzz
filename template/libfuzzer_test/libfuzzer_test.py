@@ -38,6 +38,8 @@ class LibFuzzerTest(base_test.BaseTestClass):
         _dut: AndroidDevice, the device under test as config.
     """
 
+    start_vts_agents = False
+
     def setUpClass(self):
         """Creates a remote shell instance, and copies data files."""
         required_params = [
