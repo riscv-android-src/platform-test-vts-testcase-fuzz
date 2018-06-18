@@ -37,9 +37,6 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
         _test_cases: LibFuzzerTestCase list, list of test cases to run.
         _vts_spec_parser: VtsSpecParser, used to parse .vts files.
     """
-
-    start_vts_agents = False
-
     def setUpClass(self):
         """Creates a remote shell instance, and copies data files."""
         required_params = [
