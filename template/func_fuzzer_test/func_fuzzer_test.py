@@ -37,6 +37,7 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
         _test_cases: LibFuzzerTestCase list, list of test cases to run.
         _vts_spec_parser: VtsSpecParser, used to parse .vts files.
     """
+
     def setUpClass(self):
         """Creates a remote shell instance, and copies data files."""
         required_params = [
@@ -50,7 +51,6 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
                      self.hal_hidl_package_name)
 
         self._dut = self.android_devices[0]
-        self._dut.startAdbLogcat()
         self._dut.adb.shell('mkdir %s -p' % config.FUZZER_TEST_DIR)
         self._vts_spec_parser = vts_spec_utils.VtsSpecParser(
             self.data_file_path)
