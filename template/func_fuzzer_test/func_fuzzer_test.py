@@ -17,6 +17,7 @@
 
 import logging
 import os
+import tempfile
 
 from vts.runners.host import keys
 from vts.runners.host import test_runner
@@ -36,6 +37,7 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
         _dut: AndroidDevice, the device under test as config.
         _test_cases: LibFuzzerTestCase list, list of test cases to run.
         _vts_spec_parser: VtsSpecParser, used to parse .vts files.
+        _temp_dir: temporary directory, used as buffer between target and GCS.
     """
 
     def setUpClass(self):
@@ -54,6 +56,7 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
         self._dut.adb.shell('mkdir %s -p' % config.FUZZER_TEST_DIR)
         self._vts_spec_parser = vts_spec_utils.VtsSpecParser(
             self.data_file_path)
+        self._temp_dir = tempfile.mkdtemp()
 
     def _RegisteredInterfaces(self, hal_package):
         """Returns a list of registered interfaces for a given hal package.
@@ -77,7 +80,7 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
         vts_spec_name = vts_spec_name.replace('.vts', '')
         bin_name = hal_package + '-vts.func_fuzzer.' + vts_spec_name
         bin_host_path = os.path.join(self.data_file_path, 'DATA', 'bin',
-                                       bin_name)
+                                     bin_name)
         return str(bin_host_path)
 
     def _CreateTestCasesFromSpec(self, hal_package, vts_spec_name,
@@ -110,8 +113,8 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
         hal_package = self.hal_hidl_package_name
         hal_name, hal_version = vts_spec_utils.HalPackageToNameAndVersion(
             hal_package)
-        vts_spec_names = self._vts_spec_parser.VtsSpecNames(hal_name,
-                                                            hal_version)
+        vts_spec_names = self._vts_spec_parser.VtsSpecNames(
+            hal_name, hal_version)
 
         registered_interfaces = self._RegisteredInterfaces(
             self.hal_hidl_package_name)

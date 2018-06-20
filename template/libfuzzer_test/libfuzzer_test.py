@@ -79,11 +79,35 @@ class LibFuzzerTest(base_test.BaseTestClass):
             self.binary_test_source)
         return test_cases
 
-    # TODO: retrieve the corpus.
-    def CreateCorpusDir(self, test_case):
-        """Creates corpus directory on the target."""
-        corpus_dir = test_case.GetCorpusName()
-        self._dut.adb.shell('mkdir %s -p' % corpus_dir)
+    def CreateCorpusOut(self, test_case):
+        """Creates corpus output directory on the target.
+
+        Args:
+            test_case: LibFuzzerTestCase object, current test case.
+
+        Throws:
+            throws an AdbError when there is an error in adb operations.
+        """
+        corpus_out = test_case.GetCorpusOutDir()
+        self._dut.adb.shell('mkdir %s -p' % corpus_out)
+
+    # TODO(b/64022625): retrieve from GCS to host
+    def RetrieveCorpusSeed(self, test_case):
+        """Retrieves corpus seed directory from the host.
+
+        Args:
+            test_case: LibFuzzerTestCase object, current test case.
+
+        Throws:
+            throws an AdbError when there is an error in adb operations.
+        """
+        host_corpus_seed = os.path.join(
+            self._temp_dir, '%s_corpus_seed' % test_case._test_name)
+        if not os.path.exists(host_corpus_seed):
+            corpus_seed = test_case.GetCorpusSeedDir()
+            self._dut.adb.shell('mkdir %s -p' % corpus_seed)
+        else:
+            self._dut.adb.push(host_corpus_seed, config.FUZZER_TEST_DIR)
 
     def RunTestcase(self, test_case):
         """Runs the given test case and asserts the result.
@@ -92,11 +116,22 @@ class LibFuzzerTest(base_test.BaseTestClass):
             test_case: LibFuzzerTestCase object
         """
         self.PushFiles(test_case.bin_host_path)
-        self.CreateCorpusDir(test_case)
+        self.CreateCorpusOut(test_case)
+        self.RetrieveCorpusSeed(test_case)
         fuzz_cmd = '"%s"' % test_case.GetRunCommand()
         result = self._dut.adb.shell(fuzz_cmd, no_except=True)
 
-        # TODO: upload the corpus and, possibly, crash log.
+        self._dut.adb.pull(test_case.GetCorpusOutDir(), self._temp_dir)
+        pulled_corpus_out_dir = os.path.join(
+            self._temp_dir, os.path.basename(test_case.GetCorpusOutDir()))
+        pulled_corpus = os.listdir(pulled_corpus_out_dir)
+        logging.info(
+            'temporary corpus directory %s created', pulled_corpus_out_dir)
+        for file in pulled_corpus:
+            logging.debug('binary string %s generated', file)
+        logging.info('%d binary strings generated', len(pulled_corpus))
+        # TODO(b/64022625): update from tmp to GCS
+        # TODO(b/64022625): possibly upload crash log for if needed
         self.AssertTestResult(test_case, result)
 
     def LogCrashReport(self, test_case):
