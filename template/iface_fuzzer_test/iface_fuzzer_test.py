@@ -37,8 +37,6 @@ class IfaceFuzzerTest(func_fuzzer_test.FuncFuzzerTest):
     """
     _VTS_SPEC_DIR_TARGET = os.path.join(config.FUZZER_TEST_DIR, 'spec')
 
-    start_vts_agents = False
-
     def _PushVtsResources(self, hal_name, hal_version):
         """Pushes resources needed for test to target device.
 

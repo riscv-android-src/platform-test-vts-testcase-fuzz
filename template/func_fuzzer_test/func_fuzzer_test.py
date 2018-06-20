@@ -50,8 +50,7 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
         logging.info('%s: %s', keys.ConfigKeys.IKEY_HAL_HIDL_PACKAGE_NAME,
                      self.hal_hidl_package_name)
 
-        self._dut = self.registerController(android_device, False)[0]
-        self._dut.startAdbLogcat()
+        self._dut = self.android_devices[0]
         self._dut.adb.shell('mkdir %s -p' % config.FUZZER_TEST_DIR)
         self._vts_spec_parser = vts_spec_utils.VtsSpecParser(
             self.data_file_path)
