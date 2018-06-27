@@ -91,47 +91,111 @@ class LibFuzzerTest(base_test.BaseTestClass):
         corpus_out = test_case.GetCorpusOutDir()
         self._dut.adb.shell('mkdir %s -p' % corpus_out)
 
-    # TODO(b/64022625): retrieve from GCS to host
     def RetrieveCorpusSeed(self, test_case):
-        """Retrieves corpus seed directory from the host.
+        """Retrieves corpus seed directory from GCS to the target.
 
         Args:
             test_case: LibFuzzerTestCase object, current test case.
 
         Throws:
             throws an AdbError when there is an error in adb operations.
+
+        Returns:
+            inuse_seed, the file path of the inuse seed in GCS, if fetch succeeded.
+            None, otherwise.
         """
-        host_corpus_seed = os.path.join(
+        inuse_seed = self._corpus_manager.FetchCorpusSeed(
+            test_case._test_name, self._temp_dir)
+        local_corpus_seed = os.path.join(
             self._temp_dir, '%s_corpus_seed' % test_case._test_name)
-        if not os.path.exists(host_corpus_seed):
+        if inuse_seed is not None and os.path.exists(
+                local_corpus_seed) and os.listdir(local_corpus_seed):
+            self._dut.adb.push(local_corpus_seed, config.FUZZER_TEST_DIR)
+        else:
             corpus_seed = test_case.GetCorpusSeedDir()
             self._dut.adb.shell('mkdir %s -p' % corpus_seed)
+        return inuse_seed
+
+    def AnalyzeGeneratedCorpus(self, test_case):
+        """Analyzes the generated corpus body.
+
+        Args:
+            test_case: LibFuzzerTestCase object.
+
+        Returns:
+            number of newly generated corpus strings, if the out directory exists.
+            0, otherwise.
+        """
+        logging.info('temporary directory for this test: %s', self._temp_dir)
+        pulled_corpus_out_dir = os.path.join(
+            self._temp_dir, os.path.basename(test_case.GetCorpusOutDir()))
+        if os.path.exists(pulled_corpus_out_dir):
+            logging.info('corpus out directory pulled from target: %s',
+                         pulled_corpus_out_dir)
+            pulled_corpus = os.listdir(pulled_corpus_out_dir)
+            logging.debug(pulled_corpus)
+            logging.info('generated corpus size: %d', len(pulled_corpus))
+            return len(pulled_corpus)
         else:
-            self._dut.adb.push(host_corpus_seed, config.FUZZER_TEST_DIR)
+            logging.error('corput out directory does not exist on the host.')
+            return 0
+
+    def EvaluateTestcase(self, test_case, result, inuse_seed):
+        """Evaluates the test result and moves the used seed accordingly.
+
+        Args:
+            test_case: LibFuzzerTestCase object.
+            result: a result dict object returned by the adb shell command.
+            inuse_seed: the seed used as input to this test case.
+
+        Raises:
+            signals.TestFailure when the testcase failed.
+        """
+        if 'return_codes' in result and \
+            result['return_codes'] == config.ExitCode.FUZZER_TEST_PASS:
+            logging.info('adb shell fuzzing command exited normally.')
+            if inuse_seed is not None:
+                self._corpus_manager.InuseToComplete(test_case._test_name,
+                                                     inuse_seed)
+        elif 'return_codes' in result and \
+            result['return_codes'] == config.ExitCode.FUZZER_TEST_FAIL:
+            logging.info('adb shell fuzzing command exited normally.')
+            if inuse_seed is not None:
+                self._corpus_manager.InuseToCrash(test_case._test_name,
+                                                  inuse_seed)
+        else:
+            logging.error('adb shell fuzzing command exited abnormally.')
+            #TODO(b/64123979): once normal fail happens, change
+            if inuse_seed is not None:
+                self._corpus_manager.InuseToCrash(test_case._test_name,
+                                                  inuse_seed)
 
     def RunTestcase(self, test_case):
         """Runs the given test case and asserts the result.
 
         Args:
-            test_case: LibFuzzerTestCase object
+            test_case: LibFuzzerTestCase object.
         """
         self.PushFiles(test_case.bin_host_path)
         self.CreateCorpusOut(test_case)
-        self.RetrieveCorpusSeed(test_case)
+        inuse_seed = self.RetrieveCorpusSeed(test_case)
         fuzz_cmd = '"%s"' % test_case.GetRunCommand()
-        result = self._dut.adb.shell(fuzz_cmd, no_except=True)
 
-        self._dut.adb.pull(test_case.GetCorpusOutDir(), self._temp_dir)
-        pulled_corpus_out_dir = os.path.join(
-            self._temp_dir, os.path.basename(test_case.GetCorpusOutDir()))
-        pulled_corpus = os.listdir(pulled_corpus_out_dir)
-        logging.info(
-            'temporary corpus directory %s created', pulled_corpus_out_dir)
-        for file in pulled_corpus:
-            logging.debug('binary string %s generated', file)
-        logging.info('%d binary strings generated', len(pulled_corpus))
-        # TODO(b/64022625): update from tmp to GCS
-        # TODO(b/64022625): possibly upload crash log for if needed
+        result = {}
+        try:
+            result = self._dut.adb.shell(fuzz_cmd, no_except=True)
+        except adb.AdbError as e:
+            logging.exception(e)
+
+        try:
+            self._dut.adb.pull(test_case.GetCorpusOutDir(), self._temp_dir)
+            self.AnalyzeGeneratedCorpus(test_case)
+            self._corpus_manager.UploadCorpusOutDir(test_case._test_name,
+                                                    self._temp_dir)
+        except adb.AdbError as e:
+            logging.exception(e)
+
+        self.EvaluateTestcase(test_case, result, inuse_seed)
         self.AssertTestResult(test_case, result)
 
     def LogCrashReport(self, test_case):
@@ -185,6 +249,7 @@ class LibFuzzerTest(base_test.BaseTestClass):
 
         exit_code = result[const.EXIT_CODE]
         if exit_code == config.ExitCode.FUZZER_TEST_FAIL:
+            #TODO(b/64123979): once normal fail happens, examine.
             self.LogCrashReport(test_case)
             asserts.fail('%s failed normally.' % test_case.test_name)
         elif exit_code != config.ExitCode.FUZZER_TEST_PASS:
