@@ -24,6 +24,7 @@ from vts.runners.host import test_runner
 from vts.utils.python.controllers import adb
 from vts.utils.python.controllers import android_device
 from vts.utils.python.common import vts_spec_utils
+from vts.utils.python.fuzzer import corpus_manager
 
 from vts.testcases.fuzz.template.libfuzzer_test import libfuzzer_test_config as config
 from vts.testcases.fuzz.template.libfuzzer_test import libfuzzer_test
@@ -57,6 +58,7 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
         self._vts_spec_parser = vts_spec_utils.VtsSpecParser(
             self.data_file_path)
         self._temp_dir = tempfile.mkdtemp()
+        self._corpus_manager = corpus_manager.CorpusManager(self.user_params)
 
     def _RegisteredInterfaces(self, hal_package):
         """Returns a list of registered interfaces for a given hal package.
