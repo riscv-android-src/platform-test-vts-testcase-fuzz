@@ -153,22 +153,25 @@ class LibFuzzerTest(base_test.BaseTestClass):
         """
         if 'return_codes' in result and \
             result['return_codes'] == config.ExitCode.FUZZER_TEST_PASS:
-            logging.info('adb shell fuzzing command exited normally.')
+            logging.info(
+                'adb shell fuzzing command exited normally with exitcode %d.',
+                result['return_codes'])
             if inuse_seed is not None:
-                self._corpus_manager.InuseToComplete(test_case._test_name,
-                                                     inuse_seed)
+                self._corpus_manager.InuseToDest(test_case._test_name,
+                                                 inuse_seed, 'corpus_complete')
         elif 'return_codes' in result and \
             result['return_codes'] == config.ExitCode.FUZZER_TEST_FAIL:
-            logging.info('adb shell fuzzing command exited normally.')
+            logging.info(
+                'adb shell fuzzing command exited normally with exitcode %d.',
+                result['return_codes'])
             if inuse_seed is not None:
-                self._corpus_manager.InuseToCrash(test_case._test_name,
-                                                  inuse_seed)
+                self._corpus_manager.InuseToDest(test_case._test_name,
+                                                 inuse_seed, 'corpus_crash')
         else:
             logging.error('adb shell fuzzing command exited abnormally.')
-            #TODO(b/64123979): once normal fail happens, change
             if inuse_seed is not None:
-                self._corpus_manager.InuseToCrash(test_case._test_name,
-                                                  inuse_seed)
+                self._corpus_manager.InuseToDest(test_case._test_name,
+                                                 inuse_seed, 'corpus_error')
 
     def RunTestcase(self, test_case):
         """Runs the given test case and asserts the result.
@@ -194,6 +197,12 @@ class LibFuzzerTest(base_test.BaseTestClass):
                                                     self._temp_dir)
         except adb.AdbError as e:
             logging.exception(e)
+
+        try:
+            self._dut.adb.pull(config.FUZZER_TEST_CRASH_REPORT, self._temp_dir)
+        except adb.AdbError as e:
+            logging.exception(e)
+            logging.error('crash report was not created during test run.')
 
         self.EvaluateTestcase(test_case, result, inuse_seed)
         self.AssertTestResult(test_case, result)
