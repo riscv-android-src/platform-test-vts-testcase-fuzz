@@ -122,11 +122,22 @@ extern "C" size_t LLVMFuzzerCustomMutator(uint8_t *data, size_t size,
   // 1. It can't be serialized from the given buffer OR
   // 2. The runner has opened interfaces that have not been touched.
   // Otherwise, the Execution is mutated.
-  if (!FromArray(data, size, &exec_spec) || runner->UntouchedIfaces()) {
-    exec_spec =
-        mutator->RandomGen(runner->GetOpenedIfaces(), params.exec_size_);
-  } else {
-    mutator->Mutate(runner->GetOpenedIfaces(), &exec_spec);
+  bool createNew =
+      !FromArray(data, size, &exec_spec) || runner->UntouchedIfaces();
+
+  int counter = 0;
+  do {
+    if (createNew) {
+      exec_spec =
+          mutator->RandomGen(runner->GetOpenedIfaces(), params.exec_size_);
+    } else {
+      mutator->Mutate(runner->GetOpenedIfaces(), &exec_spec);
+    }
+  } while ((size_t)exec_spec.ByteSize() > max_size && counter++ < 1000);
+
+  if ((size_t)exec_spec.ByteSize() > max_size) {
+    cerr << "execution specification message exceeded maximum size." << endl;
+    std::abort();
   }
   return ToArray(data, size, &exec_spec);
 }
