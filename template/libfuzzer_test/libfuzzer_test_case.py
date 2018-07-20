@@ -53,6 +53,10 @@ class LibFuzzerTestCase(object):
         """Returns corpus seed directory name on target."""
         return self._GetCorpusDir() + '_seed'
 
+    def GetCorpusTriggerDir(self):
+        """Returns basename of corpus trigger directory."""
+        return '%s_corpus_trigger' % self._test_name
+
     def CreateFuzzerFlags(self):
         """Creates flags for the fuzzer executable.
 
