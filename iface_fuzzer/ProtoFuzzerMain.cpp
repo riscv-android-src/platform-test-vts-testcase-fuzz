@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+#include "FuzzerInternal.h"
 #include "ProtoFuzzerMutator.h"
 
 #include "test/vts/proto/ComponentSpecificationMessage.pb.h"
 
+#include <signal.h>
 #include <unistd.h>
 
 #include <cstdlib>
@@ -32,6 +34,17 @@ using std::make_unique;
 using std::string;
 using std::unique_ptr;
 using std::vector;
+
+// Executed when fuzzer raises SIGABRT signal. This function calls
+// the signal handler from the libfuzzer library.
+extern "C" void sig_handler(int signo) {
+  if (signo == SIGABRT) {
+    cerr << "SIGABRT noticed, please refer to device logcat for the root cause."
+         << endl;
+    fuzzer::Fuzzer::StaticCrashSignalCallback();
+    exit(1);
+  }
+}
 
 namespace android {
 namespace vts {
@@ -96,6 +109,9 @@ extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
   runner->Init(params.target_iface_, params.binder_mode_);
   // Register atexit handler after all static objects' initialization.
   std::atexit(AtExit);
+  // Register signal handler for SIGABRT.
+  signal(SIGABRT, sig_handler);
+
   return 0;
 }
 
@@ -111,6 +127,13 @@ extern "C" size_t LLVMFuzzerCustomMutator(uint8_t *data, size_t size,
         mutator->RandomGen(runner->GetOpenedIfaces(), params.exec_size_);
   } else {
     mutator->Mutate(runner->GetOpenedIfaces(), &exec_spec);
+  }
+
+  if ((size_t)exec_spec.ByteSize() > max_size) {
+    cerr << "execution specification message exceeded maximum size." << endl;
+    cerr << max_size << endl;
+    cerr << (size_t)exec_spec.ByteSize() << endl;
+    std::abort();
   }
   return ToArray(data, size, &exec_spec);
 }
