@@ -190,6 +190,15 @@ class LibFuzzerTest(base_test.BaseTestClass):
         except adb.AdbError as e:
             logging.exception(e)
 
+        corpus_trigger_dir = os.path.join(self._temp_dir,
+                                   test_case.GetCorpusTriggerDir())
+        os.makedirs(corpus_trigger_dir)
+        try:
+            self._dut.adb.pull(config.FUZZER_TEST_CRASH_REPORT, corpus_trigger_dir)
+        except adb.AdbError as e:
+            logging.exception(e)
+            logging.error('crash report was not created during test run.')
+
         try:
             self._dut.adb.pull(test_case.GetCorpusOutDir(), self._temp_dir)
             self.AnalyzeGeneratedCorpus(test_case)
@@ -197,12 +206,6 @@ class LibFuzzerTest(base_test.BaseTestClass):
                                                     self._temp_dir)
         except adb.AdbError as e:
             logging.exception(e)
-
-        try:
-            self._dut.adb.pull(config.FUZZER_TEST_CRASH_REPORT, self._temp_dir)
-        except adb.AdbError as e:
-            logging.exception(e)
-            logging.error('crash report was not created during test run.')
 
         self.EvaluateTestcase(test_case, result, inuse_seed)
         self.AssertTestResult(test_case, result)
