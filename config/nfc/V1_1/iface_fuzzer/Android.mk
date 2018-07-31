@@ -5,5 +5,5 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := VtsHalAutomotiveVehicleV2_1IfaceFuzzer
+LOCAL_MODULE := VtsHalNfcV1_1IfaceFuzzer
 include test/vts/tools/build/Android.host_config.mk
