@@ -182,6 +182,11 @@ class LibFuzzerTest(base_test.BaseTestClass):
         self.PushFiles(test_case.bin_host_path)
         self.CreateCorpusOut(test_case)
         inuse_seed = self.RetrieveCorpusSeed(test_case)
+        if inuse_seed == 'locked':
+            # skip this test case
+            logging.warning('test case locked, skipping testcase %s.', test_case.test_name)
+            return
+
         fuzz_cmd = '"%s"' % test_case.GetRunCommand()
 
         result = {}
