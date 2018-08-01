@@ -58,7 +58,7 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
         self._vts_spec_parser = vts_spec_utils.VtsSpecParser(
             self.data_file_path)
         self._temp_dir = tempfile.mkdtemp()
-        self._corpus_manager = corpus_manager.CorpusManager(self.user_params)
+        self._corpus_manager = corpus_manager.CorpusManager(self.user_params, self._dut)
 
     def _RegisteredInterfaces(self, hal_package):
         """Returns a list of registered interfaces for a given hal package.
