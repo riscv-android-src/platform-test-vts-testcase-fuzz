@@ -211,6 +211,8 @@ class LibFuzzerTest(base_test.BaseTestClass):
                                                     self._temp_dir)
         except adb.AdbError as e:
             logging.exception(e)
+            logging.error('Device failed. Removing lock from GCS.')
+            self._corpus_manager.remove_lock(test_case._test_name)
 
         if inuse_seed is not 'directory':
             self.EvaluateTestcase(test_case, result, inuse_seed)
