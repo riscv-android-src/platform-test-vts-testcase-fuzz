@@ -41,6 +41,8 @@ class FuncFuzzerTest(libfuzzer_test.LibFuzzerTest):
         _temp_dir: temporary directory, used as buffer between target and GCS.
     """
 
+    start_vts_agents = False
+
     def setUpClass(self):
         """Creates a remote shell instance, and copies data files."""
         required_params = [
