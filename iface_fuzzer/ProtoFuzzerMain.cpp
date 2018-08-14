@@ -129,22 +129,61 @@ extern "C" size_t LLVMFuzzerCustomMutator(uint8_t *data, size_t size,
     mutator->Mutate(runner->GetOpenedIfaces(), &exec_spec);
   }
 
-  if ((size_t)exec_spec.ByteSize() > max_size) {
+  if (static_cast<size_t>(exec_spec.ByteSize()) > max_size) {
     cerr << "execution specification message exceeded maximum size." << endl;
     cerr << max_size << endl;
-    cerr << (size_t)exec_spec.ByteSize() << endl;
+    cerr << static_cast<size_t>(exec_spec.ByteSize()) << endl;
     std::abort();
   }
-  return ToArray(data, size, &exec_spec);
+  return ToArray(data, max_size, &exec_spec);
 }
 
-// TODO(trong): implement a meaningful cross-over mechanism.
-size_t LLVMFuzzerCustomCrossOver(const uint8_t *data1, size_t size1,
-                                 const uint8_t *data2, size_t size2,
-                                 uint8_t *out, size_t max_out_size,
-                                 unsigned int seed) {
-  memcpy(out, data1, size1);
-  return size1;
+extern "C" size_t LLVMFuzzerCustomCrossOver(const uint8_t *data1, size_t size1,
+                                            const uint8_t *data2, size_t size2,
+                                            uint8_t *out, size_t max_out_size,
+                                            unsigned int seed) {
+  ExecSpec exec_spec1{};
+  FromArray(data1, size1, &exec_spec1);
+  int function_call_size1 = exec_spec1.function_call_size();
+
+  ExecSpec exec_spec2{};
+  FromArray(data2, size2, &exec_spec2);
+  int function_call_size2 = exec_spec2.function_call_size();
+
+  if (function_call_size1 != static_cast<int>(params.exec_size_)) {
+    if (function_call_size2 != static_cast<int>(params.exec_size_)) {
+      cerr << "Both messages were invalid, aborting." << endl;
+      std::abort();
+    } else {
+      cerr << "Message 1 was invalid, copying message 2." << endl;
+      memcpy(out, data2, size2);
+      return size2;
+    }
+  } else if (function_call_size2 != static_cast<int>(params.exec_size_)) {
+    cerr << "Message 2 was invalid, copying message 1." << endl;
+    memcpy(out, data1, size1);
+    return size1;
+  }
+
+  ExecSpec exec_spec_out{};
+  for (int i = 0; i < static_cast<int>(params.exec_size_); i++) {
+    FuncCall temp;
+    int dice = rand() % 2;
+    if (dice == 0) {
+      temp = exec_spec1.function_call(i);
+    } else {
+      temp = exec_spec2.function_call(i);
+    }
+    exec_spec_out.add_function_call()->CopyFrom(temp);
+  }
+
+  if (static_cast<size_t>(exec_spec_out.ByteSize()) > max_out_size) {
+    cerr << "execution specification message exceeded maximum size." << endl;
+    cerr << max_out_size << endl;
+    cerr << static_cast<size_t>(exec_spec_out.ByteSize()) << endl;
+    std::abort();
+  }
+  return ToArray(out, max_out_size, &exec_spec_out);
 }
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {

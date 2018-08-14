@@ -106,11 +106,11 @@ class LibFuzzerTest(base_test.BaseTestClass):
         """
         inuse_seed = self._corpus_manager.FetchCorpusSeed(
             test_case._test_name, self._temp_dir)
-        local_corpus_seed = os.path.join(
+        local_corpus_seed_dir = os.path.join(
             self._temp_dir, '%s_corpus_seed' % test_case._test_name)
-        if inuse_seed is not None and os.path.exists(
-                local_corpus_seed) and os.listdir(local_corpus_seed):
-            self._dut.adb.push(local_corpus_seed, config.FUZZER_TEST_DIR)
+        if os.path.exists(local_corpus_seed_dir) and os.listdir(
+                local_corpus_seed_dir):
+            self._dut.adb.push(local_corpus_seed_dir, config.FUZZER_TEST_DIR)
         else:
             corpus_seed = test_case.GetCorpusSeedDir()
             self._dut.adb.shell('mkdir %s -p' % corpus_seed)
@@ -151,16 +151,15 @@ class LibFuzzerTest(base_test.BaseTestClass):
         Raises:
             signals.TestFailure when the testcase failed.
         """
-        if 'return_codes' in result and \
-            result['return_codes'] == config.ExitCode.FUZZER_TEST_PASS:
+        return_codes = result.get('return_codes', None)
+        if return_codes == config.ExitCode.FUZZER_TEST_PASS:
             logging.info(
                 'adb shell fuzzing command exited normally with exitcode %d.',
                 result['return_codes'])
             if inuse_seed is not None:
                 self._corpus_manager.InuseToDest(test_case._test_name,
                                                  inuse_seed, 'corpus_complete')
-        elif 'return_codes' in result and \
-            result['return_codes'] == config.ExitCode.FUZZER_TEST_FAIL:
+        elif return_codes == config.ExitCode.FUZZER_TEST_FAIL:
             logging.info(
                 'adb shell fuzzing command exited normally with exitcode %d.',
                 result['return_codes'])
@@ -182,6 +181,11 @@ class LibFuzzerTest(base_test.BaseTestClass):
         self.PushFiles(test_case.bin_host_path)
         self.CreateCorpusOut(test_case)
         inuse_seed = self.RetrieveCorpusSeed(test_case)
+        if inuse_seed == 'locked':
+            # skip this test case
+            logging.warning('test case locked, skipping testcase %s.', test_case.test_name)
+            return
+
         fuzz_cmd = '"%s"' % test_case.GetRunCommand()
 
         result = {}
@@ -191,10 +195,11 @@ class LibFuzzerTest(base_test.BaseTestClass):
             logging.exception(e)
 
         corpus_trigger_dir = os.path.join(self._temp_dir,
-                                   test_case.GetCorpusTriggerDir())
+                                          test_case.GetCorpusTriggerDir())
         os.makedirs(corpus_trigger_dir)
         try:
-            self._dut.adb.pull(config.FUZZER_TEST_CRASH_REPORT, corpus_trigger_dir)
+            self._dut.adb.pull(config.FUZZER_TEST_CRASH_REPORT,
+                               corpus_trigger_dir)
         except adb.AdbError as e:
             logging.exception(e)
             logging.error('crash report was not created during test run.')
@@ -206,8 +211,11 @@ class LibFuzzerTest(base_test.BaseTestClass):
                                                     self._temp_dir)
         except adb.AdbError as e:
             logging.exception(e)
+            logging.error('Device failed. Removing lock from GCS.')
+            self._corpus_manager.remove_lock(test_case._test_name)
 
-        self.EvaluateTestcase(test_case, result, inuse_seed)
+        if inuse_seed is not 'directory':
+            self.EvaluateTestcase(test_case, result, inuse_seed)
         self.AssertTestResult(test_case, result)
 
     def LogCrashReport(self, test_case):
