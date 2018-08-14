@@ -107,7 +107,7 @@ class SyzkallerTest(base_test.BaseTestClass):
         """
         test_command = test_case.GetRunCommand()
         stdout, stderr, err_code = cmd_utils.ExecuteOneShellCommand(
-            test_command, timeout=1800)
+            test_command, timeout=18000)
         if err_code:
             logging.error(stderr)
         else:
