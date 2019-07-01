@@ -37,8 +37,6 @@ class IfaceFuzzerTest(func_fuzzer_test.FuncFuzzerTest):
     """
     _VTS_SPEC_DIR_TARGET = os.path.join(config.FUZZER_TEST_DIR, 'spec')
 
-    start_vts_agents = False
-
     def _PushVtsResources(self, hal_name, hal_version):
         """Pushes resources needed for test to target device.
 
@@ -77,12 +75,11 @@ class IfaceFuzzerTest(func_fuzzer_test.FuncFuzzerTest):
             string list, directories on target
         """
         hal_name_dir = vts_spec_utils.HalNameDir(hal_name)
-        spec_dirs = [
-            os.path.join(self._VTS_SPEC_DIR_TARGET, hal_name_dir, hal_version)
-        ]
+        spec_dirs = [os.path.join(self._VTS_SPEC_DIR_TARGET, hal_name_dir,
+                                  hal_version)]
 
-        imported_hals = self._vts_spec_parser.ImportedHals(
-            hal_name, hal_version)
+        imported_hals = self._vts_spec_parser.ImportedHals(hal_name,
+                                                           hal_version)
         for name, version in imported_hals:
             spec_dirs.append(
                 os.path.join(self._VTS_SPEC_DIR_TARGET,
@@ -96,8 +93,8 @@ class IfaceFuzzerTest(func_fuzzer_test.FuncFuzzerTest):
         hal_name, hal_version = vts_spec_utils.HalPackageToNameAndVersion(
             hal_package)
 
-        imported_hals = self._vts_spec_parser.IndirectImportedHals(
-            hal_name, hal_version)
+        imported_hals = self._vts_spec_parser.IndirectImportedHals(hal_name,
+                                                                   hal_version)
         self._PushVtsResources(hal_name, hal_version)
         for name, version in imported_hals:
             self._PushVtsResources(name, version)
