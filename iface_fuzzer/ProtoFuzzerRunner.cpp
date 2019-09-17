@@ -57,7 +57,7 @@ static string GetServiceName(const CompSpec &comp_spec) {
       std::stoul(hal_version.substr(hal_version.find(".") + 1));
 
   auto instance_names =
-      ::android::vintf::VintfObject::GetDeviceHalManifest()->getInstances(
+      ::android::vintf::VintfObject::GetDeviceHalManifest()->getHidlInstances(
           hal_name, Version(major_version, minor_version), iface_name);
   if (instance_names.empty()) {
     cerr << "HAL service name not available in VINTF." << endl;
