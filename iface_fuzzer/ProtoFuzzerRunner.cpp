@@ -38,27 +38,24 @@ namespace vts {
 namespace fuzzer {
 
 static string GetDriverName(const CompSpec &comp_spec) {
-  stringstream version;
-  version.precision(1);
-  version << fixed << comp_spec.component_type_version();
-  string driver_name =
-      comp_spec.package() + "@" + version.str() + "-vts.driver.so";
+  stringstream version_major, version_minor;
+  version_major << comp_spec.component_type_version_major();
+  version_minor << comp_spec.component_type_version_minor();
+  string driver_name = comp_spec.package() + "@" + version_major.str() + "." +
+                       version_minor.str() + "-vts.driver.so";
   return driver_name;
 }
 
 static string GetServiceName(const CompSpec &comp_spec) {
   string hal_name = comp_spec.package();
-  string hal_version = GetVersionString(comp_spec.component_type_version());
   string iface_name = comp_spec.component_name();
-
-  size_t major_version =
-      std::stoul(hal_version.substr(0, hal_version.find(".")));
-  size_t minor_version =
-      std::stoul(hal_version.substr(hal_version.find(".") + 1));
 
   auto instance_names =
       ::android::vintf::VintfObject::GetDeviceHalManifest()->getHidlInstances(
-          hal_name, Version(major_version, minor_version), iface_name);
+          hal_name,
+          Version(comp_spec.component_type_version_major(),
+                  comp_spec.component_type_version_minor()),
+          iface_name);
   if (instance_names.empty()) {
     cerr << "HAL service name not available in VINTF." << endl;
     std::abort();
