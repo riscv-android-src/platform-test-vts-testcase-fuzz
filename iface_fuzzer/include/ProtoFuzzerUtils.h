@@ -73,6 +73,8 @@ class ProtoFuzzerParams {
   std::vector<CompSpec> comp_specs_;
   // Name of target interface, e.g. "INfc".
   std::string target_iface_;
+  // Version of target interface, e.g. "1.1".
+  std::string version_iface_;
   // Controls whether HAL is opened in passthrough or binder mode.
   // Binder mode is default. Used for testing.
   bool binder_mode_ = true;
