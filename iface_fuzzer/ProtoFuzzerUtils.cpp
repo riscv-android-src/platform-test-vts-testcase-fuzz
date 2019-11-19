@@ -46,8 +46,9 @@ static void usage() {
          "LLVMFuzzerTestOneInput.\n"
          "\tvts_spec_dir: \":\"-separated list of directories on the target "
          "containing .vts spec files.\n"
-         "\tvts_target_iface: name of interface targeted for fuzz, e.g. "
-         "\"INfc\".\n"
+         "\tvts_target_iface: name of interface targeted for fuzz with the "
+         "version, e.g. "
+         "\"INfc@1.1\".\n"
          "\tvts_seed: optional integral argument used to initalize the random "
          "number generator.\n"
          "\n"
@@ -104,6 +105,26 @@ static vector<CompSpec> ExtractCompSpecs(string arg) {
   return result;
 }
 
+template <class Container>
+static void Split(const std::string &str, Container &cont, char delim) {
+  std::stringstream ss(str);
+  std::string token;
+  while (std::getline(ss, token, delim)) {
+    cont.push_back(token);
+  }
+}
+
+static vector<string> ExtractIfaceNameAndVersion(const string &arg) {
+  vector<string> nameWithVersion;
+  Split(optarg, nameWithVersion, '@');
+  if (nameWithVersion.size() != 2) {
+    cerr << __func__ << ": Should specify vts_target_iface with version."
+         << endl;
+    std::abort();
+  }
+  return nameWithVersion;
+}
+
 static void ExtractPredefinedTypesFromVar(
     const TypeSpec &var_spec,
     unordered_map<string, TypeSpec> &predefined_types) {
@@ -139,9 +160,12 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
       case 's':
         params.seed_ = std::stoull(optarg);
         break;
-      case 't':
-        params.target_iface_ = optarg;
+      case 't': {
+        vector<string> nameWithVersion = ExtractIfaceNameAndVersion(optarg);
+        params.target_iface_ = nameWithVersion[0];
+        params.version_iface_ = nameWithVersion[1];
         break;
+      }
       default:
         // Ignore. This option will be handled by libfuzzer.
         break;

@@ -37,12 +37,17 @@ namespace android {
 namespace vts {
 namespace fuzzer {
 
-static string GetDriverName(const CompSpec &comp_spec) {
+static string GetVersionString(const CompSpec &comp_spec) {
   stringstream version_major, version_minor;
   version_major << comp_spec.component_type_version_major();
   version_minor << comp_spec.component_type_version_minor();
-  string driver_name = comp_spec.package() + "@" + version_major.str() + "." +
-                       version_minor.str() + "-vts.driver.so";
+  return version_major.str() + "." + version_minor.str();
+}
+
+static string GetDriverName(const CompSpec &comp_spec) {
+  string version_string = GetVersionString(comp_spec);
+  string driver_name =
+      comp_spec.package() + "@" + version_string + "-vts.driver.so";
   return driver_name;
 }
 
@@ -143,9 +148,11 @@ DriverBase *ProtoFuzzerRunner::LoadInterface(const CompSpec &comp_spec,
   return hal;
 }
 
-ProtoFuzzerRunner::ProtoFuzzerRunner(const vector<CompSpec> &comp_specs) {
+ProtoFuzzerRunner::ProtoFuzzerRunner(const vector<CompSpec> &comp_specs,
+                                     const string version_iface) {
   for (const auto &comp_spec : comp_specs) {
-    if (comp_spec.has_interface()) {
+    string target_version = GetVersionString(comp_spec);
+    if (comp_spec.has_interface() && target_version == version_iface) {
       string name = comp_spec.component_name();
       comp_specs_[name] = comp_spec;
     }
