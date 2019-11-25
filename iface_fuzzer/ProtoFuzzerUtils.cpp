@@ -46,9 +46,9 @@ static void usage() {
          "LLVMFuzzerTestOneInput.\n"
          "\tvts_spec_dir: \":\"-separated list of directories on the target "
          "containing .vts spec files.\n"
-         "\tvts_target_iface: name of interface targeted for fuzz with the "
-         "version, e.g. "
-         "\"INfc@1.1\".\n"
+         "\tvts_target_fq_name: fully-qualified name of interface targeted for "
+         "fuzz version, e.g. "
+         "\"android.hardware.nfc@1.1::INfc\".\n"
          "\tvts_seed: optional integral argument used to initalize the random "
          "number generator.\n"
          "\n"
@@ -63,7 +63,7 @@ static struct option long_options[] = {
     {"vts_spec_dir", required_argument, 0, 'd'},
     {"vts_exec_size", required_argument, 0, 'e'},
     {"vts_seed", required_argument, 0, 's'},
-    {"vts_target_iface", required_argument, 0, 't'}};
+    {"vts_target_fq_name", required_argument, 0, 't'}};
 
 // Removes information from CompSpec not needed by fuzzer.
 static void TrimCompSpec(CompSpec *comp_spec) {
@@ -105,26 +105,6 @@ static vector<CompSpec> ExtractCompSpecs(string arg) {
   return result;
 }
 
-template <class Container>
-static void Split(const std::string &str, Container &cont, char delim) {
-  std::stringstream ss(str);
-  std::string token;
-  while (std::getline(ss, token, delim)) {
-    cont.push_back(token);
-  }
-}
-
-static vector<string> ExtractIfaceNameAndVersion(const string &arg) {
-  vector<string> nameWithVersion;
-  Split(optarg, nameWithVersion, '@');
-  if (nameWithVersion.size() != 2) {
-    cerr << __func__ << ": Should specify vts_target_iface with version."
-         << endl;
-    std::abort();
-  }
-  return nameWithVersion;
-}
-
 static void ExtractPredefinedTypesFromVar(
     const TypeSpec &var_spec,
     unordered_map<string, TypeSpec> &predefined_types) {
@@ -161,9 +141,10 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
         params.seed_ = std::stoull(optarg);
         break;
       case 't': {
-        vector<string> nameWithVersion = ExtractIfaceNameAndVersion(optarg);
-        params.target_iface_ = nameWithVersion[0];
-        params.version_iface_ = nameWithVersion[1];
+        if (!FQName::parse(optarg, &params.target_fq_name_)) {
+          usage();
+          std::abort();
+        }
         break;
       }
       default:
@@ -177,7 +158,7 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
 string ProtoFuzzerParams::DebugString() const {
   std::stringstream ss;
   ss << "Execution size: " << exec_size_ << endl;
-  ss << "Target interface: " << target_iface_ << endl;
+  ss << "Target FQ name: " << target_fq_name_.string() << endl;
   ss << "Binder mode: " << binder_mode_ << endl;
   ss << "Seed: " << seed_ << endl;
   ss << "Loaded specs: " << endl;
