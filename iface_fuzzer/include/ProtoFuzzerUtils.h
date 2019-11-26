@@ -24,6 +24,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include <hidl-util/FQName.h>
+
 #include "driver_base/DriverBase.h"
 #include "test/vts/proto/ExecutionSpecificationMessage.pb.h"
 
@@ -71,10 +73,9 @@ class ProtoFuzzerParams {
   size_t exec_size_;
   // VTS specs supplied to the fuzzer.
   std::vector<CompSpec> comp_specs_;
-  // Name of target interface, e.g. "INfc".
-  std::string target_iface_;
-  // Version of target interface, e.g. "1.1".
-  std::string version_iface_;
+  // Fully-qualified name of the target, e.g.
+  // "android.hardware.light@2.0::ILight"
+  android::FQName target_fq_name_;
   // Controls whether HAL is opened in passthrough or binder mode.
   // Binder mode is default. Used for testing.
   bool binder_mode_ = true;
