@@ -12,15 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-cc_fuzz {
-    name: "vts_proto_fuzzer",
+filegroup {
+    name: "vts_proto_fuzzer_srcs",
     srcs: [
         "ProtoFuzzerMain.cpp",
         "ProtoFuzzerMutateFns.cpp",
         "ProtoFuzzerMutator.cpp",
         "ProtoFuzzerRunner.cpp",
+        "ProtoFuzzerStaticParams.cpp",
         "ProtoFuzzerStats.cpp",
         "ProtoFuzzerUtils.cpp",
+    ],
+}
+
+cc_defaults {
+    name: "vts_proto_fuzzer_default",
+    srcs: [
+        ":vts_proto_fuzzer_srcs",
     ],
     include_dirs: [
         "external/llvm/lib/Fuzzer",
@@ -54,4 +62,9 @@ cc_fuzz {
         // it from running there.
         disable: true,
     },
+}
+
+cc_fuzz {
+    name: "vts_proto_fuzzer",
+    defaults: ["vts_proto_fuzzer_default"],
 }
