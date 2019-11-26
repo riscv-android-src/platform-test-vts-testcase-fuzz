@@ -104,10 +104,10 @@ extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
   mutator = make_unique<ProtoFuzzerMutator>(
       *random.get(), ExtractPredefinedTypes(params.comp_specs_),
       mutator_config);
-  runner =
-      make_unique<ProtoFuzzerRunner>(params.comp_specs_, params.version_iface_);
+  runner = make_unique<ProtoFuzzerRunner>(params.comp_specs_,
+                                          params.target_fq_name_.version());
 
-  runner->Init(params.target_iface_, params.binder_mode_);
+  runner->Init(params.target_fq_name_.name(), params.binder_mode_);
   // Register atexit handler after all static objects' initialization.
   std::atexit(AtExit);
   // Register signal handler for SIGABRT.
