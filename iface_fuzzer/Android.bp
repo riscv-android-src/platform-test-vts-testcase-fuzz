@@ -70,4 +70,11 @@ cc_fuzz {
         "-Wno-c99-extensions",
         "-fno-omit-frame-pointer",
     ],
+    fuzz_config: {
+        // This fuzz target requires a custom argv, and lots of custom data
+        // (HAL interface definitions) to be manually pushed to the device.
+        // Neither of these are supported on continuous fuzzing infra, so stop
+        // it from running there.
+        disable: true,
+    },
 }
