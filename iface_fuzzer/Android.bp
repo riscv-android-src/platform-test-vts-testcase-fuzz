@@ -1,4 +1,3 @@
-//
 // Copyright (C) 2016 The Android Open Source Project
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,39 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
-
-cc_library {
-    name: "libvts_proto_fuzzer",
-    srcs: [
-        "ProtoFuzzerUtils.cpp",
-        "ProtoFuzzerMutator.cpp",
-        "ProtoFuzzerMutateFns.cpp",
-        "ProtoFuzzerRunner.cpp",
-        "ProtoFuzzerStats.cpp",
-    ],
-    include_dirs: [
-        "test/vts/drivers/hal/common/include",
-        "test/vts-testcase/fuzz/iface_fuzzer/include",
-    ],
-    shared_libs: [
-        "libprotobuf-cpp-full",
-        "libvintf",
-        "libvts_common",
-        "libvts_multidevice_proto",
-        "libvts_proto_fuzzer_proto",
-    ],
-    cflags: [
-        "-Wall",
-        "-Werror",
-        "-Wno-unused-parameter",
-    ],
-}
 
 cc_fuzz {
     name: "vts_proto_fuzzer",
     srcs: [
         "ProtoFuzzerMain.cpp",
+        "ProtoFuzzerMutateFns.cpp",
+        "ProtoFuzzerMutator.cpp",
+        "ProtoFuzzerRunner.cpp",
+        "ProtoFuzzerStats.cpp",
+        "ProtoFuzzerUtils.cpp",
     ],
     include_dirs: [
         "external/llvm/lib/Fuzzer",
@@ -52,6 +28,7 @@ cc_fuzz {
         "test/vts-testcase/fuzz/iface_fuzzer/include",
     ],
     shared_libs: [
+        "libbase",
         "libprotobuf-cpp-full",
         "libvintf",
         "libvts_common",
@@ -59,7 +36,7 @@ cc_fuzz {
         "libvts_proto_fuzzer_proto",
     ],
     static_libs: [
-        "libvts_proto_fuzzer",
+        "libhidl-gen-utils",
     ],
     cflags: [
         "-Wall",
@@ -70,4 +47,11 @@ cc_fuzz {
         "-Wno-c99-extensions",
         "-fno-omit-frame-pointer",
     ],
+    fuzz_config: {
+        // This fuzz target requires a custom argv, and lots of custom data
+        // (HAL interface definitions) to be manually pushed to the device.
+        // Neither of these are supported on continuous fuzzing infra, so stop
+        // it from running there.
+        disable: true,
+    },
 }
