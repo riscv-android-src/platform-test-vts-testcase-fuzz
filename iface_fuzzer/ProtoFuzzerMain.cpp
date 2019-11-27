@@ -50,6 +50,11 @@ namespace android {
 namespace vts {
 namespace fuzzer {
 
+#ifdef STATIC_TARGET_FQ_NAME
+// Returns parameters used for static fuzzer executables.
+extern ProtoFuzzerParams ExtractProtoFuzzerStaticParams(int argc, char **argv);
+#endif
+
 // 64-bit random number generator.
 static unique_ptr<Random> random;
 // Parameters that were passed in to fuzzer.
@@ -97,7 +102,12 @@ static void AtExit() {
 }
 
 extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
+#ifdef STATIC_TARGET_FQ_NAME
+  params = ExtractProtoFuzzerStaticParams(*argc, *argv);
+#else
   params = ExtractProtoFuzzerParams(*argc, *argv);
+#endif
+
   cerr << params.DebugString() << endl;
 
   random = make_unique<Random>(params.seed_);
