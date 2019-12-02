@@ -16,13 +16,14 @@
 
 #include "ProtoFuzzerUtils.h"
 
+#include <android-base/strings.h>
 #include <dirent.h>
 #include <getopt.h>
 #include <algorithm>
-#include <sstream>
 
 #include "utils/InterfaceSpecUtil.h"
 
+using android::base::Split;
 using std::cerr;
 using std::cout;
 using std::string;
@@ -79,12 +80,10 @@ static void TrimCompSpec(CompSpec *comp_spec) {
   }
 }
 
-static vector<CompSpec> ExtractCompSpecs(string arg) {
+vector<CompSpec> ExtractCompSpecs(const vector<string> &dirs) {
   vector<CompSpec> result{};
-  string dir_path;
-  std::istringstream iss(arg);
 
-  while (std::getline(iss, dir_path, ':')) {
+  for (const auto &dir_path : dirs) {
     DIR *dir;
     struct dirent *ent;
     if (!(dir = opendir(dir_path.c_str()))) {
@@ -132,7 +131,8 @@ ProtoFuzzerParams ExtractProtoFuzzerParams(int argc, char **argv) {
         params.binder_mode_ = true;
         break;
       case 'd':
-        params.comp_specs_ = ExtractCompSpecs(optarg);
+        // optarg is a column-separated list of directories
+        params.comp_specs_ = ExtractCompSpecs(Split(optarg, ":"));
         break;
       case 'e':
         params.exec_size_ = std::stoul(optarg);
