@@ -85,6 +85,9 @@ class ProtoFuzzerParams {
   string DebugString() const;
 };
 
+// Loads/parses component specs from a list of directories.
+vector<CompSpec> ExtractCompSpecs(const vector<string> &dirs);
+
 // Parses command-line flags to create a ProtoFuzzerParams instance.
 ProtoFuzzerParams ExtractProtoFuzzerParams(int, char **);
 

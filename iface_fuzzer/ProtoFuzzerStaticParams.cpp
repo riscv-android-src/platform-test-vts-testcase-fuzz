@@ -16,12 +16,18 @@
 
 #include "ProtoFuzzerUtils.h"
 
+#include <android-base/file.h>
+#include <android-base/macros.h>
+#include <android-base/strings.h>
 #include <vintf/VintfObject.h>
 
 #define STRINGIFY(x) STRINGIFY_INTERNAL(x)
 #define STRINGIFY_INTERNAL(x) #x
 
 using android::FQName;
+using android::base::GetExecutableDirectory;
+using android::base::Join;
+using android::base::Split;
 using android::vintf::Version;
 using android::vintf::VintfObject;
 using std::cerr;
@@ -62,14 +68,46 @@ static FQName FindAnyIfaceFQName(const FQName &package_and_version,
   return FQName{};
 }
 
-ProtoFuzzerParams ExtractProtoFuzzerStaticParams(int argc, char **argv) {
-  ProtoFuzzerParams params = ExtractProtoFuzzerParams(argc, argv);
-  FQName package_and_version;
+// Returns path to base directory where fuzzer specs are installed.
+static inline const string &GetSpecBaseDir() {
+  static const string spec_base_dir = GetExecutableDirectory() + "/data/";
+  return spec_base_dir;
+}
 
+// Parses a column-separated list of packages into a list of corresponding
+// directories.
+static vector<string> ParseDirs(const string &packages) {
+  vector<string> result{};
+
+  for (const auto &package : Split(packages, ":")) {
+    FQName fq_name;
+    if (!FQName::parse(package, &fq_name)) {
+      cerr << "package list is malformed" << endl;
+      std::abort();
+    }
+
+    vector<string> components = fq_name.getPackageAndVersionComponents(false);
+    string spec_dir = GetSpecBaseDir() + Join(components, '/');
+    result.emplace_back(std::move(spec_dir));
+  }
+  return result;
+}
+
+ProtoFuzzerParams ExtractProtoFuzzerStaticParams(int argc, char **argv) {
+  FQName package_and_version;
   if (!FQName::parse(STRINGIFY(STATIC_TARGET_FQ_NAME), &package_and_version)) {
     cerr << "STATIC_TARGET_FQ_NAME is malformed" << endl;
     std::abort();
   }
+
+  string spec_data_list = STRINGIFY(STATIC_SPEC_DATA);
+  if (spec_data_list.empty()) {
+    cerr << "STATIC_SPEC_DATA is malformed" << endl;
+    std::abort();
+  }
+
+  ProtoFuzzerParams params = ExtractProtoFuzzerParams(argc, argv);
+  params.comp_specs_ = ExtractCompSpecs(ParseDirs(spec_data_list));
 
   // Find first interface in the given package that fits the bill.
   params.target_fq_name_ =
