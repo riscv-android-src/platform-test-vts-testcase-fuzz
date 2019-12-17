@@ -50,6 +50,11 @@ namespace android {
 namespace vts {
 namespace fuzzer {
 
+#ifdef STATIC_TARGET_FQ_NAME
+// Returns parameters used for static fuzzer executables.
+extern ProtoFuzzerParams ExtractProtoFuzzerStaticParams(int argc, char **argv);
+#endif
+
 // 64-bit random number generator.
 static unique_ptr<Random> random;
 // Parameters that were passed in to fuzzer.
@@ -97,17 +102,22 @@ static void AtExit() {
 }
 
 extern "C" int LLVMFuzzerInitialize(int *argc, char ***argv) {
+#ifdef STATIC_TARGET_FQ_NAME
+  params = ExtractProtoFuzzerStaticParams(*argc, *argv);
+#else
   params = ExtractProtoFuzzerParams(*argc, *argv);
+#endif
+
   cerr << params.DebugString() << endl;
 
   random = make_unique<Random>(params.seed_);
   mutator = make_unique<ProtoFuzzerMutator>(
       *random.get(), ExtractPredefinedTypes(params.comp_specs_),
       mutator_config);
-  runner =
-      make_unique<ProtoFuzzerRunner>(params.comp_specs_, params.version_iface_);
+  runner = make_unique<ProtoFuzzerRunner>(params.comp_specs_,
+                                          params.target_fq_name_.version());
 
-  runner->Init(params.target_iface_, params.binder_mode_);
+  runner->Init(params.target_fq_name_.name(), params.binder_mode_);
   // Register atexit handler after all static objects' initialization.
   std::atexit(AtExit);
   // Register signal handler for SIGABRT.
