@@ -60,7 +60,8 @@ cc_defaults {
         // (HAL interface definitions) to be manually pushed to the device.
         // Neither of these are supported on continuous fuzzing infra, so stop
         // it from running there.
-        disable: true,
+        fuzz_on_haiku_device: false,
+        fuzz_on_haiku_host: false,
     },
 }
 
