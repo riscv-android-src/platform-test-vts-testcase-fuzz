@@ -56,11 +56,8 @@ cc_defaults {
         "-fno-omit-frame-pointer",
     ],
     fuzz_config: {
-        // This fuzz target requires a custom argv, and lots of custom data
-        // (HAL interface definitions) to be manually pushed to the device.
-        // Neither of these are supported on continuous fuzzing infra, so stop
-        // it from running there.
-        fuzz_on_haiku_device: false,
+        // This fuzz target must be run against HAL implementation, which are
+        // only present on the device.
         fuzz_on_haiku_host: false,
     },
 }
