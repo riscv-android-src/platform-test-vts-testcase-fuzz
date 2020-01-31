@@ -106,7 +106,7 @@ ProtoFuzzerParams ExtractProtoFuzzerStaticParams(int argc, char **argv) {
     std::abort();
   }
 
-  ProtoFuzzerParams params = ExtractProtoFuzzerParams(argc, argv);
+  ProtoFuzzerParams params;
   params.comp_specs_ = ExtractCompSpecs(ParseDirs(spec_data_list));
 
   // Find first interface in the given package that fits the bill.
