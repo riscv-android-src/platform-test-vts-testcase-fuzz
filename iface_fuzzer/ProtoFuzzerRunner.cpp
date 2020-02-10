@@ -182,7 +182,6 @@ void ProtoFuzzerRunner::Init(const string &iface_name, bool binder_mode) {
 
 void ProtoFuzzerRunner::Execute(const ExecSpec &exec_spec) {
   for (const auto &func_call : exec_spec.function_call()) {
-    cout << func_call.DebugString() << endl;
     Execute(func_call);
   }
 }
