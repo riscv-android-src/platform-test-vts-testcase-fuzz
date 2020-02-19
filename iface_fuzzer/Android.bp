@@ -57,7 +57,9 @@ cc_defaults {
     ],
     fuzz_config: {
         // This fuzz target must be run against HAL implementation, which are
-        // only present on the device.
+        // only present on the device. These are disabled for until Haiku has 
+        // improved support for fuzzing HAL services.
+        fuzz_on_haiku_device: false,
         fuzz_on_haiku_host: false,
         cc: [
             "smoreland@google.com",
