@@ -59,6 +59,10 @@ cc_defaults {
         // This fuzz target must be run against HAL implementation, which are
         // only present on the device.
         fuzz_on_haiku_host: false,
+        cc: [
+            "smoreland@google.com",
+            "trong@google.com",
+        ],
     },
 }
 
