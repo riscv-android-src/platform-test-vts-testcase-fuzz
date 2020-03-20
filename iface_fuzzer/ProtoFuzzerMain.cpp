@@ -154,26 +154,17 @@ extern "C" size_t LLVMFuzzerCustomCrossOver(const uint8_t *data1, size_t size1,
                                             uint8_t *out, size_t max_out_size,
                                             unsigned int seed) {
   ExecSpec exec_spec1{};
-  FromArray(data1, size1, &exec_spec1);
-  int function_call_size1 = exec_spec1.function_call_size();
+  if (!FromArray(data1, size1, &exec_spec1)) {
+    cerr << "Message 1 was invalid." << endl;
+    exec_spec1 =
+        mutator->RandomGen(runner->GetOpenedIfaces(), params.exec_size_);
+  }
 
   ExecSpec exec_spec2{};
-  FromArray(data2, size2, &exec_spec2);
-  int function_call_size2 = exec_spec2.function_call_size();
-
-  if (function_call_size1 != static_cast<int>(params.exec_size_)) {
-    if (function_call_size2 != static_cast<int>(params.exec_size_)) {
-      cerr << "Both messages were invalid, aborting." << endl;
-      std::abort();
-    } else {
-      cerr << "Message 1 was invalid, copying message 2." << endl;
-      memcpy(out, data2, size2);
-      return size2;
-    }
-  } else if (function_call_size2 != static_cast<int>(params.exec_size_)) {
-    cerr << "Message 2 was invalid, copying message 1." << endl;
-    memcpy(out, data1, size1);
-    return size1;
+  if (!FromArray(data2, size2, &exec_spec2)) {
+    cerr << "Message 2 was invalid." << endl;
+    exec_spec2 =
+        mutator->RandomGen(runner->GetOpenedIfaces(), params.exec_size_);
   }
 
   ExecSpec exec_spec_out{};
@@ -201,6 +192,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   ExecSpec exec_spec{};
   if (!FromArray(data, size, &exec_spec)) {
     cerr << "Failed to deserialize an ExecSpec." << endl;
+    // Don't generate an ExecSpec here so that libFuzzer knows that the provided
+    // buffer doesn't provide any coverage.
     return 0;
   }
   runner->Execute(exec_spec);

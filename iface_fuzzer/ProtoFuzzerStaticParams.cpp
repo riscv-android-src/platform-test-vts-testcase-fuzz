@@ -106,7 +106,7 @@ ProtoFuzzerParams ExtractProtoFuzzerStaticParams(int argc, char **argv) {
     std::abort();
   }
 
-  ProtoFuzzerParams params = ExtractProtoFuzzerParams(argc, argv);
+  ProtoFuzzerParams params;
   params.comp_specs_ = ExtractCompSpecs(ParseDirs(spec_data_list));
 
   // Find first interface in the given package that fits the bill.
@@ -114,7 +114,7 @@ ProtoFuzzerParams ExtractProtoFuzzerStaticParams(int argc, char **argv) {
       FindAnyIfaceFQName(package_and_version, params.comp_specs_);
   if (!params.target_fq_name_.isFullyQualified()) {
     cerr << "HAL service name not available in VINTF." << endl;
-    std::abort();
+    std::exit(0);
   }
 
   // Hard-coded values
