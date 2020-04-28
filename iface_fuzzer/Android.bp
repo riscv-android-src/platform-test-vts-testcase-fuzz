@@ -41,7 +41,7 @@ cc_library {
     ],
 }
 
-cc_fuzz {
+cc_binary {
     name: "vts_proto_fuzzer",
     srcs: [
         "ProtoFuzzerMain.cpp",
@@ -59,6 +59,7 @@ cc_fuzz {
         "libvts_proto_fuzzer_proto",
     ],
     static_libs: [
+        "libFuzzer",
         "libvts_proto_fuzzer",
     ],
     cflags: [
