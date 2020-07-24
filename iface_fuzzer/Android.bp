@@ -47,7 +47,7 @@ cc_binary {
         "ProtoFuzzerMain.cpp",
     ],
     include_dirs: [
-        "external/llvm/lib/Fuzzer",
+        //"external/llvm/lib/Fuzzer",
         "test/vts/drivers/hal/common/include",
         "test/vts-testcase/fuzz/iface_fuzzer/include",
     ],
