@@ -37,8 +37,9 @@ cc_defaults {
     ],
     shared_libs: [
         "libbase",
+        "libhidlbase",
         "libprotobuf-cpp-full",
-        "libvintf",
+        "libutils",
         "libvts_common",
         "libvts_multidevice_proto",
         "libvts_proto_fuzzer_proto",
